@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/screen/Authentication/forgot_password.dart';
 import 'package:lettutor/screen/Authentication/login.dart';
 import 'package:lettutor/screen/Authentication/registration.dart';
 
@@ -14,7 +15,7 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       home: Scaffold(
         body: Center(
-          child: RegisterScreen(),
+          child: ForgotPasswordScreen(),
         ),
       ),
     );
