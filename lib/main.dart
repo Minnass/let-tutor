@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/screen/Authentication/login.dart';
+import 'package:lettutor/screen/Authentication/registration.dart';
 
 void main() {
   runApp(const MainApp());
@@ -12,7 +14,7 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Text('Hello World!'),
+          child: RegisterScreen(),
         ),
       ),
     );
