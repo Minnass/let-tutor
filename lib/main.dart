@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lettutor/screen/Authentication/forgot_password.dart';
 import 'package:lettutor/screen/Authentication/login.dart';
 import 'package:lettutor/screen/Authentication/registration.dart';
-import 'package:lettutor/screen/tutors/widgets/tutor_card.dart';
+import 'package:lettutor/screen/tutors/feedback_write.dart';
+import 'package:lettutor/screen/tutors/feedbacks.dart';
+import 'package:lettutor/screen/tutors/tutor_detail.dart';
+import 'package:lettutor/widgets/tutor_card.dart';
 
 void main() {
   runApp(const MainApp());
@@ -16,7 +19,7 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       home: Scaffold(
         body: Center(
-          child: TutorSearchCard(),
+          child: FeedbackWritingScreen(),
         ),
       ),
     );
