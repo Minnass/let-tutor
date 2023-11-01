@@ -4,7 +4,9 @@ import 'package:lettutor/screen/Authentication/login.dart';
 import 'package:lettutor/screen/Authentication/registration.dart';
 import 'package:lettutor/screen/course/course_detail.dart';
 import 'package:lettutor/screen/course/course_page.dart';
+import 'package:lettutor/screen/course/topic_screen.dart';
 import 'package:lettutor/screen/homepage/home_page.dart';
+import 'package:lettutor/screen/room/room.dart';
 import 'package:lettutor/screen/tutors/feedback_write.dart';
 import 'package:lettutor/screen/tutors/feedbacks.dart';
 import 'package:lettutor/screen/tutors/tutor_detail.dart';
@@ -22,7 +24,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: Scaffold(
-        body: Center(child: CourseDetail()),
+        body: Center(child: RoomScreen()),
       ),
     );
   }

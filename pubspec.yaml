@@ -13,6 +13,8 @@ dependencies:
   chewie: 1.7.1
   video_player: 2.7.2
   cached_network_image: ^3.3.0
+  syncfusion_flutter_pdfviewer: ^23.1.43
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_test:
