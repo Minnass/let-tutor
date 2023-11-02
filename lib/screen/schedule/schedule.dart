@@ -3,14 +3,14 @@ import 'package:lettutor/widgets/history_booking_card.dart';
 import 'package:lettutor/widgets/tutor_card.dart';
 import 'package:lettutor/widgets/upcoming_card.dart';
 
-class SchedulePage extends StatefulWidget {
-  const SchedulePage({Key? key}) : super(key: key);
+class ScheduleScreen extends StatefulWidget {
+  const ScheduleScreen({Key? key}) : super(key: key);
 
   @override
-  State<SchedulePage> createState() => _SchedulePageState();
+  State<ScheduleScreen> createState() => _ScheduleScreenState();
 }
 
-class _SchedulePageState extends State<SchedulePage> {
+class _ScheduleScreenState extends State<ScheduleScreen> {
   int count = 10;
 
   @override

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:lettutor/widgets/topic_card.dart';
 
-class CourseDetail extends StatefulWidget {
-  const CourseDetail({super.key});
+class CourseDetailScreen extends StatefulWidget {
+  const CourseDetailScreen({super.key});
 
   @override
-  State<CourseDetail> createState() => _CourseDetailState();
+  State<CourseDetailScreen> createState() => _CourseDetailScreenState();
 }
 
-class _CourseDetailState extends State<CourseDetail> {
+class _CourseDetailScreenState extends State<CourseDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

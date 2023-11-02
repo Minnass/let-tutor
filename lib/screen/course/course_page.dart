@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:lettutor/widgets/course_card.dart';
 import 'package:lettutor/widgets/search_bar.dart';
 
-class CoursePage extends StatefulWidget {
-  const CoursePage({Key? key});
+class CourseScreen extends StatefulWidget {
+  const CourseScreen({Key? key});
 
   @override
-  State<CoursePage> createState() => _CoursePageState();
+  State<CourseScreen> createState() => _CoursePageState();
 }
 
-class _CoursePageState extends State<CoursePage> {
+class _CoursePageState extends State<CourseScreen> {
   final _searchController = TextEditingController();
   final List<String> topics = [
     "For Studying Abroad",
