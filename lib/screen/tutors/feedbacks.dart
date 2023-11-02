@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/widgets/feedback_card.dart';
 
 class TutorFeedBackScreen extends StatefulWidget {
@@ -32,7 +33,9 @@ class _TutorFeedBackScreenState extends State<TutorFeedBackScreen> {
                 child: TextButton(
                   style:
                       TextButton.styleFrom(padding: const EdgeInsets.all(12)),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, Routes.writeReview);
+                  },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,

@@ -72,11 +72,26 @@ class _TutorSearchCardState extends State<TutorSearchCard> {
                             ),
                             Row(
                               children: [
-                                const Icon(Icons.star, color: Colors.amber),
-                                const Icon(Icons.star, color: Colors.amber),
-                                const Icon(Icons.star, color: Colors.amber),
-                                const Icon(Icons.star, color: Colors.amber),
-                                const Icon(Icons.star, color: Colors.amber)
+                                const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                  size: 15,
+                                ),
+                                const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                  size: 15,
+                                ),
+                                const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                  size: 15,
+                                ),
+                                const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                  size: 15,
+                                ),
                               ],
                             ),
                           ],

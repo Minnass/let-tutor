@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/const/routes.dart';
 
 class CourseCard extends StatelessWidget {
   const CourseCard({super.key});
@@ -6,7 +7,9 @@ class CourseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(context, Routes.courseDetail);
+      },
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 8),
         clipBehavior: Clip.hardEdge,
@@ -56,7 +59,7 @@ class CourseCard extends StatelessWidget {
                           style: TextStyle(
                               fontSize: 14, fontWeight: FontWeight.w600),
                         )),
-                        Text('lesson',
+                        Text('9 lesson',
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w600))
                       ],

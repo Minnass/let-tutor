@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/screen/homepage/home_page_header.dart';
 import 'package:lettutor/screen/tutors/tutor_detail.dart';
 import 'package:lettutor/widgets/tutor_card.dart';
@@ -16,7 +17,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
     return Scaffold(
         appBar: AppBar(
             elevation: 0,
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.white10,
             leading: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
                 child: Row(
@@ -41,7 +42,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const HomePageHeader(),
             Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(2),
                 child: Column(
                   children: [
                     Row(
@@ -54,7 +55,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              print('dadad');
+                              Navigator.pushNamed(context, Routes.tutors);
                             },
                             child: const Text(
                               'See all',

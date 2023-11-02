@@ -1,5 +1,5 @@
 name: lettutor
-description: A new Flutter project.
+description: A new Flutter project
 publish_to: "none"
 version: 0.1.0
 
@@ -16,6 +16,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^23.1.43
   flutter_svg: ^2.0.9
   country_code_picker: ^3.0.0
+  syncfusion_flutter_calendar: ^23.1.43
 
 dev_dependencies:
   flutter_test:

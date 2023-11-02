@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/const/routes.dart';
+import 'package:lettutor/widgets/dialog/request_dialog.dart';
 
 class UpcomingCard extends StatelessWidget {
   const UpcomingCard({super.key});
@@ -47,7 +49,11 @@ class UpcomingCard extends StatelessWidget {
                   ),
                   Expanded(
                       child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => const RequestDialog());
+                    },
                     icon: Icon(
                       Icons.edit_note_outlined,
                       size: 25,

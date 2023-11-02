@@ -20,26 +20,11 @@ class _MainScreenState extends State<MainScreen> {
     const CourseScreen(),
     // const SettingsPage(),
   ];
-  List<String> screenTitles = [
-    'Home',
-    'Tutors',
-    'Schedule',
-    'Courses',
-    // 'Settings'
-  ];
+
   int chosenScreenIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.blueAccent,
-        title: Text(screenTitles[chosenScreenIndex],
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: Colors.white)),
-      ),
       body: screens[chosenScreenIndex],
       bottomNavigationBar: BottomNavigationBar(
         selectedFontSize: 14,

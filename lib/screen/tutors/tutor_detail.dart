@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:expandable_text/expandable_text.dart';
+import 'package:lettutor/const/routes.dart';
+import 'package:lettutor/widgets/dialog/book_tutor_dialog.dart';
+import 'package:lettutor/widgets/dialog/report_dialog.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 
@@ -41,6 +44,10 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.blueAccent,
+        title: const Text(
+          'Tutor Detail',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
         leading: BackButton(
           color: Colors.white,
         ),
@@ -122,10 +129,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
               Expanded(
                 child: TextButton(
                   onPressed: () {
-                    // Navigator.pushNamed(
-                    //   context,
-                    //   arguments: feedbacks,
-                    // );
+                    Navigator.pushNamed(context, Routes.review);
                   },
                   child: Column(
                     children: const [
@@ -137,7 +141,14 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
               ),
               Expanded(
                 child: TextButton(
-                    onPressed: () => {},
+                    onPressed: () => {
+                          showDialog(
+                            context: context,
+                            builder: (context) => const BookTutorDialog(
+                                // name: 'Keegan',
+                                ),
+                          )
+                        },
                     child: Column(
                       children: [
                         Icon(Icons.report_outlined, color: Colors.blue),
@@ -337,15 +348,17 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
               padding: const EdgeInsets.only(top: 24, bottom: 12),
               child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(0),
-                  padding: const EdgeInsets.all(12),
+                  minimumSize: const Size.fromHeight(1),
+                  padding: const EdgeInsets.all(20),
                   side: const BorderSide(color: Colors.blue, width: 1.5),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
                         20.0), // Adjust the radius as needed
                   ),
                 ),
-                onPressed: () async {},
+                onPressed: () {
+                  Navigator.pushNamed(context, Routes.bookTutor);
+                },
                 child: const Text(
                   'Book This Tutor',
                   style: TextStyle(fontSize: 16, color: Colors.blue),
