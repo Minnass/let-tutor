@@ -154,7 +154,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.blue, width: 2),
                 borderRadius: const BorderRadius.all(Radius.circular(10))),
-            child: false
+            child: true
                 ? Text('No Introduction Video',
                     style: TextStyle(
                       fontSize: 16,
@@ -254,7 +254,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                 Expanded(
                   child: Text(
                       'Caring for Our Planet - A very long and detailed text that should be limited with ellipsis if it exceeds the available space.',
-                      style: TextStyle(fontSize: 15, color: Colors.black),
+                      style: TextStyle(fontSize: 14, color: Colors.black),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1),
                 ),
@@ -348,7 +348,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                 onPressed: () async {},
                 child: const Text(
                   'Book This Tutor',
-                  style: TextStyle(fontSize: 18, color: Colors.blue),
+                  style: TextStyle(fontSize: 16, color: Colors.blue),
                 ),
               ))
         ]),
