@@ -3,6 +3,7 @@ import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/screen/course/course_page.dart';
 import 'package:lettutor/screen/homepage/home_page.dart';
 import 'package:lettutor/screen/schedule/schedule.dart';
+import 'package:lettutor/screen/setting/setting.dart';
 import 'package:lettutor/screen/tutors/tutor_search.dart';
 
 class MainScreen extends StatefulWidget {
@@ -18,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
     const TutorSearchScreen(),
     const ScheduleScreen(),
     const CourseScreen(),
-    // const SettingsPage(),
+    const SettingScreen(),
   ];
 
   int chosenScreenIndex = 0;

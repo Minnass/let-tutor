@@ -17,4 +17,5 @@ class Routes {
   static const writeReview = '/review/write_review/';
   static const videoCall = '/video_call/';
   static const bookTutor = '/book_tutor/';
+  static const setting='/setting/';
 }
