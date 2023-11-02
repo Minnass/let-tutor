@@ -1,4 +1,5 @@
 class Routes {
+  // Authentication
   static const login = '/login/';
   static const register = '/register/';
   static const forgotPassword = '/forgot_password/';
@@ -14,5 +15,4 @@ class Routes {
   static const review = '/review/';
   static const writeReview = '/review/write_review/';
   static const videoCall = '/video_call/';
-  static const tutorSearchResult = '/tutor_search_result';
 }

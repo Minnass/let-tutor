@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/const/routes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -59,8 +60,12 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'EMAIL',
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
+              'Email',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -81,8 +86,11 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'PASSWORD',
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
+              'Password',
+              style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -103,7 +111,13 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 24),
             TextButton(
-              onPressed: () => {},
+              onPressed: () => {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  Routes.main,
+                  (route) => false,
+                )
+              },
               style: TextButton.styleFrom(
                   minimumSize: const Size.fromHeight(56),
                   backgroundColor: Colors.blue),
@@ -114,7 +128,9 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 16),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.forgotPassword);
+              },
               child: Text(
                 'Forgot Password?',
                 style: const TextStyle(fontSize: 16),
@@ -178,8 +194,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                         child: Icon(
-                          Icons.smartphone, 
-                          size: 24.0, 
+                          Icons.smartphone,
+                          size: 24.0,
                           color: Colors.blue,
                         ),
                       )),
@@ -195,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 TextButton(
                   onPressed: () {
-                    // Navigator.pushNamed(context, Routes.register);
+                    Navigator.pushNamed(context, Routes.register);
                   },
                   child: Text(
                     'Sign up',
