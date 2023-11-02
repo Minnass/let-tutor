@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/const/routes.dart';
+import 'package:lettutor/widgets/dialog/report_dialog.dart';
 
 class HistoryCard extends StatefulWidget {
   const HistoryCard({Key? key}) : super(key: key);
@@ -78,8 +79,13 @@ class _HistoryCardState extends State<HistoryCard> {
                 Expanded(
                   child: TextButton(
                     style: TextButton.styleFrom(foregroundColor: Colors.red),
-                    onPressed: () async {
-                      final dialogResult = await showReportDialog(context);
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const ReportDialog(
+                          name: 'Keegan',
+                        ),
+                      );
                     },
                     child: const Text(
                       'Report',
