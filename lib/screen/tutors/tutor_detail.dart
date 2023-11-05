@@ -158,7 +158,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
               )
             ],
           ),
-          Container(
+          Container(  
             margin: const EdgeInsets.symmetric(vertical: 8),
             height: 300,
             alignment: Alignment.center,
