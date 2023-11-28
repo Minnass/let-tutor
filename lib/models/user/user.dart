@@ -7,8 +7,8 @@ class User {
   String? country;
   String? phone;
   Account? account;
+  DateTime? birthday;
 
-  // Constructor 1: Default values are used for other fields
   User({
     this.id,
     this.name,
@@ -16,9 +16,9 @@ class User {
     this.country,
     this.phone,
     this.account,
+    this.birthday,
   });
 
-  // Constructor 2: Named constructor with only account parameter
   User.withAccount({this.account})
       : id = null,
         name = null,

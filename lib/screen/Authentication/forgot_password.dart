@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/models/tuple.dart';
+import 'package:lettutor/providers/auth.provider.dart';
 import 'package:lettutor/utils/validate_email.dart';
+import 'package:provider/provider.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -86,9 +88,34 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   onPressed: () {
                     _handleValidation();
                     if (_emailErrorText.isEmpty) {
-                      print('No-Loi');
-                    } else {
-                      print('Co loi');
+                      bool success =
+                          Provider.of<AuthProvider>(context, listen: false)
+                              .checkEmail(_emailController.text);
+                      if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Row(
+                              children: [
+                                Icon(Icons.check_circle,
+                                    color: Colors.green), 
+                                SizedBox(
+                                    width:
+                                        8), 
+                                Expanded(
+                                  child: Text(
+                                    'Password was sent to your email.',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: const Text('Email not found.'),
+                            duration: Duration(seconds: 1)));
+                      }
                     }
                   },
                   style: TextButton.styleFrom(

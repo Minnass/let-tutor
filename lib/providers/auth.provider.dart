@@ -29,8 +29,12 @@ class AuthProvider extends ChangeNotifier {
         element.email == account.email && element.password == account.password);
   }
 
+  bool checkEmail(String email) {
+    return accountList.any((element) => element.email == email);
+  }
+
   bool registerNewAccount(Account account) {
-    if (accountList.any((element) => (element.email == account.email))) {
+    if (!checkEmail(account.email ?? "")) {
       return false;
     }
     accountList.add(account);

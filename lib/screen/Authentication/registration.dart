@@ -211,10 +211,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               email: _emailController.text,
                               password: _passwordController.text));
                   if (success) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: const Text('Register successfully.'),
-                        duration: Duration(seconds: 1)));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          children: [
+                            Icon(Icons.check_circle,
+                                color: Colors.green), // Success icon
+                            SizedBox(
+                                width:
+                                    8), // Adjust spacing between icon and text
+                            Expanded(
+                              child: Text(
+                                'Register successfully.',
+                                // Style the text as needed
+                              ),
+                            ),
+                          ],
+                        ),
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
                     Navigator.pushNamed(context, Routes.login);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          children: [
+                            Icon(Icons.error, color: Colors.red), // Error icon
+                            SizedBox(
+                                width:
+                                    8), // Adjust spacing between icon and text
+                            Expanded(
+                              child: Text(
+                                'Email was existed',
+                                // Style the text as needed
+                              ),
+                            ),
+                          ],
+                        ),
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
                   }
                 }
               },

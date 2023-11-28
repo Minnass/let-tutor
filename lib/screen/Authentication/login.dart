@@ -137,9 +137,22 @@ class _LoginScreenState extends State<LoginScreen> {
                               email: _emailController.text,
                               password: _passwordController.text));
                   if (success) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: const Text('Login successfully.'),
-                        duration: Duration(seconds: 1)));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          children: [
+                            Icon(Icons.check_circle, color: Colors.green),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Login successfully.',
+                              ),
+                            ),
+                          ],
+                        ),
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
                     Provider.of<AuthProvider>(context, listen: false).logIn(
                         User(
                             account: Account(
@@ -149,6 +162,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       context,
                       Routes.main,
                       (route) => false,
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          children: [
+                            Icon(Icons.error, color: Colors.red), // Error icon
+                            SizedBox(
+                                width:
+                                    8), // Adjust spacing between icon and text
+                            Expanded(
+                              child: Text(
+                                'Email or password was incorrect',
+                                // Style the text as needed
+                              ),
+                            ),
+                          ],
+                        ),
+                        duration: Duration(seconds: 1),
+                      ),
                     );
                   }
                 }
