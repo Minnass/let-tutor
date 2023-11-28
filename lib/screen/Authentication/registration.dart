@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/models/tuple.dart';
+import 'package:lettutor/models/user/account.dart';
+import 'package:lettutor/providers/auth.provider.dart';
 import 'package:lettutor/utils/validate_email.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -198,12 +202,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 _handlePasswordValidation();
                 _handleConfirmPasswordValidation();
                 _handleEmailvalidation();
-                if (_passwordErrorText.isEmpty &&
-                    _confirmErrorText.isEmpty &&
-                    _emailErrorText.isEmpty) {
-                  print('Du dieu kien');
-                } else {
-                  print('Khong du dieu kien');
+                if (_emailErrorText.isEmpty &&
+                    _passwordErrorText.isEmpty &&
+                    _confirmErrorText.isEmpty) {
+                  bool success =
+                      Provider.of<AuthProvider>(context, listen: false)
+                          .registerNewAccount(Account(
+                              email: _emailController.text,
+                              password: _passwordController.text));
+                  if (success) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: const Text('Register successfully.'),
+                        duration: Duration(seconds: 1)));
+                    Navigator.pushNamed(context, Routes.login);
+                  }
                 }
               },
               style: TextButton.styleFrom(

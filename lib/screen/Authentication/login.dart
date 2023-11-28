@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/const/routes.dart';
+import 'package:lettutor/models/tuple.dart';
+import 'package:lettutor/models/user/account.dart';
+import 'package:lettutor/models/user/user.dart';
+import 'package:lettutor/providers/auth.provider.dart';
+import 'package:lettutor/utils/validate_email.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,8 +17,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
+  String _emailErrorText = '';
   String chosenLanguage = 'English';
+  void _handleEmailvalidation() {
+    Tuple _EmailValidation = validateEmail(_emailController.text);
+    _emailErrorText = _EmailValidation.error;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,13 +84,18 @@ class _LoginScreenState extends State<LoginScreen> {
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               autocorrect: false,
-              onChanged: (value) {},
+              onChanged: (value) {
+                _handleEmailvalidation();
+              },
               decoration: InputDecoration(
                 hintStyle: TextStyle(color: Colors.grey[400]),
                 hintText: 'abc@example.com',
                 prefixIcon: Icon(
                   Icons.mail,
+                  color:
+                      _emailErrorText.isEmpty ? Colors.blue : Colors.red[700],
                 ),
+                errorText: _emailErrorText.isEmpty ? null : _emailErrorText,
                 border: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey, width: 2),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -111,12 +128,30 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 24),
             TextButton(
-              onPressed: () => {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  Routes.main,
-                  (route) => false,
-                )
+              onPressed: () {
+                if (_emailErrorText.isEmpty &&
+                    !_passwordController.text.isEmpty) {
+                  bool success =
+                      Provider.of<AuthProvider>(context, listen: false)
+                          .checkLogin(Account(
+                              email: _emailController.text,
+                              password: _passwordController.text));
+                  if (success) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: const Text('Login successfully.'),
+                        duration: Duration(seconds: 1)));
+                    Provider.of<AuthProvider>(context, listen: false).logIn(
+                        User(
+                            account: Account(
+                                email: _emailController.text,
+                                password: _passwordController.text)));
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      Routes.main,
+                      (route) => false,
+                    );
+                  }
+                }
               },
               style: TextButton.styleFrom(
                   minimumSize: const Size.fromHeight(56),
