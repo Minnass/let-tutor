@@ -1,3 +1,5 @@
+import 'package:lettutor/models/review/review.dart';
+
 class Tutor {
   int id = 0;
   String? uriVideo;

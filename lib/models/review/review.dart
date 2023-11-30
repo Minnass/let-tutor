@@ -1,8 +1,10 @@
+import 'package:lettutor/models/student/student.dart';
+
 class RatingComment {
   double? rating;
   String? comment;
   DateTime? time;
-  Profile? student;
+  Student? student;
 
   RatingComment(
       {required this.rating,
