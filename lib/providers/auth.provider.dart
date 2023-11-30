@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/models/user/account.dart';
-import 'package:lettutor/models/user/user.dart';
+import 'package:lettutor/models/account/account.dart';
+import 'package:lettutor/models/account/user.dart';
 
 class AuthProvider extends ChangeNotifier {
   List<Account> accountList = [

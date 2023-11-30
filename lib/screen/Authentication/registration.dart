@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/models/tuple.dart';
-import 'package:lettutor/models/user/account.dart';
+import 'package:lettutor/models/account/account.dart';
 import 'package:lettutor/providers/auth.provider.dart';
 import 'package:lettutor/utils/validate_email.dart';
 import 'package:provider/provider.dart';

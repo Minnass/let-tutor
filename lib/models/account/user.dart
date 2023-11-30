@@ -1,4 +1,4 @@
-import 'package:lettutor/models/user/account.dart';
+import 'package:lettutor/models/account/account.dart';
 
 class User {
   String? id;
