@@ -1,19 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/const/routes.dart';
+import 'package:lettutor/models/tutor/tutor.dart';
+import 'package:lettutor/providers/favorite.provider.dart';
 import 'package:lettutor/screen/homepage/home_page_header.dart';
 import 'package:lettutor/screen/tutors/tutor_detail.dart';
 import 'package:lettutor/widgets/tutor_card.dart';
+import 'package:provider/provider.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
-
   @override
   State<HomePageScreen> createState() => _HomePageScreenState();
 }
 
 class _HomePageScreenState extends State<HomePageScreen> {
+  List<Tutor> tutors = [];
+  List<String> favourites = [];
   @override
   Widget build(BuildContext context) {
+    FavoriteProvider favouriteRepository = context.watch<FavoriteProvider>();
+    favourites = favouriteRepository.itemIds;
+    tutors = context.watch<List<Tutor>>();
+    tutors.sort((a, b) => (b.rating ?? 0).compareTo(a.rating ?? 0));
+    List<Tutor> favoriteTutors = [];
+    List<Tutor> nonFavoriteTutors = [];
+
+    // Splitting tutors into favorite and non-favorite lists
+    tutors.forEach((tutor) {
+      if (favourites.contains(tutor.id)) {
+        favoriteTutors.add(tutor);
+      } else {
+        nonFavoriteTutors.add(tutor);
+      }
+    });
+    tutors = [...favoriteTutors, ...nonFavoriteTutors];
     return Scaffold(
         appBar: AppBar(
             elevation: 0,
@@ -55,6 +75,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
+                              print(tutors);
                               Navigator.pushNamed(context, Routes.tutors);
                             },
                             child: const Text(
@@ -63,10 +84,16 @@ class _HomePageScreenState extends State<HomePageScreen> {
                             ),
                           )
                         ]),
-                    TutorSearchCard(),
-                    TutorSearchCard(),
-                    TutorSearchCard(),
-                    TutorSearchCard(),
+                    Visibility(
+                        child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: tutors.length,
+                            itemBuilder: (context, index) {
+                              return TutorSearchCard(
+                                tutor: tutors[index],
+                              );
+                            }))
                   ],
                 ))
           ]),

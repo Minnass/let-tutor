@@ -1,7 +1,7 @@
 import 'package:lettutor/models/course/category.dart';
 import 'package:lettutor/models/course/topic.dart';
 
-class CourseDTO {
+class Course {
   String id;
   String name;
   String description;
@@ -21,7 +21,7 @@ class CourseDTO {
   List<Topic> topics;
   List<Category> categories;
 
-  CourseDTO({
+  Course({
     required this.id,
     required this.name,
     required this.description,
@@ -55,8 +55,8 @@ class CourseDTO {
     return result;
   }
 
-  factory CourseDTO.fromJson(Map<String, dynamic> json) {
-    return CourseDTO(
+  factory Course.fromJson(Map<String, dynamic> json) {
+    return Course(
       id: json['id'],
       name: json['name'],
       description: json['description'],
@@ -80,5 +80,10 @@ class CourseDTO {
           .map((categoryJson) => Category.fromJson(categoryJson))
           .toList(),
     );
+  }
+  @override
+  String toString() {
+    // TODO: implement toString
+    return this.name;
   }
 }

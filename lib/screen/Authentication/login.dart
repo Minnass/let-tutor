@@ -154,10 +154,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     );
                     Provider.of<AuthProvider>(context, listen: false).logIn(
-                        User(
-                            account: Account(
-                                email: _emailController.text,
-                                password: _passwordController.text)));
+                        Account(
+                            email: _emailController.text,
+                            password: _passwordController.text));
                     Navigator.pushNamedAndRemoveUntil(
                       context,
                       Routes.main,

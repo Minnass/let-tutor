@@ -118,13 +118,14 @@ class Tutor {
 
     return filterLabels;
   }
-   List<String>? convertStringToLanguages(String? inputString) {
+
+  List<String>? convertStringToLanguages(String? inputString) {
     List<String>? labels = inputString?.split(' ');
 
     return labels;
   }
 
-  factory Tutor.fromJson(Map<String,dynamic>json){
+  factory Tutor.fromJson(Map<String, dynamic> json) {
     return Tutor(
       level: json['level'],
       email: json['email'],
@@ -133,8 +134,7 @@ class Tutor {
       apple: json['apple'],
       avatar: json['avatar'],
       name: json['name'],
-      country: json['country']
-      ,
+      country: json['country'],
       phone: json['phone'],
       language: json['language'],
       birthday: json['birthday'],
@@ -154,7 +154,8 @@ class Tutor {
       updatedAt: json['updatedAt'],
       deletedAt: json['deletedAt'],
       studentGroupId: json['studentGroupId'],
-      feedbacks: List<Feedback>.from(json['feedbacks'].map((x) => Feedback.fromJson(x))),
+      feedbacks: List<Feedback>.from(
+          json['feedbacks'].map((x) => Feedback.fromJson(x))),
       id: json['id'],
       userId: json['userId'],
       video: json['video'],
@@ -166,7 +167,9 @@ class Tutor {
       targetStudent: json['targetStudent'],
       interests: json['interests'],
       languages: json['languages'],
-      specialties: json['specialties']!=null?Tutor.convertStringToSpecialties(json['specialties']):[],
+      specialties: json['specialties'] != null
+          ? Tutor.convertStringToSpecialties(json['specialties'])
+          : [],
       resume: json['resume'],
       rating: json['rating'],
       isNative: json['isNative'],
@@ -174,5 +177,10 @@ class Tutor {
       price: json['price'],
       isOnline: json['isOnline'],
     );
+  }
+  @override
+  String toString() {
+    // TODO: implement toString
+    return this.name + this.email + this.createdAt;
   }
 }

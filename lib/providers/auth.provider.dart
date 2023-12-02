@@ -7,24 +7,23 @@ class AuthProvider extends ChangeNotifier {
     Account(email: 'phannhattrieu@gmail.com', password: '123123'),
     Account(email: 'nguyenanhtuan@gmail.com', password: '234'),
   ];
-  User? currentUser;
-  void setUser(User user) {
-    currentUser = user;
+  Account? currentAccount;
+  void setUser(Account account) {
+    currentAccount = account;
     notifyListeners();
   }
 
-  void logIn(User user) {
-    currentUser = user;
+  void logIn(Account account) {
+    currentAccount = account;
     notifyListeners();
   }
 
   void logOut() {
-    currentUser = null;
+    currentAccount = null;
     notifyListeners();
   }
 
   bool checkLogin(Account account) {
-    print('da');
     return accountList.any((element) =>
         element.email == account.email && element.password == account.password);
   }
@@ -34,7 +33,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   bool registerNewAccount(Account account) {
-    if (!checkEmail(account.email ?? "")) {
+    if (checkEmail(account.email ?? "")) {
       return false;
     }
     accountList.add(account);
