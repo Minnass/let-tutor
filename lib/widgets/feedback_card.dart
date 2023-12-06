@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/models/feedback/feedback.dart';
 
 class FeedbackCard extends StatefulWidget {
-  const FeedbackCard({super.key});
+  final MyFeedback feedback;
+  const FeedbackCard({super.key, required this.feedback});
 
   @override
   State<FeedbackCard> createState() => _FeedbackCardState();
@@ -29,7 +31,9 @@ class _FeedbackCardState extends State<FeedbackCard> {
                     shape: BoxShape.circle,
                   ),
                   child: Image.network(
-                    'https://tse2.mm.bing.net/th?id=OIP.iMnXKOix_JvmgbMnjr7tbAHaFO&pid=Api&P=0&h=180',
+                    widget.feedback.firstInfo.avatar != null
+                        ? widget.feedback.firstInfo.avatar
+                        : "https://api.app.lettutor.com/avatar/e9e3eeaa-a588-47c4-b4d1-ecfa190f63faavatar1632109929661.jpg",
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => const Icon(
                       Icons.error_outline_rounded,
@@ -46,7 +50,9 @@ class _FeedbackCardState extends State<FeedbackCard> {
                     Row(
                       children: [
                         Text(
-                          'John Kenvil',
+                          widget.feedback.content != null
+                              ? widget.feedback.content
+                              : '',
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
@@ -54,7 +60,7 @@ class _FeedbackCardState extends State<FeedbackCard> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          '1 days ago',
+                          widget.feedback.updatedAt,
                           style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,

@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/const/routes.dart';
+import 'package:lettutor/models/course/course.dart';
+import 'package:lettutor/screen/course/course_detail.dart';
 
 class CourseCard extends StatelessWidget {
-  const CourseCard({super.key});
+  final Course course;
+  const CourseCard({Key? key, required this.course}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, Routes.courseDetail);
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => CourseDetailScreen(course: course),
+        ));
       },
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 8),
@@ -21,7 +26,9 @@ class CourseCard extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               height: 200,
               child: Image.network(
-                'https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e',
+                course.imageUrl != null
+                    ? course.imageUrl
+                    : 'https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e',
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => const Icon(
                   Icons.error_outline_rounded,
@@ -36,7 +43,7 @@ class CourseCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Movies and Television',
+                      course.name != null ? course.name : '',
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
@@ -44,7 +51,7 @@ class CourseCard extends StatelessWidget {
                       height: 8,
                     ),
                     Text(
-                      'Let\'s discuss our preferences and habbits surrounding movies and televisionshows',
+                      course.description != null ? course.description : '',
                       style: const TextStyle(
                           fontWeight: FontWeight.w400, color: Colors.grey),
                     ),
@@ -55,11 +62,14 @@ class CourseCard extends StatelessWidget {
                       children: [
                         Expanded(
                             child: Text(
-                          'Beginner',
+                          course.level != null ? course.level : '',
                           style: TextStyle(
                               fontSize: 14, fontWeight: FontWeight.w600),
                         )),
-                        Text('9 lesson',
+                        Text(
+                            course.topics != null
+                                ? course.topics.length.toString() + ' Lessons'
+                                : '',
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w600))
                       ],

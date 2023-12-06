@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/models/course/topic.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class TopicScreen extends StatelessWidget {
-  const TopicScreen({super.key});
-
+  final Topic topic;
+  const TopicScreen({Key? key, required this.topic}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    print(topic.nameFile);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -14,11 +16,24 @@ class TopicScreen extends StatelessWidget {
           color: Colors.white,
         ),
         title: Text(
-          'The Internet',
+          topic.name != null ? topic.name : '',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
-      body: SfPdfViewer.network('https://www.pdf995.com/samples/pdf.pdf'),
+      body: topic.nameFile == null
+          ? Center(
+              child: Text(
+                'No materials found',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
+          : SfPdfViewer.network(
+              topic.nameFile!,
+            ),
     );
   }
 }

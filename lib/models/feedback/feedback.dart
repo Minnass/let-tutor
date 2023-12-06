@@ -1,7 +1,7 @@
 import 'package:lettutor/models/student/student.dart';
 import 'package:lettutor/utils/datetime_converter.dart';
 
-class Feedback {
+class MyFeedback {
   final dynamic id;
   final dynamic bookingId;
   final dynamic firstId;
@@ -11,7 +11,7 @@ class Feedback {
   final String createdAt;
   final String updatedAt;
   final Student firstInfo;
-  Feedback({
+  MyFeedback({
     required this.id,
     required this.bookingId,
     required this.firstId,
@@ -22,8 +22,8 @@ class Feedback {
     required this.updatedAt,
     required this.firstInfo,
   });
-  factory Feedback.fromJson(Map<String, dynamic> json) {
-    return Feedback(
+  factory MyFeedback.fromJson(Map<String, dynamic> json) {
+    return MyFeedback(
       id: json['id'],
       bookingId: json['bookingId'],
       firstId: json['firstId'],

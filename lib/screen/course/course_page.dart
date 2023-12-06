@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/models/course/course.dart';
 import 'package:lettutor/widgets/course_card.dart';
 import 'package:lettutor/widgets/ebook_card.dart';
 import 'package:lettutor/widgets/search_bar.dart';
+import 'package:provider/provider.dart';
 
 class CourseScreen extends StatefulWidget {
   const CourseScreen({Key? key});
@@ -11,6 +13,7 @@ class CourseScreen extends StatefulWidget {
 }
 
 class _CoursePageState extends State<CourseScreen> {
+  List<Course> courses = [];
   final _searchController = TextEditingController();
   final List<String> topics = [
     "For Studying Abroad",
@@ -27,6 +30,7 @@ class _CoursePageState extends State<CourseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    courses = context.watch<List<Course>>();
     return DefaultTabController(
       length: 3,
       child: Column(
@@ -178,21 +182,22 @@ class _CoursePageState extends State<CourseScreen> {
                       const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
                   child: Expanded(
                     child: ListView.separated(
-                        itemBuilder: (context, index) => CourseCard(),
+                        itemBuilder: (context, index) =>
+                            CourseCard(course: courses[index]),
                         separatorBuilder: (BuildContext context, int index) =>
                             const SizedBox(height: 8),
-                        itemCount: 10),
+                        itemCount: courses.length),
                   )),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                  child: Expanded(
-                    child: ListView.separated(
-                        itemBuilder: (context, index) => EbookCard(),
-                        separatorBuilder: (BuildContext context, int index) =>
-                            const SizedBox(height: 8),
-                        itemCount: 10),
-                  )),
+              // Padding(
+              //     padding:
+              //         const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+              //     child: Expanded(
+              //       child: ListView.separated(
+              //           itemBuilder: (context, index) => EbookCard(),
+              //           separatorBuilder: (BuildContext context, int index) =>
+              //               const SizedBox(height: 8),
+              //           itemCount: courses.length),
+              //     )),
             ],
           ))
         ],

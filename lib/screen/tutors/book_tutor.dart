@@ -27,7 +27,7 @@ class _BookTutorScreenState extends State<BookTutorScreen> {
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ),
-        body: SfCalendar(
+          body: SfCalendar(
             cellBorderColor: Colors.black,
             view: CalendarView.day,
             showDatePickerButton: true,

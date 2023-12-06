@@ -147,7 +147,29 @@ class _ReportDialogState extends State<ReportDialog> {
                     const SizedBox(
                         width: 8), // Add some spacing between buttons
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Row(
+                              children: [
+                                Icon(Icons.check_circle,
+                                    color: Colors.green), // Success icon
+                                SizedBox(
+                                    width:
+                                        8), // Adjust spacing between icon and text
+                                Expanded(
+                                  child: Text(
+                                    'Report was sent successfully.',
+                                    // Style the text as needed
+                                  ),
+                                ),
+                              ],
+                            ),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.blue, // Background color for Submit
                       ),

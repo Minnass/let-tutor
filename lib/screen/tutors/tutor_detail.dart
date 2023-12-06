@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:lettutor/const/routes.dart';
+import 'package:lettutor/models/tutor/tutor.dart';
+import 'package:lettutor/providers/favorite.provider.dart';
+import 'package:lettutor/screen/tutors/videoIntro.dart';
 import 'package:lettutor/widgets/dialog/book_tutor_dialog.dart';
+import 'package:lettutor/widgets/dialog/feedback_dialog.dart';
 import 'package:lettutor/widgets/dialog/report_dialog.dart';
+import 'package:lettutor/widgets/schedule._table.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 
 class TutorDetailScreen extends StatefulWidget {
-  const TutorDetailScreen({super.key});
+  final Tutor tutor;
+  const TutorDetailScreen({Key? key, required this.tutor}) : super(key: key);
 
   @override
   State<TutorDetailScreen> createState() => _TutorDetailScreenState();
@@ -40,6 +47,8 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    FavoriteProvider favouriteProvider = context.watch<FavoriteProvider>();
+    var isInFavourite = favouriteProvider.itemIds.contains(widget.tutor.userId);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -65,7 +74,9 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                     shape: BoxShape.circle,
                   ),
                   child: Image.network(
-                    'https://tse2.mm.bing.net/th?id=OIP.iMnXKOix_JvmgbMnjr7tbAHaFO&pid=Api&P=0&h=180',
+                    widget.tutor.avatar != null
+                        ? widget.tutor.avatar
+                        : "https://api.app.lettutor.com/avatar/e9e3eeaa-a588-47c4-b4d1-ecfa190f63faavatar1632109929661.jpg",
                     fit: BoxFit.cover,
                   )),
               Expanded(
@@ -74,22 +85,31 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('John Bidden',
+                      Text(widget.tutor.name,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 14)),
                       Text(
-                        'American',
+                        widget.tutor.country != null
+                            ? widget.tutor.country
+                            : '',
                         style: const TextStyle(fontSize: 14),
                       ),
-                      Row(children: [
-                        const Icon(Icons.star, color: Colors.amber),
-                        const Icon(Icons.star, color: Colors.amber),
-                        const Icon(Icons.star, color: Colors.amber),
-                        const Icon(Icons.star, color: Colors.amber),
-                        const Icon(Icons.star, color: Colors.amber),
-                        const SizedBox(width: 1),
-                        Text('(60)', style: const TextStyle(fontSize: 14))
-                      ])
+                      Row(
+                        children: [
+                          ...List.generate(
+                            (widget.tutor.rating ?? 0).toInt(),
+                            (index) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                              size: 15,
+                            ),
+                          ),
+                          Text(
+                            ' (${widget.tutor.feedbacks.length.toString()})', // Assuming this represents a count or some additional text
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
                     ]),
               ))
             ],
@@ -97,7 +117,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: ExpandableText(
-                'Hello, my name is David, I specialize in Software Engineering. Nice to meet you, have a good day, Goodbye',
+                widget.tutor.bio,
                 expandText: 'more',
                 collapseText: 'less',
                 maxLines: 2,
@@ -111,15 +131,17 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                   child: TextButton(
                 onPressed: () => {},
                 child: Column(children: [
-                  true
-                      ? const Icon(
-                          Icons.favorite_rounded,
-                          color: Colors.red,
-                        )
-                      : const Icon(
-                          Icons.favorite_border_rounded,
-                          color: Colors.blue,
-                        ),
+                  IconButton(
+                    onPressed: () {
+                      isInFavourite
+                          ? favouriteProvider.remove(widget.tutor.userId)
+                          : favouriteProvider.add(widget.tutor.userId);
+                    },
+                    icon: Icon(
+                      isInFavourite ? Icons.favorite : Icons.favorite_border,
+                      color: isInFavourite ? Colors.red : Colors.blueAccent,
+                    ),
+                  ),
                   Text(
                     'Favorite',
                     style: TextStyle(color: true ? Colors.red : Colors.blue),
@@ -129,7 +151,10 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
               Expanded(
                 child: TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, Routes.review);
+                    showDialog(
+                        context: context,
+                        builder: (context) =>
+                            FeedbackDialog(feedbacks: widget.tutor.feedbacks));
                   },
                   child: Column(
                     children: const [
@@ -144,9 +169,9 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                     onPressed: () => {
                           showDialog(
                             context: context,
-                            builder: (context) => const BookTutorDialog(
-                                // name: 'Keegan',
-                                ),
+                            builder: (context) => const ReportDialog(
+                              name: 'Keegan',
+                            ),
                           )
                         },
                     child: Column(
@@ -158,7 +183,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
               )
             ],
           ),
-          Container(  
+          Container(
             margin: const EdgeInsets.symmetric(vertical: 8),
             height: 300,
             alignment: Alignment.center,
@@ -172,46 +197,46 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                       fontWeight: FontWeight.bold,
                       color: Colors.blue[700],
                     ))
-                : Chewie(controller: _chewieController),
+                : ChewieDemo(
+                    linkVideo: widget.tutor.video,
+                  ),
           ),
           const SizedBox(height: 8),
+          Text(
+            'Education',
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 3, 0, 10),
+            child: Text(
+              widget.tutor.education,
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w200,
+                  color: Colors.black),
+            ),
+          ),
           Text(
             'Languages',
             style: TextStyle(
                 fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Wrap(spacing: 8, runSpacing: 4, children: [
-              Chip(
-                backgroundColor: Colors.lightBlue[50],
-                label: Text(
-                  'English',
-                  style: const TextStyle(fontSize: 14, color: Colors.blue),
-                ),
-              ),
-              Chip(
-                backgroundColor: Colors.lightBlue[50],
-                label: Text(
-                  'English for kid',
-                  style: const TextStyle(fontSize: 14, color: Colors.blue),
-                ),
-              ),
-              Chip(
-                backgroundColor: Colors.lightBlue[50],
-                label: Text(
-                  'IELTS',
-                  style: const TextStyle(fontSize: 14, color: Colors.blue),
-                ),
-              ),
-              Chip(
-                backgroundColor: Colors.lightBlue[50],
-                label: Text(
-                  'TOEIC',
-                  style: const TextStyle(fontSize: 14, color: Colors.blue),
-                ),
-              )
-            ]),
+            padding: const EdgeInsets.fromLTRB(0, 3, 0, 10),
+            child: Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: List.generate(
+                  widget.tutor.languages.length,
+                  (index) => Chip(
+                    backgroundColor: Colors.lightBlue[50],
+                    label: Text(
+                      widget.tutor.languages[index],
+                      style: const TextStyle(fontSize: 14, color: Colors.blue),
+                    ),
+                  ),
+                )),
           ),
           const SizedBox(height: 8),
           Text(
@@ -221,117 +246,21 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Wrap(spacing: 8, runSpacing: 4, children: [
-              Chip(
-                backgroundColor: Colors.lightBlue[50],
-                label: Text(
-                  'English',
-                  style: const TextStyle(fontSize: 14, color: Colors.blue),
-                ),
-              ),
-              Chip(
-                backgroundColor: Colors.lightBlue[50],
-                label: Text(
-                  'English for kid',
-                  style: const TextStyle(fontSize: 14, color: Colors.blue),
-                ),
-              ),
-              Chip(
-                backgroundColor: Colors.lightBlue[50],
-                label: Text(
-                  'IELTS',
-                  style: const TextStyle(fontSize: 14, color: Colors.blue),
-                ),
-              ),
-              Chip(
-                backgroundColor: Colors.lightBlue[50],
-                label: Text(
-                  'TOEIC',
-                  style: const TextStyle(fontSize: 14, color: Colors.blue),
-                ),
-              )
-            ]),
+            child: Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: List.generate(
+                    widget.tutor.specialties.length,
+                    (index) => Chip(
+                          backgroundColor: Colors.lightBlue[50],
+                          label: Text(
+                            widget.tutor.specialties[index],
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.blue),
+                          ),
+                        ))),
           ),
           const SizedBox(height: 8),
-          Text(
-            'Specialties',
-            style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                      'Caring for Our Planet - A very long and detailed text that should be limited with ellipsis if it exceeds the available space.',
-                      style: TextStyle(fontSize: 14, color: Colors.black),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1),
-                ),
-                const SizedBox(width: 16),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Detail',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    'Life in the Internet Age',
-                    style: TextStyle(fontSize: 14, color: Colors.black),
-                  ),
-                ),
-                const SizedBox(width: 15),
-                TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Detail',
-                      style: TextStyle(fontSize: 12),
-                    ))
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              children: [
-                Text(
-                  'Caring for Our Planet',
-                  style: TextStyle(fontSize: 14, color: Colors.black),
-                ),
-                const SizedBox(width: 16),
-                TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Detail',
-                      style: TextStyle(fontSize: 12),
-                    ))
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Interests',
-            style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10, right: 8),
-            child: Text('No interests',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400)),
-          ),
-          const SizedBox(height: 12),
           Text(
             'Teaching Experiences',
             style: TextStyle(
@@ -339,7 +268,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 8),
-            child: Text('No teaching experiences',
+            child: Text(widget.tutor.experience,
                 style: TextStyle(
                   fontSize: 14,
                 )),
@@ -363,7 +292,18 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                   'Book This Tutor',
                   style: TextStyle(fontSize: 16, color: Colors.blue),
                 ),
-              ))
+              )),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: ScheduleTable(
+              onPressBook: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => const BookTutorDialog(),
+                );
+              },
+            ),
+          )
         ]),
       ),
     );

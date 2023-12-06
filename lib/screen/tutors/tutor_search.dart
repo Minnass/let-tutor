@@ -13,6 +13,7 @@ class TutorSearchScreen extends StatefulWidget {
 }
 
 const tags = [
+  'All',
   'English for kids',
   'Business English',
   'Conversational English',
@@ -30,11 +31,9 @@ class _TutorSearchScreenState extends State<TutorSearchScreen> {
   var countryCode = 'VN';
   List<Tutor> tutors = [];
   List<Tutor> filteredTutor = [];
-  List<String> selectedTags = [];
+  List<String> selectedTags = ['All'];
   bool isFirstBuild = true;
-  void handleSearchSubmit(String searchText) {
-    print('Search submitted: $searchText');
-  }
+  String keyWord = '';
 
   @override
   void initState() {
@@ -42,17 +41,30 @@ class _TutorSearchScreenState extends State<TutorSearchScreen> {
   }
 
   void filterTutor() {
-    filteredTutor = tutors
-        .where((tutor) => tutor.country.toString() == countryCode)
-        .toList();
-    if (selectedTags.length > 0) {
+    filteredTutor = tutors;
+    if (!selectedTags.contains('All')) {
+      filteredTutor = filteredTutor
+          .where((tutor) => tutor.country.toString() == countryCode)
+          .toList();
+    }
+    if (selectedTags.length > 0 && !selectedTags.contains('All')) {
       filteredTutor = filteredTutor.where((tutor) {
         return tutor.specialties
             .any((specialty) => selectedTags.contains(specialty));
       }).toList();
     }
-
+    if (!keyWord.isEmpty) {
+      filteredTutor = filteredTutor
+          .where((tutor) =>
+              tutor.name.toLowerCase().contains(keyWord.toLowerCase()))
+          .toList();
+    }
     setState(() {});
+  }
+
+  void handleSearchSubmit(String searchText) {
+    keyWord = searchText;
+    filterTutor();
   }
 
   @override

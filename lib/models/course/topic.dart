@@ -3,7 +3,7 @@ class Topic {
   String courseId;
   int orderCourse;
   String name;
-  String nameFile;
+  String? nameFile;
   final dynamic beforeTheClassNotes;
   final dynamic afterTheClassNotes;
   final dynamic numberOfPages;

@@ -3,6 +3,7 @@ import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/widgets/feedback_card.dart';
 
 class TutorFeedBackScreen extends StatefulWidget {
+  // List<Feedback> feedbacks=[];
   const TutorFeedBackScreen({super.key});
 
   @override
@@ -51,9 +52,9 @@ class _TutorFeedBackScreenState extends State<TutorFeedBackScreen> {
                   ),
                 ),
               ),
-              FeedbackCard(),
-              FeedbackCard(),
-              FeedbackCard(),
+              // FeedbackCard(),
+              // FeedbackCard(),
+              // FeedbackCard(),
             ],
           )),
     );

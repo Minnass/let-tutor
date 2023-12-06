@@ -1,3 +1,5 @@
+
+
 import 'package:lettutor/models/feedback/feedback.dart';
 
 class Tutor {
@@ -28,7 +30,7 @@ class Tutor {
   final String updatedAt;
   final dynamic deletedAt;
   final dynamic studentGroupId;
-  final List<Feedback> feedbacks;
+  final List<MyFeedback> feedbacks;
   final String id;
   final String userId;
   final dynamic video;
@@ -39,7 +41,7 @@ class Tutor {
   final dynamic accent;
   final dynamic targetStudent;
   final dynamic interests;
-  final dynamic languages;
+  final List<String> languages;
   final List<String> specialties;
   final dynamic resume;
   final dynamic rating;
@@ -95,6 +97,11 @@ class Tutor {
     required this.price,
     required this.isOnline,
   });
+  static List<String> converLanguagesToList(String inputString) {
+    List<String> labels = inputString.split(',');
+    return labels;
+  }
+
   static List<String> convertStringToSpecialties(String inputString) {
     List<String> labels = inputString.split(',');
 
@@ -154,8 +161,8 @@ class Tutor {
       updatedAt: json['updatedAt'],
       deletedAt: json['deletedAt'],
       studentGroupId: json['studentGroupId'],
-      feedbacks: List<Feedback>.from(
-          json['feedbacks'].map((x) => Feedback.fromJson(x))),
+      feedbacks: List<MyFeedback>.from(
+          json['feedbacks'].map((x) => MyFeedback.fromJson(x))),
       id: json['id'],
       userId: json['userId'],
       video: json['video'],
@@ -166,7 +173,9 @@ class Tutor {
       accent: json['accent'],
       targetStudent: json['targetStudent'],
       interests: json['interests'],
-      languages: json['languages'],
+      languages: json['languages'] != null
+          ? Tutor.converLanguagesToList(json['languages'])
+          : [],
       specialties: json['specialties'] != null
           ? Tutor.convertStringToSpecialties(json['specialties'])
           : [],

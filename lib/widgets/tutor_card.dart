@@ -21,8 +21,10 @@ class _TutorSearchCardState extends State<TutorSearchCard> {
         favouriteRepository.itemIds.contains(widget.tutor.userId);
     return GestureDetector(
       onTap: () => {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => TutorDetailScreen())),
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => TutorDetailScreen(
+                  tutor: widget.tutor,
+                ))),
       },
       child: Card(
         elevation: 3.0,
@@ -66,6 +68,7 @@ class _TutorSearchCardState extends State<TutorSearchCard> {
                             Text('${widget.tutor.name ?? ''}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 15)),
+                            SizedBox(height: 8),
                             Row(
                               children: [
                                 SvgPicture.network(
@@ -86,6 +89,7 @@ class _TutorSearchCardState extends State<TutorSearchCard> {
                                     )),
                               ],
                             ),
+                            SizedBox(height: 8),
                             Row(
                               children: List.generate(
                                 (widget.tutor.rating ?? 0)

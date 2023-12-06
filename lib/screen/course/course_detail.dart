@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:lettutor/models/course/course.dart';
 import 'package:lettutor/widgets/topic_card.dart';
 
 class CourseDetailScreen extends StatefulWidget {
-  const CourseDetailScreen({super.key});
-
+  final Course course;
+  const CourseDetailScreen({Key? key, required this.course}) : super(key: key);
   @override
   State<CourseDetailScreen> createState() => _CourseDetailScreenState();
 }
@@ -34,8 +35,9 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CachedNetworkImage(
-                      imageUrl:
-                          'https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e',
+                      imageUrl: widget.course.imageUrl != null
+                          ? widget.course.imageUrl
+                          : 'https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e',
                       fit: BoxFit.cover,
                       placeholder: (context, url) => const Icon(
                         Icons.image_rounded,
@@ -52,7 +54,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 8, horizontal: 16),
                         child: Text(
-                          'Life in the Internet Age',
+                          widget.course.name != null ? widget.course.name : '',
                           style: const TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
@@ -62,7 +64,9 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        'Let\'s discuss how technology is changing the way we live',
+                        widget.course.description != null
+                            ? widget.course.description
+                            : '',
                         style: const TextStyle(fontSize: 14),
                       ),
                     ),
@@ -105,8 +109,9 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 48, right: 16),
                       child: Text(
-                        'Our world is rapidly changing thanks to new technology,and the vocabulary needed to discuss modern life is evolving almost daily.In this course you will learn the most up-to-date terminology from expertly crafted lessons as well from your native-speaking tutor.' ??
-                            'null. There is no reason to study this course',
+                        widget.course.reason != null
+                            ? widget.course.reason
+                            : '',
                         style: TextStyle(fontSize: 14),
                       ),
                     ),
@@ -128,8 +133,9 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 48, right: 16),
                       child: Text(
-                        'You will learn vocabulary related to timely topics like remote work, artificial intelligence, online privacy, and more. In addition to discussion questions, you will practice intermediate level speaking tasks such as using data to describe trends.' ??
-                            'null. This course is useless apparently',
+                        widget.course.purpose != null
+                            ? widget.course.purpose
+                            : '',
                         style: TextStyle(fontSize: 14),
                       ),
                     ),
@@ -148,7 +154,9 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                               color: Colors.blue),
                           const SizedBox(width: 8),
                           Text(
-                            'Intermediate' ?? 'null. Possibly for gods only',
+                            widget.course.level != null
+                                ? widget.course.level
+                                : '',
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.bold),
                           ),
@@ -169,9 +177,13 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                           const Icon(Icons.book_outlined, color: Colors.blue),
                           const SizedBox(width: 8),
                           Text(
-                            '9 Topics',
+                            widget.course.topics != null
+                                ? '${widget.course.topics.length} Lessons'
+                                : 'No Lessons Available',
                             style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold),
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -184,11 +196,15 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    TopicCard(),
-                    TopicCard(),
-                    TopicCard(),
-                    TopicCard(),
-                    TopicCard(),
+                    ListView.builder(
+                      itemBuilder: (context, index) {
+                        final topic = widget.course.topics[index];
+                        return TopicCard(topic: topic);
+                      },
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: widget.course.topics?.length ?? 0,
+                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                       child: Text('Suggested Tutors',

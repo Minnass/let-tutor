@@ -1,0 +1,123 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+
+class ScheduleTable extends StatelessWidget {
+  const ScheduleTable({Key? key, required this.onPressBook}) : super(key: key);
+  final Function onPressBook;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Column(children: [
+          Container(
+            height: 50,
+            width: 120,
+            decoration: BoxDecoration(
+              color: const Color(0xFFD3D6DB),
+              border: Border.all(color: Colors.black26, width: 1),
+            ),
+          ),
+          for (var i = 0; i < 17; ++i)
+            Container(
+              height: 50,
+              width: 120,
+              decoration: BoxDecoration(
+                color: const Color(0xFFD3D6DB),
+                border: Border.all(color: Colors.black26, width: 1),
+              ),
+              child: Center(
+                child: Text(
+                  '${(i + 6).toString().padLeft(2, '0')}:${(i % 2 == 0 ? 30 : 00).toString().padLeft(2, '0')} - ${(i + 6).toString().padLeft(2, '0')}:55',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+        ]),
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (var i = 0; i < 7; ++i)
+                  Column(children: [
+                    Container(
+                      height: 50,
+                      width: 120,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black26, width: 1),
+                      ),
+                      child: Center(
+                        child: Text(getWeekDay(i)),
+                      ),
+                    ),
+                    for (var i = 0; i < 17; ++i)
+                      Container(
+                        height: 50,
+                        width: 120,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black26, width: 1),
+                        ),
+                        child: Center(child: getRandomStatus(() {
+                          onPressBook();
+                        })),
+                      ),
+                  ])
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+String getWeekDay(int order) {
+  switch (order) {
+    case 0:
+      return 'Monday';
+    case 1:
+      return 'Tuesday';
+    case 2:
+      return 'Wednesday';
+    case 3:
+      return 'Thursday';
+    case 4:
+      return 'Friday';
+    case 5:
+      return 'Saturday';
+    default:
+      return 'Sunday';
+  }
+}
+
+Widget getRandomStatus(Function onPressBook) {
+  final rand = Random();
+  switch (rand.nextInt(3)) {
+    case 0:
+      return Card(
+          color: Colors.blue,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          child: InkWell(
+              borderRadius: BorderRadius.circular(8),
+              onTap: () {},
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Book',
+                    style: TextStyle(fontSize: 12, color: Colors.white),
+                  )
+                ],
+              )));
+    case 1:
+      return const Text(
+        'Reserved',
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black45),
+      );
+    default:
+      return Container();
+  }
+}

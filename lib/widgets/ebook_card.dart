@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/models/course/course.dart';
 
 class EbookCard extends StatelessWidget {
-  const EbookCard({
-    Key? key,
-  }) : super(key: key);
-
+  final Course course;
+  const EbookCard({Key? key, required this.course}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -13,8 +12,9 @@ class EbookCard extends StatelessWidget {
       surfaceTintColor: Colors.white,
       child: Column(
         children: [
-          Image.network(
-              'https://api.app.lettutor.com/file/be4c3df8-3b1b-4c8f-a5cc-75a8e2e6626afilelets_go.jpeg'),
+          Image.network(course.imageUrl != null
+              ? course.imageUrl
+              : 'https://api.app.lettutor.com/file/be4c3df8-3b1b-4c8f-a5cc-75a8e2e6626afilelets_go.jpeg'),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             child: Column(
