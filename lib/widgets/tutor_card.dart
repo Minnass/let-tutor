@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lettutor/models/tutor/tutor.dart';
 import 'package:lettutor/providers/favorite.provider.dart';
 import 'package:lettutor/screen/tutors/tutor_detail.dart';
+import 'package:lettutor/utils/country_convertor.dart';
 import 'package:provider/provider.dart';
 
 class TutorSearchCard extends StatefulWidget {
@@ -83,7 +84,11 @@ class _TutorSearchCardState extends State<TutorSearchCard> {
                                   height: 16, // Adjust the height as needed
                                 ),
                                 const SizedBox(width: 8),
-                                Text('${widget.tutor.country}',
+                                Text(
+                                    widget.tutor.country != null
+                                        ? convertFromCodeToName(
+                                            widget.tutor.country)
+                                        : '',
                                     style: TextStyle(
                                       fontSize: 14,
                                     )),
@@ -148,9 +153,7 @@ class _TutorSearchCardState extends State<TutorSearchCard> {
                     // ... (other widgets)
                     Spacer(), // This pushes the TextButton to the right
                     TextButton(
-                      onPressed: () {
-                        print('Hello');
-                      },
+                      onPressed: () {},
                       child: Row(
                         children: [
                           Icon(Icons.schedule),

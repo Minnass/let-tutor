@@ -3,11 +3,11 @@ import 'package:expandable_text/expandable_text.dart';
 import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/models/tutor/tutor.dart';
 import 'package:lettutor/providers/favorite.provider.dart';
+import 'package:lettutor/screen/tutors/book_tutor.dart';
 import 'package:lettutor/screen/tutors/videoIntro.dart';
-import 'package:lettutor/widgets/dialog/book_tutor_dialog.dart';
+import 'package:lettutor/utils/country_convertor.dart';
 import 'package:lettutor/widgets/dialog/feedback_dialog.dart';
 import 'package:lettutor/widgets/dialog/report_dialog.dart';
-import 'package:lettutor/widgets/schedule._table.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
@@ -21,28 +21,8 @@ class TutorDetailScreen extends StatefulWidget {
 }
 
 class _TutorDetailScreenState extends State<TutorDetailScreen> {
-  late VideoPlayerController _videoController;
-  late ChewieController _chewieController;
-
   void initState() {
     super.initState();
-    _videoController = VideoPlayerController.network(Uri.parse(
-            'https://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4')
-        .toString());
-
-    _chewieController = ChewieController(
-      videoPlayerController: _videoController,
-      aspectRatio: 16 / 9,
-      autoPlay: true,
-      looping: true,
-    );
-  }
-
-  @override
-  void dispose() {
-    _videoController?.dispose();
-    _chewieController?.dispose();
-    super.dispose();
   }
 
   @override
@@ -88,11 +68,17 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                       Text(widget.tutor.name,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 14)),
+                      SizedBox(
+                        height: 3,
+                      ),
                       Text(
                         widget.tutor.country != null
-                            ? widget.tutor.country
+                            ? convertFromCodeToName(widget.tutor.country)
                             : '',
                         style: const TextStyle(fontSize: 14),
+                      ),
+                      SizedBox(
+                        height: 3,
                       ),
                       Row(
                         children: [
@@ -190,7 +176,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.blue, width: 2),
                 borderRadius: const BorderRadius.all(Radius.circular(10))),
-            child: true
+            child: widget.tutor.video == null
                 ? Text('No Introduction Video',
                     style: TextStyle(
                       fontSize: 16,
@@ -293,17 +279,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                   style: TextStyle(fontSize: 16, color: Colors.blue),
                 ),
               )),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: ScheduleTable(
-              onPressBook: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => const BookTutorDialog(),
-                );
-              },
-            ),
-          )
+          Booking()
         ]),
       ),
     );

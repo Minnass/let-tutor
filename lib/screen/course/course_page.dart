@@ -25,7 +25,6 @@ class _CoursePageState extends State<CourseScreen> {
   List<String> selectedTopics = [];
   List<String> selectedLevels = [];
   void handleSearchSubmit(String searchText) {
-    print('Search submitted: $searchText');
   }
 
   @override
@@ -87,7 +86,7 @@ class _CoursePageState extends State<CourseScreen> {
               ),
             ],
             onTap: (index) {
-              print('Current Tab: $index');
+
             },
           ),
           Padding(
@@ -157,7 +156,6 @@ class _CoursePageState extends State<CourseScreen> {
                                       setState(() {
                                         if (selected) {
                                           selectedLevels.add(level);
-                                          print(selectedLevels);
                                         } else {
                                           selectedLevels.remove(level);
                                         }

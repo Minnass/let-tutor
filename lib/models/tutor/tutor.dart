@@ -1,19 +1,17 @@
-
-
 import 'package:lettutor/models/feedback/feedback.dart';
 
 class Tutor {
-  final dynamic level;
+  dynamic level;
   final String email;
   final dynamic google;
   final dynamic facebook;
   final dynamic apple;
   final dynamic avatar;
-  final String name;
-  final dynamic country;
+  String name;
+  dynamic country;
   final dynamic phone;
   final dynamic language;
-  final dynamic birthday;
+  dynamic birthday;
   final bool requestPassword;
   final bool isActivated;
   final dynamic isPhoneActivated;
@@ -21,7 +19,7 @@ class Tutor {
   final dynamic timezone;
   final dynamic phoneAuth;
   final bool isPhoneAuthActivated;
-  final dynamic studySchedule;
+  dynamic studySchedule;
   final bool canSendMessage;
   final bool isPublicRecord;
   final dynamic caredByStaffId;

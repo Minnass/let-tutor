@@ -13,7 +13,6 @@ class _HomePageHeaderState extends State<HomePageHeader> {
     return Container(
         color: Colors.blue[700],
         width: double.maxFinite,
-        height: 120,
         child: false
             ? Center(
                 child: false
@@ -68,7 +67,7 @@ class _HomePageHeaderState extends State<HomePageHeader> {
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 15, color: Colors.white),
                     ),
-                  )
+                  ),
                 ],
               ));
   }

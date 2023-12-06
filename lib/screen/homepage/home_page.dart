@@ -62,7 +62,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const HomePageHeader(),
             Padding(
-                padding: const EdgeInsets.all(2),
+                padding: const EdgeInsets.all(5),
                 child: Column(
                   children: [
                     Row(
@@ -75,7 +75,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              print(tutors);
                               Navigator.pushNamed(context, Routes.tutors);
                             },
                             child: const Text(

@@ -7,7 +7,6 @@ class TopicScreen extends StatelessWidget {
   const TopicScreen({Key? key, required this.topic}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    print(topic.nameFile);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

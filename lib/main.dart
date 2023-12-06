@@ -12,6 +12,7 @@ import 'package:lettutor/screen/Authentication/login.dart';
 import 'package:lettutor/screen/Authentication/registration.dart';
 import 'package:lettutor/screen/course/course_detail.dart';
 import 'package:lettutor/screen/main/main_page.dart';
+import 'package:lettutor/screen/profile/account.profile.dart';
 import 'package:lettutor/screen/room/room.dart';
 import 'package:lettutor/screen/setting/setting.dart';
 import 'package:lettutor/screen/tutors/book_tutor.dart';
@@ -79,8 +80,8 @@ class _LettutorAppState extends State<LettutorApp> {
             Routes.review: (context) => const TutorFeedBackScreen(),
             Routes.writeReview: (context) => const FeedbackWritingScreen(),
             Routes.videoCall: (context) => const RoomScreen(),
-            Routes.bookTutor: (context) => const BookTutorScreen(),
             Routes.setting: (context) => const SettingScreen(),
+            Routes.profile: (context) => const AccountProfileScreen(),
           },
         ));
   }
