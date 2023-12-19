@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:lettutor/const/routes.dart';
-import 'package:lettutor/models/tutor/tutor.dart';
-import 'package:lettutor/providers/favorite.provider.dart';
+import 'package:lettutor/domains/tutor/tutor.dart';
+import 'package:lettutor/data/providers/favorite.provider.dart';
 import 'package:lettutor/screen/tutors/book_tutor.dart';
 import 'package:lettutor/screen/tutors/videoIntro.dart';
 import 'package:lettutor/utils/country_convertor.dart';

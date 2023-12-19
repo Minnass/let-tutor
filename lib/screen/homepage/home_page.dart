@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/const/routes.dart';
-import 'package:lettutor/models/tutor/tutor.dart';
-import 'package:lettutor/providers/favorite.provider.dart';
+import 'package:lettutor/domains/tutor/tutor.dart';
+import 'package:lettutor/data/providers/favorite.provider.dart';
 import 'package:lettutor/screen/homepage/home_page_header.dart';
-import 'package:lettutor/screen/tutors/tutor_detail.dart';
 import 'package:lettutor/widgets/tutor_card.dart';
 import 'package:provider/provider.dart';
 

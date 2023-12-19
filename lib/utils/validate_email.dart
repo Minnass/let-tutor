@@ -1,4 +1,4 @@
-import 'package:lettutor/models/tuple.dart';
+import 'package:lettutor/domains/tuple.dart';
 
 Tuple validateEmail(String email) {
   final result = Tuple<bool, String>();

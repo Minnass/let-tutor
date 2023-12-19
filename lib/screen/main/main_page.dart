@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/screen/course/course_page.dart';
 import 'package:lettutor/screen/homepage/home_page.dart';
 import 'package:lettutor/screen/schedule/schedule.dart';

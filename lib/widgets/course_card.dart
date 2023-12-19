@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/const/routes.dart';
-import 'package:lettutor/models/course/course.dart';
+import 'package:lettutor/domains/course/course.dart';
 import 'package:lettutor/screen/course/course_detail.dart';
 
 class CourseCard extends StatelessWidget {

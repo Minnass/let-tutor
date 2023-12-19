@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/models/tutor/tutor.dart';
-import 'package:lettutor/providers/auth.provider.dart';
+import 'package:lettutor/domains/tutor/tutor.dart';
+import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/screen/profile/account.profile.dart';
 import 'package:lettutor/widgets/setting_item.dart';
 import 'package:provider/provider.dart';

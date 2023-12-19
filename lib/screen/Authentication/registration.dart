@@ -1,8 +1,13 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:lettutor/const/routes.dart';
-import 'package:lettutor/models/tuple.dart';
-import 'package:lettutor/models/account/account.dart';
-import 'package:lettutor/providers/auth.provider.dart';
+import 'package:lettutor/data/network/apis/auth/auth.api.dart';
+import 'package:lettutor/data/network/apis/auth/request/register.request.dart';
+import 'package:lettutor/data/network/dio_client.dart';
+import 'package:lettutor/data/network/utils/custom_exception.dart';
+import 'package:lettutor/domains/tuple.dart';
+import 'package:lettutor/domains/account/account.dart';
+import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/utils/validate_email.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +23,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  AuthApi authApi = AuthApi(DioClient(Dio()));
 
   String _emailErrorText = '';
   String _passwordErrorText = '';
@@ -198,19 +204,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 24),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 _handlePasswordValidation();
                 _handleConfirmPasswordValidation();
                 _handleEmailvalidation();
                 if (_emailErrorText.isEmpty &&
                     _passwordErrorText.isEmpty &&
                     _confirmErrorText.isEmpty) {
-                  bool success =
-                      Provider.of<AuthProvider>(context, listen: false)
-                          .registerNewAccount(Account(
-                              email: _emailController.text,
-                              password: _passwordController.text));
-                  if (success) {
+                  final registerRequest = RegisterRequest(
+                      email: _emailController.text,
+                      password: _passwordController.text);
+                  try {
+                    final res = await authApi.register(registerRequest);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Row(
@@ -232,7 +237,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     );
                     Navigator.pushNamed(context, Routes.login);
-                  } else {
+                  } catch (error) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Row(
@@ -243,8 +248,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     8), // Adjust spacing between icon and text
                             Expanded(
                               child: Text(
-                                'Email was existed',
-                                // Style the text as needed
+                                error.toString(),
                               ),
                             ),
                           ],

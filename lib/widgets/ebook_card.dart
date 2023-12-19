@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/models/course/course.dart';
+import 'package:lettutor/domains/course/course.dart';
 
 class EbookCard extends StatelessWidget {
   final Course course;

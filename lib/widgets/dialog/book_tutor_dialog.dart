@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class BookTutorDialog extends StatefulWidget {
-  const BookTutorDialog({super.key});
+  const BookTutorDialog(
+      {Key? key, required this.start, required this.end, required this.date})
+      : super(key: key);
+  final String start;
+  final String end;
+  final String date;
 
   @override
   State<BookTutorDialog> createState() => _BookTutorDialogState();
@@ -75,7 +80,7 @@ class _BookTutorDialogState extends State<BookTutorDialog> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Text(
-                                  '10:00-11:30',
+                                  '${widget.start}-${widget.end}, ${widget.date}',
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,

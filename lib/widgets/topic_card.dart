@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/models/course/topic.dart';
+import 'package:lettutor/domains/course/topic.dart';
 import 'package:lettutor/screen/course/topic_screen.dart';
 
 class TopicCard extends StatelessWidget {

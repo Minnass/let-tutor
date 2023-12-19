@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/models/course/topic.dart';
+import 'package:lettutor/domains/course/topic.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class TopicScreen extends StatelessWidget {

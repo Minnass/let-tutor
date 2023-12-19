@@ -3,8 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lettutor/models/schedule/schedule.dart';
-import 'package:lettutor/providers/schedule.provider.dart';
+import 'package:lettutor/domains/schedule/schedule.dart';
+import 'package:lettutor/data/providers/schedule.provider.dart';
+import 'package:lettutor/widgets/dialog/book_tutor_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -16,26 +17,33 @@ class Booking extends StatefulWidget {
 
 class _BookingState extends State<Booking> {
   List<Schedule> listScheduleOfTutor = [];
+  @override
   void initState() {
-    loadScheduleOfTutor();
+    super.initState();
+    // loadScheduleOfTutor();
+    // Future.wait([loadScheduleOfTutor()]).then((value) {
+    //   if (!mounted) {
+    //     return;
+    //   }
+    //   setState(() {});
+    // });
   }
 
-  Future<void> loadScheduleOfTutor() async {
-    String jsonString =
-        await rootBundle.loadString('assets/data/schedule.json');
-    Map<String, dynamic> jsonData = json.decode(jsonString);
+  // Future<void> loadScheduleOfTutor() async {
+  //   String jsonString =
+  //       await rootBundle.loadString('assets/data/schedule.json');
+  //   Map<String, dynamic> jsonData = json.decode(jsonString);
 
-    List<Map<String, dynamic>> schedules = [];
+  //   List<Map<String, dynamic>> schedules = [];
 
-    if (jsonData['data'] != null && jsonData['data'] is List) {
-      schedules = List<Map<String, dynamic>>.from(jsonData["data"]);
-    }
-    print(schedules.length);
-    setState(() {
-      listScheduleOfTutor =
-          schedules.map((json) => Schedule.fromJson(json)).toList();
-    });
-  }
+  //   if (jsonData['data'] != null && jsonData['data'] is List) {
+  //     schedules = List<Map<String, dynamic>>.from(jsonData["data"]);
+  //   }
+  //   setState(() {
+  //     listScheduleOfTutor =
+  //         schedules.map((json) => Schedule.fromJson(json)).toList();
+  //   });
+  // }
 
   @override
   @override
@@ -58,7 +66,6 @@ class _BookingState extends State<Booking> {
           text: listScheduleOfTutor[i].isBooked ? "Booked" : 'Book',
         ));
       }
-
       return regions;
     }
 
@@ -84,8 +91,7 @@ class _BookingState extends State<Booking> {
               alignment: Alignment.center,
               child: TextButton(
                   style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(
-                        Size(18, 18)), // Thay đổi width và height tùy ý
+                    minimumSize: MaterialStateProperty.all(Size(18, 18)),
                     padding: MaterialStateProperty.all(
                         EdgeInsets.symmetric(horizontal: 8, vertical: 3)),
                     backgroundColor:
@@ -128,11 +134,11 @@ class _BookingState extends State<Booking> {
                 String date = DateFormat.yMMMMEEEEd().format(
                     DateTime.fromMillisecondsSinceEpoch(
                         listScheduleOfTutor[i].startTimestamp!));
-                // final dialogResult = await showDialog(
-                //   context: context,
-                //   builder: (context) =>
-                //       BookingConfirmDialog(start: start, end: end, date: date),
-                // );
+                final dialogResult = await showDialog(
+                  context: context,
+                  builder: (context) =>
+                      BookTutorDialog(start: start, end: end, date: date),
+                );
 
                 // if (dialogResult) {
                 //   mySchedule.addSchedule(listScheduleOfTutor[i]);

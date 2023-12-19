@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lettutor/models/tutor/tutor.dart';
-import 'package:lettutor/providers/favorite.provider.dart';
+import 'package:lettutor/domains/tutor/tutor.dart';
+import 'package:lettutor/data/providers/favorite.provider.dart';
 import 'package:lettutor/screen/tutors/tutor_detail.dart';
 import 'package:lettutor/utils/country_convertor.dart';
 import 'package:provider/provider.dart';

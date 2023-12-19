@@ -2,7 +2,7 @@ import 'package:flutter/src/material/feedback.dart' hide Feedback;
 import 'package:flutter/material.dart';
 import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/widgets/feedback_card.dart';
-import 'package:lettutor/models/feedback/feedback.dart';
+import 'package:lettutor/domains/feedback/feedback.dart';
 
 class FeedbackDialog extends StatefulWidget {
   final List<MyFeedback> feedbacks;

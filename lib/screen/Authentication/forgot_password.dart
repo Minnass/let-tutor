@@ -1,6 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:lettutor/models/tuple.dart';
-import 'package:lettutor/providers/auth.provider.dart';
+import 'package:lettutor/data/network/apis/auth/auth.api.dart';
+import 'package:lettutor/data/network/apis/auth/request/forgot_password.request.dart';
+import 'package:lettutor/data/network/dio_client.dart';
+import 'package:lettutor/domains/tuple.dart';
+import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/utils/validate_email.dart';
 import 'package:provider/provider.dart';
 
@@ -13,12 +17,51 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _emailController = TextEditingController();
-
+  AuthApi authApi = AuthApi(DioClient(Dio()));
   String _emailErrorText = '';
   _handleValidation() {
     Tuple _EmailValidation = validateEmail(_emailController.text);
     _emailErrorText = _EmailValidation.error;
     setState(() {});
+  }
+
+  Future<void> _handleForgotPassword() async {
+    try {
+      final res = await authApi
+          .forgotPassword(ForgotPassword(email: _emailController.text));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.green),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text('Email send success!'),
+              ),
+            ],
+          ),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      Navigator.pushNamed(context, Routes.login);
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error, color: Colors.red),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  error.toString(),
+                ),
+              ),
+            ],
+          ),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    }
   }
 
   @override
@@ -85,37 +128,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
                 const SizedBox(height: 24),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     _handleValidation();
                     if (_emailErrorText.isEmpty) {
-                      bool success =
-                          Provider.of<AuthProvider>(context, listen: false)
-                              .checkEmail(_emailController.text);
-                      if (success) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Row(
-                              children: [
-                                Icon(Icons.check_circle,
-                                    color: Colors.green), 
-                                SizedBox(
-                                    width:
-                                        8), 
-                                Expanded(
-                                  child: Text(
-                                    'Password was sent to your email.',
-                                  ),
-                                ),
-                              ],
-                            ),
-                            duration: Duration(seconds: 1),
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: const Text('Email not found.'),
-                            duration: Duration(seconds: 1)));
-                      }
+                      await _handleForgotPassword();
                     }
                   },
                   style: TextButton.styleFrom(

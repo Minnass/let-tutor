@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:lettutor/models/course/course.dart';
+import 'package:lettutor/domains/course/course.dart';
 import 'package:lettutor/widgets/topic_card.dart';
 
 class CourseDetailScreen extends StatefulWidget {

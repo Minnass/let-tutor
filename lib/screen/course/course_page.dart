@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/models/course/course.dart';
+import 'package:lettutor/domains/course/course.dart';
 import 'package:lettutor/widgets/course_card.dart';
 import 'package:lettutor/widgets/ebook_card.dart';
 import 'package:lettutor/widgets/search_bar.dart';

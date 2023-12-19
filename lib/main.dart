@@ -2,23 +2,20 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lettutor/const/routes.dart';
-import 'package:lettutor/models/course/course.dart';
-import 'package:lettutor/models/tutor/tutor.dart';
-import 'package:lettutor/providers/auth.provider.dart';
-import 'package:lettutor/providers/favorite.provider.dart';
-import 'package:lettutor/providers/schedule.provider.dart';
+import 'package:lettutor/domains/course/course.dart';
+import 'package:lettutor/domains/tutor/tutor.dart';
+import 'package:lettutor/data/providers/auth.provider.dart';
+import 'package:lettutor/data/providers/favorite.provider.dart';
+import 'package:lettutor/data/providers/schedule.provider.dart';
 import 'package:lettutor/screen/Authentication/forgot_password.dart';
 import 'package:lettutor/screen/Authentication/login.dart';
 import 'package:lettutor/screen/Authentication/registration.dart';
-import 'package:lettutor/screen/course/course_detail.dart';
 import 'package:lettutor/screen/main/main_page.dart';
 import 'package:lettutor/screen/profile/account.profile.dart';
 import 'package:lettutor/screen/room/room.dart';
 import 'package:lettutor/screen/setting/setting.dart';
-import 'package:lettutor/screen/tutors/book_tutor.dart';
 import 'package:lettutor/screen/tutors/feedback_write.dart';
 import 'package:lettutor/screen/tutors/feedbacks.dart';
-import 'package:lettutor/screen/tutors/tutor_detail.dart';
 import 'package:lettutor/screen/tutors/tutor_search.dart';
 import 'package:provider/provider.dart';
 
@@ -42,14 +39,6 @@ class _LettutorAppState extends State<LettutorApp> {
   @override
   void initState() {
     // super.initState();
-    loadTutors();
-    loadCourse();
-    Future.wait([loadTutors(), loadCourse()]).then((value) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    });
   }
 
   @override
@@ -84,45 +73,5 @@ class _LettutorAppState extends State<LettutorApp> {
             Routes.profile: (context) => const AccountProfileScreen(),
           },
         ));
-  }
-
-  Future<void> loadCourse() async {
-    // Đọc dữ liệu từ file JSON
-    String jsonString = await rootBundle.loadString('assets/data/course.json');
-    Map<String, dynamic> jsonData = json.decode(jsonString);
-    // Lấy danh sách tutors từ dữ liệu JSON
-    List<Map<String, dynamic>> courseList = [];
-    if (jsonData['data'] != null && jsonData['data']['rows'] is List) {
-      courseList = List<Map<String, dynamic>>.from(jsonData['data']['rows']);
-    }
-    listCourse = courseList.map((json) => Course.fromJson(json)).toList();
-    // print(listCourse.length);
-  }
-
-  Future<void> loadTutors() async {
-    // Đọc dữ liệu từ file JSON
-    String jsonString =
-        await rootBundle.loadString('assets/data/dataTutor.json');
-    Map<String, dynamic> jsonData = json.decode(jsonString);
-    // Lấy danh sách tutors từ dữ liệu JSON
-    List<Map<String, dynamic>> tutorList = [];
-    List<Map<String, dynamic>> favoriteList = [];
-    if (jsonData['tutors'] != null && jsonData['tutors']['rows'] is List) {
-      tutorList = List<Map<String, dynamic>>.from(jsonData['tutors']['rows']);
-    }
-    // Chuyển đổi thành danh sách các đối tượng Tutor'
-    listTutor = tutorList.map((json) => Tutor.fromJson(json)).toList();
-    // print(listTutor);
-    if (jsonData['tutors'] != null && jsonData['favoriteTutor'] is List) {
-      favoriteList = List<Map<String, dynamic>>.from(jsonData['favoriteTutor']);
-    }
-    List<String> idindex = [];
-    for (var tutor in favoriteList) {
-      String secondId = tutor['secondId'];
-      idindex.add(secondId);
-    }
-    setState(() {
-      favouriteProvier.setListIds(idindex);
-    });
   }
 }

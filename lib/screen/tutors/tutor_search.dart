@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:lettutor/models/tutor/tutor.dart';
+import 'package:lettutor/domains/tutor/tutor.dart';
 import 'package:lettutor/widgets/search_bar.dart';
 import 'package:lettutor/widgets/tutor_card.dart';
 import 'package:provider/provider.dart';

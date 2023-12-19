@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/models/feedback/feedback.dart';
+import 'package:lettutor/domains/feedback/feedback.dart';
 
 class FeedbackCard extends StatefulWidget {
   final MyFeedback feedback;
