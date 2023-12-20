@@ -6,6 +6,9 @@ class DioClient {
 
   // injecting dio instance
   DioClient(this._dio);
+  void setToken(String token) {
+    _dio.options.headers['Authorization'] = 'Bearer $token';
+  }
 
   // Get:-----------------------------------------------------------------------
   Future<dynamic> get(

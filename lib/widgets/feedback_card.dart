@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/domains/feedback/feedback.dart';
+import 'package:lettutor/domains/entity/feedback/feedback.dart';
 
 class FeedbackCard extends StatefulWidget {
   final MyFeedback feedback;
@@ -31,9 +31,10 @@ class _FeedbackCardState extends State<FeedbackCard> {
                     shape: BoxShape.circle,
                   ),
                   child: Image.network(
-                    widget.feedback.firstInfo.avatar != null
-                        ? widget.feedback.firstInfo.avatar
-                        : "https://api.app.lettutor.com/avatar/e9e3eeaa-a588-47c4-b4d1-ecfa190f63faavatar1632109929661.jpg",
+                    // widget.feedback.firstInfo.avatar != null
+                    //     ? widget.feedback.firstInfo.avatar
+                    //     : "https://api.app.lettutor.com/avatar/e9e3eeaa-a588-47c4-b4d1-ecfa190f63faavatar1632109929661.jpg",
+                    'https://api.app.lettutor.com/avatar/e9e3eeaa-a588-47c4-b4d1-ecfa190f63faavatar1632109929661.jpg',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => const Icon(
                       Icons.error_outline_rounded,
@@ -50,9 +51,10 @@ class _FeedbackCardState extends State<FeedbackCard> {
                     Row(
                       children: [
                         Text(
-                          widget.feedback.content != null
-                              ? widget.feedback.content
-                              : '',
+                          // widget.feedback.content != null
+                          //     ? widget.feedback.content
+                          //     : '',
+                          '',
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
@@ -60,7 +62,8 @@ class _FeedbackCardState extends State<FeedbackCard> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          widget.feedback.updatedAt,
+                          // widget.feedback.updatedAt,
+                          '',
                           style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,

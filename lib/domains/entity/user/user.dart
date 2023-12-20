@@ -1,3 +1,4 @@
+import 'package:lettutor/domains/entity/course/course.dart';
 import 'package:lettutor/domains/entity/course/learn_topic.dart';
 import 'package:lettutor/domains/entity/course/test_preparationg.dart';
 import 'package:lettutor/domains/entity/user/wallet_info.dart';
@@ -10,12 +11,16 @@ class User {
   String? country;
   String? phone;
   String? language;
+  dynamic zaloUserId;
   dynamic birthday;
   bool? isActivated;
   dynamic requireNote;
   dynamic level;
   dynamic isPhoneActivated;
   dynamic timezone;
+  dynamic google;
+  dynamic facebook;
+  dynamic apple;
   dynamic studySchedule;
   bool? canSendMessage;
   List<String>? roles;
@@ -26,6 +31,11 @@ class User {
   dynamic studentGroupId;
   List<LearnTopic>? learnTopics;
   List<TestPreparation>? testPreparations;
+  List<Course>? courses;
+  dynamic requestPassword;
+  dynamic phoneAuth;
+  dynamic isPhoneAuthActivated;
+
   User({
     this.id,
     this.email,
@@ -33,6 +43,7 @@ class User {
     this.avatar,
     this.country,
     this.phone,
+    this.zaloUserId,
     this.language,
     this.birthday,
     this.isActivated,
@@ -45,58 +56,63 @@ class User {
     this.walletInfo,
     this.roles,
     this.createdAt,
-    this.deletedAt,
     this.updatedAt,
+    this.deletedAt,
     this.studentGroupId,
     this.learnTopics,
     this.testPreparations,
+    this.courses,
+    this.apple,
+    this.facebook,
+    this.google,
+    this.requestPassword,
+    this.phoneAuth,
+    this.isPhoneAuthActivated,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-        level: json['level'],
-        email: json['email'],
-        avatar: json['avatar'],
-        name: json['name'],
-        country: json['country'],
-        phone: json['phone'],
-        language: json['language'],
-        birthday: json['birthday'],
-        isActivated: json['isActivated'],
-        isPhoneActivated: json['isPhoneActivated'],
-        requireNote: json['requireNote'],
-        timezone: json['timezone'],
-        studySchedule: json['studySchedule'],
-        canSendMessage: json['canSendMessage'],
-        id: json['id'],
-        walletInfo: json['walletInfo'] != null
-            ? WalletInfo.fromJson(json['walletInfo'])
-            : null,
-        roles: json['roles']?.cast<String>(),
-        createdAt: json['createdAt'],
-        updatedAt: json['updatedAt'],
-        deletedAt: json['deletedAt'],
-        studentGroupId: json['studentGroupId'],
-        learnTopics: json['learnTopics'] != null
-            ? (json['learnTopics'] as List<dynamic>)
-                .map((item) => LearnTopic.fromJson(item))
-                .toList()
-            : [],
-        testPreparations: json['testPreparations'] != null
-            ? (json['testPreparations'] as List<dynamic>)
-                .map((item) => TestPreparation.fromJson(item))
-                .toList()
-            : []);
-  }
-
-  static List<String> converLanguagesToList(String inputString) {
-    List<String> labels = inputString.split(',');
-    return labels;
-  }
-
-  List<String>? convertStringToLanguages(String? inputString) {
-    List<String>? labels = inputString?.split(' ');
-
-    return labels;
+      id: json['id'],
+      email: json['email'],
+      name: json['name'],
+      avatar: json['avatar'],
+      country: json['country'],
+      phone: json['phone'],
+      zaloUserId: json['zaloUserId'],
+      language: json['language'],
+      birthday: json['birthday'],
+      isActivated: json['isActivated'],
+      requireNote: json['requireNote'],
+      level: json['level'],
+      isPhoneActivated: json['isPhoneActivated'],
+      timezone: json['timezone'],
+      studySchedule: json['studySchedule'],
+      canSendMessage: json['canSendMessage'],
+      walletInfo: json['walletInfo'] != null
+          ? WalletInfo.fromJson(json['walletInfo'])
+          : null,
+      roles: json['roles'] != null ? List<String>.from(json['roles']) : null,
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      deletedAt: json['deletedAt'],
+      studentGroupId: json['studentGroupId'],
+      learnTopics: json['learnTopics'] != null
+          ? List<LearnTopic>.from(
+              json['learnTopics'].map((x) => LearnTopic.fromJson(x)))
+          : null,
+      testPreparations: json['testPreparations'] != null
+          ? List<TestPreparation>.from(
+              json['testPreparations'].map((x) => TestPreparation.fromJson(x)))
+          : null,
+      courses: json['courses'] != null
+          ? List<Course>.from(json['courses'].map((x) => Course.fromJson(x)))
+          : null,
+      apple: json['apple'],
+      facebook: json['facebook'],
+      google: json['google'],
+      requestPassword: json['requestPassword'],
+      phoneAuth: json['phoneAuth'],
+      isPhoneAuthActivated: json['isPhoneAuthActivated'],
+    );
   }
 }

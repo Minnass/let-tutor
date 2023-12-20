@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:lettutor/data/network/apis/auth/request/forgot_password.request.dart';
 import 'package:lettutor/data/network/apis/auth/request/login.request.dart';
 import 'package:lettutor/data/network/apis/auth/request/register.request.dart';
+import 'package:lettutor/data/network/apis/auth/response/login.response.dart';
 import 'package:lettutor/data/network/apis/auth/response/register.response.dart';
 import 'package:lettutor/data/network/constants/end_points.dart';
 import 'package:lettutor/data/network/dio_client.dart';
@@ -26,14 +27,14 @@ class AuthApi {
     }
   }
 
-  Future<RegisterResponse> login(LoginRequest request) async {
+  Future<LoginResponse> login(LoginRequest request) async {
     try {
       Map<String, dynamic> jsonRequest = request.toJson();
       final res = await _dioClient.post(
         Endpoints.login,
         data: jsonRequest,
       );
-      return RegisterResponse.fromJson(res);
+      return LoginResponse.fromJson(res);
     } on DioException catch (e) {
       final customError = CustomErrorResponse.fromJson(
           e.response?.data as Map<String, dynamic>);
@@ -41,14 +42,14 @@ class AuthApi {
     }
   }
 
-  Future<RegisterResponse> forgotPassword(ForgotPassword request) async {
+  Future<void> forgotPassword(ForgotPassword request) async {
     try {
       Map<String, dynamic> jsonRequest = request.toJson();
       final res = await _dioClient.post(
         Endpoints.forgotPassword,
         data: jsonRequest,
       );
-      return RegisterResponse.fromJson(res);
+      return;
     } on DioException catch (e) {
       final customError = CustomErrorResponse.fromJson(
           e.response?.data as Map<String, dynamic>);

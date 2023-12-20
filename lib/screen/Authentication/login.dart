@@ -38,12 +38,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
       final res = await authApi.login(request);
 
-        if (res.user != null) {
+      if (res.user != null) {
         setState(() {
           _isAuthenticating = false;
         });
         authProvider.login(res.user, res.tokens?.access, res.tokens?.refresh);
-        Future.delayed(const Duration(seconds: 1), () {
+        Future.delayed(const Duration(seconds: 0), () {
           Navigator.pushNamed(context, Routes.main);
         });
         ScaffoldMessenger.of(context).showSnackBar(

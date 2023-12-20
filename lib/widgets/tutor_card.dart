@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lettutor/domains/tutor/tutor.dart';
+import 'package:lettutor/data/network/apis/tutor/response/tutor_pagination.response.dart';
 import 'package:lettutor/data/providers/favorite.provider.dart';
 import 'package:lettutor/screen/tutors/tutor_detail.dart';
 import 'package:lettutor/utils/country_convertor.dart';
+import 'package:lettutor/utils/first_character.dart';
 import 'package:provider/provider.dart';
 
 class TutorSearchCard extends StatefulWidget {
-  final Tutor tutor;
+  final TutorResponse tutor;
   const TutorSearchCard({Key? key, required this.tutor}) : super(key: key);
 
   @override
@@ -18,8 +19,7 @@ class _TutorSearchCardState extends State<TutorSearchCard> {
   @override
   Widget build(BuildContext context) {
     FavoriteProvider favouriteRepository = context.watch<FavoriteProvider>();
-    var isInfavourite =
-        favouriteRepository.itemIds.contains(widget.tutor.userId);
+    var isInfavourite = favouriteRepository.itemIds.contains(widget.tutor.id);
     return GestureDetector(
       onTap: () => {
         Navigator.of(context).push(MaterialPageRoute(
@@ -46,18 +46,29 @@ class _TutorSearchCardState extends State<TutorSearchCard> {
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                       ),
-                      child: Image.network(
-                        widget.tutor.avatar != null
-                            ? widget.tutor.avatar
-                            : "https://api.app.lettutor.com/avatar/e9e3eeaa-a588-47c4-b4d1-ecfa190f63faavatar1632109929661.jpg",
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(
-                          Icons.error_outline_rounded,
-                          color: Colors.red,
-                          size: 32,
-                        ),
-                      ),
+                      child: widget.tutor.avatar != null
+                          ? Image.network(
+                              widget.tutor.avatar!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(
+                                Icons.error_outline_rounded,
+                                color: Colors.red,
+                                size: 32,
+                              ),
+                            )
+                          : CircleAvatar(
+                              backgroundColor: Colors.blue,
+                              radius: 50,
+                              child: Text(
+                                getFirstCharacters(widget.tutor.name),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                ),
+                              ),
+                            ),
                     ),
                     Expanded(
                       flex: 1,
@@ -87,7 +98,7 @@ class _TutorSearchCardState extends State<TutorSearchCard> {
                                 Text(
                                     widget.tutor.country != null
                                         ? convertFromCodeToName(
-                                            widget.tutor.country)
+                                            widget.tutor.country ?? '')
                                         : '',
                                     style: TextStyle(
                                       fontSize: 14,
@@ -113,8 +124,8 @@ class _TutorSearchCardState extends State<TutorSearchCard> {
                     IconButton(
                       onPressed: () {
                         isInfavourite
-                            ? favouriteRepository.remove(widget.tutor.userId)
-                            : favouriteRepository.add(widget.tutor.userId);
+                            ? favouriteRepository.remove(widget.tutor.id ?? '')
+                            : favouriteRepository.add(widget.tutor.id ?? '');
                       },
                       icon: Icon(
                         isInfavourite ? Icons.favorite : Icons.favorite_border,
@@ -129,11 +140,11 @@ class _TutorSearchCardState extends State<TutorSearchCard> {
                     spacing: 8,
                     runSpacing: 3,
                     children: List.generate(
-                      widget.tutor.specialties.length,
+                      widget.tutor.specialties?.length ?? 0,
                       (index) => Chip(
                         backgroundColor: Colors.lightBlue[50],
                         label: Text(
-                          widget.tutor.specialties[index],
+                          widget.tutor.specialties![index],
                           style:
                               const TextStyle(fontSize: 14, color: Colors.blue),
                         ),

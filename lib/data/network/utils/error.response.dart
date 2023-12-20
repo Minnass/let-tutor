@@ -10,7 +10,6 @@ class CustomErrorResponse {
   });
 
   factory CustomErrorResponse.fromJson(Map<String, dynamic> json) {
-    print(json['statusCode']);
     return CustomErrorResponse(
       statusCode: json['statusCode'],
       message: json['message'],

@@ -1,34 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:lettutor/const/routes.dart';
-import 'package:lettutor/domains/tutor/tutor.dart';
+import 'package:lettutor/data/network/apis/tutor/response/tutor_pagination.response.dart';
+import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/data/providers/favorite.provider.dart';
 import 'package:lettutor/screen/tutors/book_tutor.dart';
 import 'package:lettutor/screen/tutors/videoIntro.dart';
 import 'package:lettutor/utils/country_convertor.dart';
+import 'package:lettutor/utils/first_character.dart';
 import 'package:lettutor/widgets/dialog/feedback_dialog.dart';
 import 'package:lettutor/widgets/dialog/report_dialog.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
-import 'package:chewie/chewie.dart';
 
 class TutorDetailScreen extends StatefulWidget {
-  final Tutor tutor;
-  const TutorDetailScreen({Key? key, required this.tutor}) : super(key: key);
+  TutorResponse tutor;
+  TutorDetailScreen({Key? key, required this.tutor}) : super(key: key);
 
   @override
   State<TutorDetailScreen> createState() => _TutorDetailScreenState();
 }
 
 class _TutorDetailScreenState extends State<TutorDetailScreen> {
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    FavoriteProvider favouriteProvider = context.watch<FavoriteProvider>();
-    var isInFavourite = favouriteProvider.itemIds.contains(widget.tutor.userId);
+    FavoriteProvider favouriteRepository = context.watch<FavoriteProvider>();
+    var isInfavourite = favouriteRepository.itemIds.contains(widget.tutor.id);
+    final authProvider = context.watch<AuthProvider>();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -47,25 +44,43 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
           Row(
             children: [
               Container(
-                  width: 72,
-                  height: 72,
-                  clipBehavior: Clip.hardEdge,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-                  child: Image.network(
-                    widget.tutor.avatar != null
-                        ? widget.tutor.avatar
-                        : "https://api.app.lettutor.com/avatar/e9e3eeaa-a588-47c4-b4d1-ecfa190f63faavatar1632109929661.jpg",
-                    fit: BoxFit.cover,
-                  )),
+                width: 72,
+                height: 72,
+                clipBehavior: Clip.hardEdge,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+                child: widget.tutor.avatar != null
+                    ? Image.network(
+                        widget.tutor.avatar!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(
+                          Icons.error_outline_rounded,
+                          color: Colors.red,
+                          size: 32,
+                        ),
+                      )
+                    : CircleAvatar(
+                        backgroundColor: Colors.blue,
+                        radius: 50,
+                        child: Text(
+                          getFirstCharacters(widget.tutor.name),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
+                        ),
+                      ),
+              ),
               Expanded(
                   child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.tutor.name,
+                      Text(widget.tutor.name ?? '',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 14)),
                       SizedBox(
@@ -73,7 +88,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                       ),
                       Text(
                         widget.tutor.country != null
-                            ? convertFromCodeToName(widget.tutor.country)
+                            ? convertFromCodeToName(widget.tutor.country!)
                             : '',
                         style: const TextStyle(fontSize: 14),
                       ),
@@ -91,7 +106,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                             ),
                           ),
                           Text(
-                            ' (${widget.tutor.feedbacks.length.toString()})', // Assuming this represents a count or some additional text
+                            ' (${widget.tutor.feedbacks?.length.toString()})', // Assuming this represents a count or some additional text
                             style: const TextStyle(fontSize: 14),
                           ),
                         ],
@@ -103,7 +118,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
           Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: ExpandableText(
-                widget.tutor.bio,
+                widget.tutor.bio ?? '',
                 expandText: 'more',
                 collapseText: 'less',
                 maxLines: 2,
@@ -119,13 +134,13 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                 child: Column(children: [
                   IconButton(
                     onPressed: () {
-                      isInFavourite
-                          ? favouriteProvider.remove(widget.tutor.userId)
-                          : favouriteProvider.add(widget.tutor.userId);
+                      isInfavourite
+                          ? favouriteRepository.remove(widget.tutor.id!)
+                          : favouriteRepository.add(widget.tutor.id!);
                     },
                     icon: Icon(
-                      isInFavourite ? Icons.favorite : Icons.favorite_border,
-                      color: isInFavourite ? Colors.red : Colors.blueAccent,
+                      isInfavourite ? Icons.favorite : Icons.favorite_border,
+                      color: isInfavourite ? Colors.red : Colors.blueAccent,
                     ),
                   ),
                   Text(
@@ -139,8 +154,8 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                   onPressed: () {
                     showDialog(
                         context: context,
-                        builder: (context) =>
-                            FeedbackDialog(feedbacks: widget.tutor.feedbacks));
+                        builder: (context) => FeedbackDialog(
+                            feedbacks: widget.tutor.feedbacks ?? []));
                   },
                   child: Column(
                     children: const [
@@ -184,7 +199,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                       color: Colors.blue[700],
                     ))
                 : ChewieDemo(
-                    linkVideo: widget.tutor.video,
+                    linkVideo: widget.tutor.video!,
                   ),
           ),
           const SizedBox(height: 8),
@@ -196,10 +211,10 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 3, 0, 10),
             child: Text(
-              widget.tutor.education,
+              widget.tutor.education ?? '',
               style: TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w200,
+                  fontWeight: FontWeight.normal,
                   color: Colors.black),
             ),
           ),
@@ -214,11 +229,11 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                 spacing: 8,
                 runSpacing: 4,
                 children: List.generate(
-                  widget.tutor.languages.length,
+                  widget.tutor.languages?.length ?? 0,
                   (index) => Chip(
                     backgroundColor: Colors.lightBlue[50],
                     label: Text(
-                      widget.tutor.languages[index],
+                      widget.tutor.languages?[index] ?? '',
                       style: const TextStyle(fontSize: 14, color: Colors.blue),
                     ),
                   ),
@@ -236,11 +251,11 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                 spacing: 8,
                 runSpacing: 4,
                 children: List.generate(
-                    widget.tutor.specialties.length,
+                    widget.tutor.specialties?.length ?? 0,
                     (index) => Chip(
                           backgroundColor: Colors.lightBlue[50],
                           label: Text(
-                            widget.tutor.specialties[index],
+                            widget.tutor.specialties?[index] ?? '',
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.blue),
                           ),
@@ -254,31 +269,11 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 8),
-            child: Text(widget.tutor.experience,
+            child: Text(widget.tutor.experience ?? '',
                 style: TextStyle(
                   fontSize: 14,
                 )),
           ),
-          Padding(
-              padding: const EdgeInsets.only(top: 24, bottom: 12),
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(1),
-                  padding: const EdgeInsets.all(20),
-                  side: const BorderSide(color: Colors.blue, width: 1.5),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        20.0), // Adjust the radius as needed
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, Routes.bookTutor);
-                },
-                child: const Text(
-                  'Book This Tutor',
-                  style: TextStyle(fontSize: 16, color: Colors.blue),
-                ),
-              )),
           Booking()
         ]),
       ),

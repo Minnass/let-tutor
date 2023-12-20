@@ -1,8 +1,5 @@
 import 'dart:convert';
-import 'package:intl/intl.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lettutor/domains/schedule/schedule.dart';
 import 'package:lettutor/data/providers/schedule.provider.dart';
 import 'package:lettutor/widgets/dialog/book_tutor_dialog.dart';
@@ -28,22 +25,6 @@ class _BookingState extends State<Booking> {
     //   setState(() {});
     // });
   }
-
-  // Future<void> loadScheduleOfTutor() async {
-  //   String jsonString =
-  //       await rootBundle.loadString('assets/data/schedule.json');
-  //   Map<String, dynamic> jsonData = json.decode(jsonString);
-
-  //   List<Map<String, dynamic>> schedules = [];
-
-  //   if (jsonData['data'] != null && jsonData['data'] is List) {
-  //     schedules = List<Map<String, dynamic>>.from(jsonData["data"]);
-  //   }
-  //   setState(() {
-  //     listScheduleOfTutor =
-  //         schedules.map((json) => Schedule.fromJson(json)).toList();
-  //   });
-  // }
 
   @override
   @override
@@ -131,9 +112,10 @@ class _BookingState extends State<Booking> {
                     "${timestart.hour.toString().length == 1 ? "0" + timestart.hour.toString() : timestart.hour.toString()}:${timestart.minute.toString().length == 1 ? "0" + timestart.minute.toString() : timestart.minute.toString()}";
                 String end =
                     "${timeend.hour.toString().length == 1 ? "0" + timeend.hour.toString() : timeend.hour.toString()}:${timeend.minute.toString().length == 1 ? "0" + timeend.minute.toString() : timeend.minute.toString()}";
-                String date = DateFormat.yMMMMEEEEd().format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        listScheduleOfTutor[i].startTimestamp!));
+                // String date = DateFormat.yMMMMEEEEd().format(
+                //     DateTime.fromMillisecondsSinceEpoch(
+                //         listScheduleOfTutor[i].startTimestamp!));
+                String date = 'da';
                 final dialogResult = await showDialog(
                   context: context,
                   builder: (context) =>

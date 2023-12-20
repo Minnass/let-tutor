@@ -21,6 +21,10 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String getToken() {
+    return currentToken?.token ?? '';
+  }
+
   List<Account> accountList = [
     Account(email: 'phannhattrieu@gmail.com', password: '123123'),
     Account(email: 'nguyenanhtuan@gmail.com', password: '234'),

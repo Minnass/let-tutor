@@ -1,5 +1,4 @@
 import 'package:lettutor/domains/account/account.dart';
-import 'package:lettutor/domains/account/user.dart';
 
 class Student extends Account {
   final dynamic level;
