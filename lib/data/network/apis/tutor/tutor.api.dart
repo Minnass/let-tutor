@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:lettutor/data/network/apis/tutor/request/tutor_detail.request.dart';
+import 'package:lettutor/data/network/apis/tutor/request/tutor_favorite.request.dart';
+import 'package:lettutor/data/network/apis/tutor/request/tutor_feedback.request.dart';
 import 'package:lettutor/data/network/apis/tutor/request/tutor_pagination.request.dart';
 import 'package:lettutor/data/network/apis/tutor/response/tutor_pagination.response.dart';
 import 'package:lettutor/data/network/constants/end_points.dart';
@@ -27,4 +29,29 @@ class TutorApi {
       throw CustomException(customError.message);
     }
   }
+
+  Future<void> addFavoriteTutor(FavoriteTutorRequest request) async {
+    try {
+      Map<String, dynamic> jsonRequest = request.toJson();
+      final res =
+          await dioClient.post(Endpoints.addFavoriteTutor, data: jsonRequest);
+    } on DioException catch (e) {
+      final customError = CustomErrorResponse.fromJson(
+          e.response?.data as Map<String, dynamic>);
+      throw CustomException(customError.message);
+    }
+  }
+
+  Future<void> writeFeedback(TutorFeedbackRequest request) async {
+    try {
+      Map<String, dynamic> jsonRequest = request.toJson();
+      final res =
+          await dioClient.post(Endpoints.writefeedback, data: jsonRequest);
+    } on DioException catch (e) {
+      final customError = CustomErrorResponse.fromJson(
+          e.response?.data as Map<String, dynamic>);
+      throw CustomException(customError.message);
+    }
+  }
+  
 }

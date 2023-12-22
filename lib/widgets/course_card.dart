@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/const/routes.dart';
-import 'package:lettutor/domains/course/course.dart';
+import 'package:lettutor/data/network/apis/course/response/course_pagination.response.dart';
 import 'package:lettutor/screen/course/course_detail.dart';
 
 class CourseCard extends StatelessWidget {
-  final Course course;
+  final CourseResponse course;
   const CourseCard({Key? key, required this.course}) : super(key: key);
 
   @override
@@ -12,7 +11,7 @@ class CourseCard extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => CourseDetailScreen(course: course),
+          builder: (context) => CourseDetailScreen(courseId: course.id!),
         ));
       },
       child: Card(
@@ -26,9 +25,8 @@ class CourseCard extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               height: 200,
               child: Image.network(
-                course.imageUrl != null
-                    ? course.imageUrl
-                    : 'https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e',
+                course.imageUrl ??
+                    'https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e',
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => const Icon(
                   Icons.error_outline_rounded,
@@ -43,7 +41,7 @@ class CourseCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      course.name != null ? course.name : '',
+                      course.name ?? '',
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
@@ -51,7 +49,7 @@ class CourseCard extends StatelessWidget {
                       height: 8,
                     ),
                     Text(
-                      course.description != null ? course.description : '',
+                      course.description ?? '',
                       style: const TextStyle(
                           fontWeight: FontWeight.w400, color: Colors.grey),
                     ),
@@ -62,13 +60,13 @@ class CourseCard extends StatelessWidget {
                       children: [
                         Expanded(
                             child: Text(
-                          course.level != null ? course.level : '',
+                          course.level ?? '',
                           style: TextStyle(
                               fontSize: 14, fontWeight: FontWeight.w600),
                         )),
                         Text(
                             course.topics != null
-                                ? course.topics.length.toString() + ' Lessons'
+                                ? course.topics!.length.toString() + ' Lessons'
                                 : '',
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w600))

@@ -1,18 +1,49 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:lettutor/domains/course/course.dart';
+import 'package:lettutor/data/network/apis/course/course.api.dart';
+import 'package:lettutor/data/network/apis/course/request/course_details.request.dart';
+import 'package:lettutor/data/network/apis/course/response/course_details.response.dart';
+import 'package:lettutor/data/network/dio_client.dart';
+import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/widgets/topic_card.dart';
+import 'package:provider/provider.dart';
 
 class CourseDetailScreen extends StatefulWidget {
-  final Course course;
-  const CourseDetailScreen({Key? key, required this.course}) : super(key: key);
+  final String courseId;
+  const CourseDetailScreen({Key? key, required this.courseId})
+      : super(key: key);
   @override
   State<CourseDetailScreen> createState() => _CourseDetailScreenState();
 }
 
 class _CourseDetailScreenState extends State<CourseDetailScreen> {
+  CourseTutorResponse? course;
+  bool _isLoading = true;
+  CourseApi courseApi = CourseApi(DioClient(Dio()));
+  Future<void> _fetchCourse() async {
+    try {
+      final res = await courseApi
+          .getCourseDetails(CourseDetailsRequest(courseId: widget.courseId));
+      course = res.data;
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (error) {
+      print(error);
+      print(error);
+      print(error);
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
+    courseApi.setToken(authProvider.getToken());
+    _fetchCourse();
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -25,19 +56,16 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),
-        body: false
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CachedNetworkImage(
-                      imageUrl: widget.course.imageUrl != null
-                          ? widget.course.imageUrl
-                          : 'https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e',
+                      imageUrl: course?.imageUrl ??
+                          'https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e',
                       fit: BoxFit.cover,
                       placeholder: (context, url) => const Icon(
                         Icons.image_rounded,
@@ -54,7 +82,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 8, horizontal: 16),
                         child: Text(
-                          widget.course.name != null ? widget.course.name : '',
+                          course?.name ?? '',
                           style: const TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
@@ -64,9 +92,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        widget.course.description != null
-                            ? widget.course.description
-                            : '',
+                        course?.description ?? '',
                         style: const TextStyle(fontSize: 14),
                       ),
                     ),
@@ -109,9 +135,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 48, right: 16),
                       child: Text(
-                        widget.course.reason != null
-                            ? widget.course.reason
-                            : '',
+                        course?.reason ?? '',
                         style: TextStyle(fontSize: 14),
                       ),
                     ),
@@ -133,9 +157,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 48, right: 16),
                       child: Text(
-                        widget.course.purpose != null
-                            ? widget.course.purpose
-                            : '',
+                        course?.purpose ?? '',
                         style: TextStyle(fontSize: 14),
                       ),
                     ),
@@ -154,9 +176,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                               color: Colors.blue),
                           const SizedBox(width: 8),
                           Text(
-                            widget.course.level != null
-                                ? widget.course.level
-                                : '',
+                            course?.level ?? '',
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.bold),
                           ),
@@ -177,9 +197,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                           const Icon(Icons.book_outlined, color: Colors.blue),
                           const SizedBox(width: 8),
                           Text(
-                            widget.course.topics != null
-                                ? '${widget.course.topics.length} Lessons'
-                                : 'No Lessons Available',
+                            '${course?.topics?.length ?? 0} Lessons' ??
+                                'No Lessons Available',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -198,12 +217,12 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     ),
                     ListView.builder(
                       itemBuilder: (context, index) {
-                        final topic = widget.course.topics[index];
-                        return TopicCard(topic: topic);
+                        final topic = course?.topics![index];
+                        return topic != null ? TopicCard(topic: topic) : null;
                       },
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: widget.course.topics?.length ?? 0,
+                      itemCount: course?.topics?.length ?? 0,
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),

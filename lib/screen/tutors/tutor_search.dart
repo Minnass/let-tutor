@@ -20,17 +20,17 @@ class TutorSearchScreen extends StatefulWidget {
 
 const tags = [
   'All',
-  'English for kids',
-  'Business English',
-  'Conversational English',
+  'English for Kids',
+  'English for Business',
+  'Conversational',
   'TOEIC',
   'TOEFL',
   'IELTS',
   'KET',
   'PET',
-  'Movers',
-  'Flyers',
-  'Starters'
+  'MOVERS',
+  'FLYERS',
+  'STARTERS'
 ];
 
 class _TutorSearchScreenState extends State<TutorSearchScreen> {
@@ -55,7 +55,8 @@ class _TutorSearchScreenState extends State<TutorSearchScreen> {
           .where((tutor) => tutor.country.toString() == countryCode)
           .toList();
     }
-    if (selectedTags.length > 0 && !selectedTags.contains('All')) {
+    if (!(selectedTags.length == 1 && selectedTags.contains('All') ||
+        selectedTags.length == 0)) {
       filteredTutor = filteredTutor.where((tutor) {
         return tutor.specialties
                 ?.any((specialty) => selectedTags.contains(specialty)) ??

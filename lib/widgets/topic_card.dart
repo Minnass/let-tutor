@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/domains/course/topic.dart';
+import 'package:lettutor/data/network/apis/course/response/topic.response.dart';
 import 'package:lettutor/screen/course/topic_screen.dart';
 
 class TopicCard extends StatelessWidget {
-  final Topic topic;
+  final TopicResponse topic;
   const TopicCard({Key? key, required this.topic}) : super(key: key);
 
   @override
@@ -15,7 +15,7 @@ class TopicCard extends StatelessWidget {
           surfaceTintColor: Colors.white,
           child: ListTile(
             title: Text(
-              topic.name != null ? topic.name : '',
+              topic.name ?? '',
               style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14),
             ),
             onTap: () => {

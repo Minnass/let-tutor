@@ -1,6 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lettutor/data/network/apis/tutor/request/tutor_favorite.request.dart';
 import 'package:lettutor/data/network/apis/tutor/response/tutor_pagination.response.dart';
+import 'package:lettutor/data/network/apis/tutor/tutor.api.dart';
+import 'package:lettutor/data/network/dio_client.dart';
+import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/data/providers/favorite.provider.dart';
 import 'package:lettutor/screen/tutors/tutor_detail.dart';
 import 'package:lettutor/utils/country_convertor.dart';
@@ -16,10 +21,30 @@ class TutorSearchCard extends StatefulWidget {
 }
 
 class _TutorSearchCardState extends State<TutorSearchCard> {
+  TutorApi tutorApi = TutorApi(DioClient(Dio()));
+  Future<void> addFavoriteTutor() async {
+    try {
+      print(widget.tutor.id);
+      print(widget.tutor.id);
+      print(widget.tutor.id);
+      await tutorApi
+          .addFavoriteTutor(FavoriteTutorRequest(tutorId: widget.tutor.id!));
+    } catch (error) {
+      print('dada');
+      print('dada');
+      print('dada');
+      print('dada');
+      print('dada');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     FavoriteProvider favouriteRepository = context.watch<FavoriteProvider>();
+    AuthProvider authProvider = context.watch<AuthProvider>();
+    tutorApi.setToken(authProvider.getToken());
     var isInfavourite = favouriteRepository.itemIds.contains(widget.tutor.id);
+
     return GestureDetector(
       onTap: () => {
         Navigator.of(context).push(MaterialPageRoute(
@@ -123,6 +148,7 @@ class _TutorSearchCardState extends State<TutorSearchCard> {
                     ),
                     IconButton(
                       onPressed: () {
+                        addFavoriteTutor();
                         isInfavourite
                             ? favouriteRepository.remove(widget.tutor.id ?? '')
                             : favouriteRepository.add(widget.tutor.id ?? '');
@@ -158,22 +184,6 @@ class _TutorSearchCardState extends State<TutorSearchCard> {
                 ),
                 const SizedBox(
                   height: 8,
-                ),
-                Row(
-                  children: [
-                    // ... (other widgets)
-                    Spacer(), // This pushes the TextButton to the right
-                    TextButton(
-                      onPressed: () {},
-                      child: Row(
-                        children: [
-                          Icon(Icons.schedule),
-                          const SizedBox(width: 8),
-                          Text('Book'),
-                        ],
-                      ),
-                    ),
-                  ],
                 ),
               ]),
         ),

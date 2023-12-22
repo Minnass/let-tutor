@@ -3,21 +3,25 @@ import 'package:lettutor/data/network/apis/auth/response/register.response.dart'
 import 'package:lettutor/domains/account/account.dart';
 import 'package:lettutor/domains/entity/user/user.dart';
 import 'package:lettutor/domains/tutor/tutor.dart';
+import 'package:lettutor/utils/enum/login_type.dart';
 
 class AuthProvider extends ChangeNotifier {
   late User? currentUser;
   Token? currentToken;
   Token? refreshToken;
-  void login(User? user, Token? token, Token? refresh) {
+  late LoginType? loginType;
+  void login(User? user, Token? token, Token? refresh, LoginType type) {
     currentUser = user;
     currentToken = token;
     refreshToken = refresh;
+    loginType = type;
     notifyListeners();
   }
 
   void logout() {
     currentUser = null;
     currentToken = null;
+    loginType = null;
     notifyListeners();
   }
 

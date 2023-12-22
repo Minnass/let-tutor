@@ -128,7 +128,7 @@ class _ReportDialogState extends State<ReportDialog> {
                     border: OutlineInputBorder(),
                     hintText: 'Let us know details about your problem',
                   ),
-                  maxLines: 5,
+                  maxLines: 1,
                 ),
                 const Divider(),
                 Row(

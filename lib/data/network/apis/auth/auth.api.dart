@@ -42,6 +42,36 @@ class AuthApi {
     }
   }
 
+  Future<LoginResponse> loginByGoogle(GoogleLoginRequest request) async {
+    try {
+      Map<String, dynamic> jsonRequest = request.toJson();
+      final res = await _dioClient.post(
+        Endpoints.googleLogin,
+        data: jsonRequest,
+      );
+      return LoginResponse.fromJson(res);
+    } on DioException catch (e) {
+      final customError = CustomErrorResponse.fromJson(
+          e.response?.data as Map<String, dynamic>);
+      throw CustomException(customError.message);
+    }
+  }
+
+  Future<LoginResponse> loginByFacebook(FacebookLoginRequest request) async {
+    try {
+      Map<String, dynamic> jsonRequest = request.toJson();
+      final res = await _dioClient.post(
+        Endpoints.facebookLogin,
+        data: jsonRequest,
+      );
+      return LoginResponse.fromJson(res);
+    } on DioException catch (e) {
+      final customError = CustomErrorResponse.fromJson(
+          e.response?.data as Map<String, dynamic>);
+      throw CustomException(customError.message);
+    }
+  }
+
   Future<void> forgotPassword(ForgotPassword request) async {
     try {
       Map<String, dynamic> jsonRequest = request.toJson();

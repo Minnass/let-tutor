@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/data/network/apis/course/response/topic.response.dart';
 import 'package:lettutor/domains/course/topic.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class TopicScreen extends StatelessWidget {
-  final Topic topic;
+  final TopicResponse topic;
   const TopicScreen({Key? key, required this.topic}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class TopicScreen extends StatelessWidget {
           color: Colors.white,
         ),
         title: Text(
-          topic.name != null ? topic.name : '',
+          topic.name ?? '',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),

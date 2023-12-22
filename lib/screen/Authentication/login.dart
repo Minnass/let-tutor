@@ -1,11 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/data/network/apis/auth/auth.api.dart';
 import 'package:lettutor/data/network/apis/auth/request/login.request.dart';
 import 'package:lettutor/data/network/dio_client.dart';
 import 'package:lettutor/domains/tuple.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
+import 'package:lettutor/utils/enum/login_type.dart';
 import 'package:lettutor/utils/validate_email.dart';
 import 'package:provider/provider.dart';
 
@@ -42,7 +45,8 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           _isAuthenticating = false;
         });
-        authProvider.login(res.user, res.tokens?.access, res.tokens?.refresh);
+        authProvider.login(
+            res.user, res.tokens?.access, res.tokens?.refresh, LoginType.email);
         Future.delayed(const Duration(seconds: 0), () {
           Navigator.pushNamed(context, Routes.main);
         });
@@ -82,6 +86,122 @@ class _LoginScreenState extends State<LoginScreen> {
           duration: Duration(seconds: 1),
         ),
       );
+    }
+  }
+
+  Future<void> _handleFacebookLogin(AuthProvider authProvider) async {
+    final result = await FacebookAuth.instance.login();
+    if (result.status == LoginStatus.success) {
+      try {
+        setState(() {
+          _isAuthenticating = true;
+        });
+        final res = await authApi.loginByFacebook(
+            FacebookLoginRequest(access_token: result.accessToken!.token));
+        if (res.user != null) {
+          authProvider.login(res.user, res.tokens?.access, res.tokens?.refresh,
+              LoginType.facebook);
+          Future.delayed(const Duration(seconds: 0), () {
+            Navigator.pushNamed(context, Routes.main);
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text('Login successfully.'),
+                  ),
+                ],
+              ),
+              duration: Duration(seconds: 1),
+            ),
+          );
+        }
+        setState(() {
+          _isAuthenticating = false;
+        });
+      } catch (error) {
+        setState(() {
+          _isAuthenticating = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.error, color: Colors.red),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    error.toString(),
+                  ),
+                ),
+              ],
+            ),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _handleGoolgeLogin(AuthProvider authProvider) async {
+    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+    final String? accessToken = googleAuth?.accessToken;
+    if (accessToken != null) {
+      try {
+        setState(() {
+          _isAuthenticating = true;
+        });
+        final res = await authApi
+            .loginByGoogle(GoogleLoginRequest(access_token: accessToken));
+        if (res.user != null) {
+          authProvider.login(res.user, res.tokens?.access, res.tokens?.refresh,
+              LoginType.google);
+          Future.delayed(const Duration(seconds: 0), () {
+            Navigator.pushNamed(context, Routes.main);
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text('Login successfully.'),
+                  ),
+                ],
+              ),
+              duration: Duration(seconds: 1),
+            ),
+          );
+        }
+        setState(() {
+          _isAuthenticating = false;
+        });
+      } catch (error) {
+        setState(() {
+          _isAuthenticating = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.error, color: Colors.red),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    error.toString(),
+                  ),
+                ),
+              ],
+            ),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }
     }
   }
 
@@ -231,7 +351,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _handleFacebookLogin(authProvider);
+                            },
                             child: Container(
                               padding: EdgeInsets.all(3.0),
                               width: 40.0,
@@ -248,7 +370,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             )),
                         TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _handleGoolgeLogin(authProvider);
+                            },
                             child: Container(
                               padding: EdgeInsets.all(3.0),
                               width: 40.0,
