@@ -23,4 +23,5 @@ class Endpoints {
   static const String getPagedCourse = baseUrl + "course";
   static const String getCourseDetails = baseUrl + 'course/';
   static const String bookedClass = baseUrl + 'booking/list/student';
+  static const String lessonRequest = baseUrl + "booking/student-request";
 }

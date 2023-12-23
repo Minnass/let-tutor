@@ -90,7 +90,9 @@ class _CoursePageState extends State<CourseScreen> {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
     courseApi.setToken(authProvider.getToken());
-    _fetchCourse();
+    if (_isLoading) {
+      _fetchCourse();
+    }
     return DefaultTabController(
       length: 2,
       child: Column(

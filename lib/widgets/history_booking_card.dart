@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lettutor/const/routes.dart';
+import 'package:lettutor/data/network/apis/schedule/response/booking_info.response.dart';
+import 'package:lettutor/screen/tutors/feedback_write.dart';
+import 'package:lettutor/utils/datetime_converter.dart';
+import 'package:lettutor/utils/first_character.dart';
 import 'package:lettutor/widgets/dialog/report_dialog.dart';
 
 class HistoryCard extends StatefulWidget {
-  const HistoryCard({Key? key}) : super(key: key);
+  const HistoryCard({Key? key, required this.bookingInfo}) : super(key: key);
+  final BookingInfoResponse bookingInfo;
 
   @override
   State<HistoryCard> createState() => _HistoryCardState();
@@ -22,15 +28,44 @@ class _HistoryCardState extends State<HistoryCard> {
           children: [
             Row(
               children: [
-                InkWell(
-                  onTap: () {
-                    // Navigator.pushNamed(context, Routes.teacherDetail);
-                  },
-                  child: const CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        'https://sandbox.api.lettutor.com/avatar/4d54d3d7-d2a9-42e5-97a2-5ed38af5789aavatar1684484879187.jpg'),
-                    radius: 32,
+                Container(
+                  width: 70,
+                  height: 70,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
                   ),
+                  child: widget.bookingInfo.scheduleDetailInfo!.scheduleInfo!
+                              .tutorInfo!.avatar !=
+                          null
+                      ? Image.network(
+                          widget.bookingInfo.scheduleDetailInfo!.scheduleInfo!
+                              .tutorInfo!.avatar!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                            Icons.error_outline_rounded,
+                            color: Colors.red,
+                            size: 32,
+                          ),
+                        )
+                      : CircleAvatar(
+                          backgroundColor: Colors.blue,
+                          radius: 50,
+                          child: Text(
+                            getFirstCharacters(widget
+                                .bookingInfo
+                                .scheduleDetailInfo!
+                                .scheduleInfo!
+                                .tutorInfo!
+                                .name),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                            ),
+                          ),
+                        ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -42,14 +77,17 @@ class _HistoryCardState extends State<HistoryCard> {
                           // Navigator.pushNamed(context, Routes.teacherDetail);
                         },
                         child: Text(
-                          'Keegan',
+                          widget.bookingInfo.scheduleDetailInfo!.scheduleInfo!
+                                  .tutorInfo!.name ??
+                              '',
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold),
                         ),
                       ),
                       const SizedBox(height: 4),
-                      const Text(
-                        '2022-10-20    10:00 - 10:55',
+                      Text(
+                        fromMilisecondToDateTime(widget.bookingInfo
+                            .scheduleDetailInfo!.startPeriodTimestamp),
                         style: TextStyle(fontSize: 12),
                       )
                     ],
@@ -58,18 +96,18 @@ class _HistoryCardState extends State<HistoryCard> {
               ],
             ),
             const SizedBox(height: 12),
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 12),
               child: Text(
-                'No Requests For Lessons',
+                widget.bookingInfo.studentRequest ?? 'No Requests For Lessons',
                 style: TextStyle(fontSize: 14),
               ),
             ),
             const SizedBox(height: 12),
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 12),
               child: Text(
-                "Tutor haven't reviewed yet",
+                widget.bookingInfo.tutorReview ?? "Tutor haven't reviewed yet",
                 style: TextStyle(fontSize: 14),
               ),
             ),
@@ -97,7 +135,10 @@ class _HistoryCardState extends State<HistoryCard> {
                 Expanded(
                   child: TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, Routes.writeReview);
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => FeedbackWritingScreen(
+                            bookingInfo: widget.bookingInfo),
+                      ));
                     },
                     child: const Text(
                       'Add A Review',

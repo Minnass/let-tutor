@@ -67,7 +67,7 @@ class _LettutorAppState extends State<LettutorApp> {
             // Routes.courseDetail: (context) => const CourseDetailScreen(),
             // Routes.teacherDetail: (context) => const TutorDetailScreen(),
             Routes.review: (context) => const TutorFeedBackScreen(),
-            Routes.writeReview: (context) => const FeedbackWritingScreen(),
+            // Routes.writeReview: (context) => const FeedbackWritingScreen(),
             Routes.videoCall: (context) => const RoomScreen(),
             Routes.setting: (context) => const SettingScreen(),
             Routes.profile: (context) => const AccountProfileScreen(),

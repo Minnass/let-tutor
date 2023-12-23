@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/widgets/history_booking_card.dart';
-import 'package:lettutor/widgets/tutor_card.dart';
-import 'package:lettutor/widgets/upcoming_card.dart';
+import 'package:lettutor/screen/schedule/history/history.dart';
+import 'package:lettutor/screen/schedule/upcoming/upcoming.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({Key? key}) : super(key: key);
@@ -11,8 +10,6 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  int count = 10;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,30 +55,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             ),
             Expanded(
               child: TabBarView(
-                children: [
-                  // Here goes the first tab
-                  SingleChildScrollView(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                    child: Column(
-                      children: List<Widget>.generate(
-                        count,
-                        (index) => const UpcomingCard(),
-                      ),
-                    ),
-                  ),
-                  // Here goes the second tab
-                  SingleChildScrollView(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                    child: Column(
-                      children: List<Widget>.generate(
-                        count,
-                        (index) => const HistoryCard(),
-                      ),
-                    ),
-                  ),
-                ],
+                children: [UpcomingTab(), HistoryTab()],
               ),
             )
           ],
