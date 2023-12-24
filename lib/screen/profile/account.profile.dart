@@ -246,7 +246,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
               ),
               items: courseLevels.entries
                   .map((entry) => DropdownMenuItem(
-                        value: entry.value,
+                        value: entry.key,
                         child: Text(entry.value),
                       ))
                   .toList(),

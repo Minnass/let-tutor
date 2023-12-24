@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/domains/entity/user/user.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
@@ -21,22 +24,43 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   late LanguageProvider languageProvider;
   late AuthProvider authProvider;
-  void _signOut(AuthProvider authProvider) {
-    if (authProvider.loginType == LoginType.email) {
-      authProvider.logout();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-      );
-    } else if (authProvider.loginType == LoginType.google) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-      );
+  late Completer<bool> _logoutConfirmationCompleter;
+  Future<void> signout(AuthProvider authProvider) async {
+    if (authProvider.loginType == LoginType.google) {
+      final GoogleSignIn _googleSignIn = GoogleSignIn();
+      await _googleSignIn.signOut();
     }
+    authProvider.logout();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.green),
+            SizedBox(width: 8),
+            Expanded(
+              child: Text(languageProvider.language.signoutSuccessfully),
+            ),
+          ],
+        ),
+        duration: Duration(seconds: 1),
+      ),
+    );
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+      );
+    });
   }
 
   late User user;
+
+  @override
+  void initState() {
+    super.initState();
+    _logoutConfirmationCompleter = Completer<bool>();
+  }
+
   @override
   Widget build(BuildContext context) {
     languageProvider = Provider.of<LanguageProvider>(context);
@@ -213,7 +237,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     height: 16,
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await _showLogoutConfirmation(authProvider);
+                    },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.blue, // Background color for Submit
                       minimumSize: Size(double.infinity,
@@ -223,6 +249,37 @@ class _SettingScreenState extends State<SettingScreen> {
                   )
                 ],
               ))),
+    );
+  }
+
+  Future<void> _showLogoutConfirmation(AuthProvider authProvider) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return _buildLogoutDialog(context);
+      },
+    ).then((value) => {
+          if (value) {signout(authProvider)}
+        });
+  }
+
+  AlertDialog _buildLogoutDialog(BuildContext context) {
+    return AlertDialog(
+      title: Text('Do you want to log out?'),
+      actions: <Widget>[
+        ElevatedButton(
+          child: Text('No'),
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+        ),
+        ElevatedButton(
+          child: Text('Yes'),
+          onPressed: () {
+            Navigator.of(context).pop(true);
+          },
+        ),
+      ],
     );
   }
 }

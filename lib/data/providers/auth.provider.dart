@@ -21,8 +21,8 @@ class AuthProvider extends ChangeNotifier {
   }
 
   void logout() {
-    currentUser = null;
     currentToken = null;
+    refreshToken = null;
     loginType = null;
     notifyListeners();
   }

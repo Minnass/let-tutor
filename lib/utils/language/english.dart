@@ -106,6 +106,8 @@ class English extends Language {
   String get logout => 'Logout';
   @override
   String get switchSuccessfully => 'Switch language successfully';
+  @override
+  String get signoutSuccessfully => "Logout successfully";
   //home page
   @override
   String get seeAll => 'See All';
@@ -117,7 +119,7 @@ class English extends Language {
   @override
   String get topic => 'Topics';
   @override
-  String get level => 'Cấp độ';
+  String get level => 'Level';
   @override
   String get courseDetails => 'Course Details';
   //Schedule page;
@@ -143,4 +145,27 @@ class English extends Language {
   String get studySchedule => 'Study Schedule';
   @override
   String get save => 'Save';
+  //report dialog
+  @override
+  String get report => "Report";
+  @override
+  String get reportTitle => "Reason for report";
+  @override
+  String get reportHint => "Let us know details about your problem";
+  @override
+  String get annoy => "This tutor is annoying me";
+  @override
+  String get pretend => 'This profile is pretending to be someone or is fake';
+  @override
+  String get violate => 'This tutor is violating our policies';
+  @override
+  String get another => 'Another';
+  @override
+  String get cancel => 'Cancle';
+  @override
+  String get reportSuccessfully => "Report was sent successfully.";
+  @override
+  String get submit => "Submit";
+  @override
+  String get review => "Review";
 }

@@ -46,6 +46,7 @@ abstract class Language {
   String get website;
   String get logout;
   String get switchSuccessfully;
+  String get signoutSuccessfully;
   //home page;
   String get recommendTutor;
   String get seeAll;
@@ -67,4 +68,20 @@ abstract class Language {
   String get birthDay;
   String get studySchedule;
   String get save;
+  //report dialog
+  String get report;
+  String get reportTitle;
+  String get reportHint;
+  String get annoy;
+  String get pretend;
+  String get violate;
+  String get another;
+  String get cancel;
+  String get reportSuccessfully;
+  String get submit;
+  //request dialog
+  String get title;
+  
+  //review dialog
+  String get review;
 }

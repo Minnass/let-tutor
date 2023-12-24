@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
+import 'package:provider/provider.dart';
 
 class ReportDialog extends StatefulWidget {
   const ReportDialog({Key? key, required this.name}) : super(key: key);
@@ -9,10 +11,11 @@ class ReportDialog extends StatefulWidget {
 }
 
 class _ReportDialogState extends State<ReportDialog> {
+  late LanguageProvider languageProvider;
   int selectedOption = 0; // Initialize the selected option
-
   @override
   Widget build(BuildContext context) {
+    languageProvider = context.watch<LanguageProvider>();
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Column(
@@ -24,7 +27,7 @@ class _ReportDialogState extends State<ReportDialog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Report ${widget.name}',
+                  '${languageProvider.language.report} ${widget.name}',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 18),
                 ),
@@ -43,7 +46,7 @@ class _ReportDialogState extends State<ReportDialog> {
             child: Column(
               children: [
                 Row(
-                  children: const [
+                  children: [
                     Icon(
                       Icons.report,
                       color: Colors.blue,
@@ -53,7 +56,7 @@ class _ReportDialogState extends State<ReportDialog> {
                     ),
                     Expanded(
                       child: Text(
-                        "Help us understand what's happening",
+                        languageProvider.language.reportTitle,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 14),
                       ),
@@ -71,7 +74,7 @@ class _ReportDialogState extends State<ReportDialog> {
                       },
                     ),
                     const SizedBox(width: 4),
-                    const Expanded(child: Text('This tutor is annoying me')),
+                    Expanded(child: Text(languageProvider.language.annoy)),
                   ],
                 ),
                 Row(
@@ -85,9 +88,8 @@ class _ReportDialogState extends State<ReportDialog> {
                       },
                     ),
                     const SizedBox(width: 4),
-                    const Expanded(
-                      child: Text(
-                          'This profile is pretending to be someone or is fake'),
+                    Expanded(
+                      child: Text(languageProvider.language.pretend),
                     ),
                   ],
                 ),
@@ -102,8 +104,8 @@ class _ReportDialogState extends State<ReportDialog> {
                       },
                     ),
                     const SizedBox(width: 4),
-                    const Expanded(
-                      child: Text('This tutor is violating our policies'),
+                    Expanded(
+                      child: Text(languageProvider.language.violate),
                     ),
                   ],
                 ),
@@ -118,15 +120,15 @@ class _ReportDialogState extends State<ReportDialog> {
                       },
                     ),
                     const SizedBox(width: 4),
-                    const Expanded(
-                      child: Text('Another'),
+                    Expanded(
+                      child: Text(languageProvider.language.another),
                     ),
                   ],
                 ),
                 TextFormField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Let us know details about your problem',
+                    hintText: languageProvider.language.reportHint,
                   ),
                   maxLines: 1,
                 ),
@@ -142,7 +144,7 @@ class _ReportDialogState extends State<ReportDialog> {
                         primary: Colors.white, // Background color for Cancel
                         onPrimary: Colors.blue, // Border color for Cancel
                       ),
-                      child: Text('Cancel'),
+                      child: Text(languageProvider.language.cancel),
                     ),
                     const SizedBox(
                         width: 8), // Add some spacing between buttons
@@ -160,7 +162,8 @@ class _ReportDialogState extends State<ReportDialog> {
                                         8), // Adjust spacing between icon and text
                                 Expanded(
                                   child: Text(
-                                    'Report was sent successfully.',
+                                    languageProvider
+                                        .language.reportSuccessfully,
                                     // Style the text as needed
                                   ),
                                 ),
@@ -173,7 +176,7 @@ class _ReportDialogState extends State<ReportDialog> {
                       style: ElevatedButton.styleFrom(
                         primary: Colors.blue, // Background color for Submit
                       ),
-                      child: Text('Submit'),
+                      child: Text(languageProvider.language.submit),
                     ),
                   ],
                 ),

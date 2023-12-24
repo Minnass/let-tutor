@@ -107,6 +107,8 @@ class Vietnamese extends Language {
   String get logout => 'Đăng xuất';
   @override
   String get switchSuccessfully => 'Chuyển đổi ngôn ngữ thành công';
+  @override
+  String get signoutSuccessfully => "Đăng xuất thành công";
   //home page
   @override
   String get seeAll => 'Xem tất cả';
@@ -145,4 +147,28 @@ class Vietnamese extends Language {
   String get studySchedule => 'Study Schedule';
   @override
   String get save => 'Lưu';
+  //report dialog
+  @override
+  String get report => "Báo cáo";
+  @override
+  String get reportTitle => "Lý do báo cáo";
+  @override
+  String get reportHint => "Cho chúng tôi biết về vấn đề của bạn";
+  @override
+  String get annoy => "Giáo viên này làm phiền tôi";
+  @override
+  String get pretend => 'Hồ sơ này giả mạo';
+  @override
+  String get violate => 'Giáo viên vi phạm chính sách';
+  @override
+  String get another => 'Lý do khác';
+  @override
+  String get cancel => 'Hủy';
+  @override
+  String get reportSuccessfully => "Báo cáo gửi thành công.";
+  @override
+  String get submit => "Gửi";
+  //review dialog
+  @override
+  String get review => "Phản hồi";
 }

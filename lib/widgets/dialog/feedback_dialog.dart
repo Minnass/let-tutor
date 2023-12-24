@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/domains/entity/feedback/feedback.dart';
 import 'package:lettutor/widgets/feedback_card.dart';
+import 'package:provider/provider.dart';
 
 class FeedbackDialog extends StatefulWidget {
   final List<MyFeedback> feedbacks;
@@ -11,9 +13,10 @@ class FeedbackDialog extends StatefulWidget {
 
 class _FeedbackDialogState extends State<FeedbackDialog> {
   int selectedOption = 0; // Initialize the selected option
-
+  late LanguageProvider languageProvider;
   @override
   Widget build(BuildContext context) {
+    languageProvider = context.watch<LanguageProvider>();
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: SizedBox(
@@ -26,8 +29,8 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Review',
+                  Text(
+                    languageProvider.language.review,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                   IconButton(
