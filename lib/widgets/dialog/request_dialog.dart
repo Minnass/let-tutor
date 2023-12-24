@@ -23,9 +23,6 @@ class _RequestDialogState extends State<RequestDialog> {
     _validateText();
     if (_error.isEmpty) {
       final res = await widget.requestForLesson(_textController.text);
-      print(res);
-      print(res);
-      print(res);
       if (res) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -68,7 +65,7 @@ class _RequestDialogState extends State<RequestDialog> {
                 border: OutlineInputBorder(),
                 hintText: 'Let us know details about your desire',
               ),
-              maxLines: 15,
+              maxLines: 10,
             ),
             SizedBox(
               height: 10,

@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/data/network/apis/tutor/request/tutor_pagination.request.dart';
 import 'package:lettutor/data/network/apis/tutor/response/tutor_pagination.response.dart';
 import 'package:lettutor/data/network/apis/tutor/tutor.api.dart';
 import 'package:lettutor/data/network/dio_client.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/data/providers/favorite.provider.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/screen/homepage/home_page_header.dart';
+import 'package:lettutor/screen/tutors/tutor_search.dart';
 import 'package:lettutor/widgets/tutor_card.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +23,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   List<String> favourites = [];
   bool _isLoading = true;
   TutorApi tutorApi = TutorApi(DioClient(Dio()));
+  late LanguageProvider languageProvider;
   Future<void> _fetchRecommendedTutors(
       FavoriteProvider favoriteProvider) async {
     try {
@@ -72,6 +74,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
+    languageProvider = context.watch<LanguageProvider>();
     tutorApi.setToken(authProvider.getToken());
     FavoriteProvider favouriteRepository = context.watch<FavoriteProvider>();
     if (_isLoading) {
@@ -116,19 +119,23 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text(
-                                      'Recommended Tutors',
+                                    Text(
+                                      languageProvider.language.recommendTutor,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16),
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        Navigator.pushNamed(
-                                            context, Routes.tutors);
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (_) =>
+                                                    TutorSearchScreen(
+                                                      hasBackButton: true,
+                                                    )));
                                       },
-                                      child: const Text(
-                                        'See all',
+                                      child: Text(
+                                        languageProvider.language.seeAll,
                                         style: TextStyle(color: Colors.blue),
                                       ),
                                     )

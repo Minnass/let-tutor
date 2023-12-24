@@ -7,12 +7,14 @@ import 'package:lettutor/data/network/apis/tutor/tutor.api.dart';
 import 'package:lettutor/data/network/dio_client.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/data/providers/favorite.provider.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/widgets/search_bar.dart';
 import 'package:lettutor/widgets/tutor_card.dart';
 import 'package:provider/provider.dart';
 
 class TutorSearchScreen extends StatefulWidget {
-  const TutorSearchScreen({Key? key}) : super(key: key);
+  bool hasBackButton;
+  TutorSearchScreen({Key? key, required this.hasBackButton}) : super(key: key);
 
   @override
   _TutorSearchScreenState createState() => _TutorSearchScreenState();
@@ -42,7 +44,7 @@ class _TutorSearchScreenState extends State<TutorSearchScreen> {
   List<String> selectedTags = ['All'];
   String keyWord = '';
   bool _isLoading = true;
-
+  late LanguageProvider languageProvider;
   @override
   void initState() {
     super.initState();
@@ -82,7 +84,7 @@ class _TutorSearchScreenState extends State<TutorSearchScreen> {
     tutors.sort((a, b) => (b.rating ?? 0).compareTo(a.rating ?? 0));
     List<TutorResponse> favoriteTutors = [];
     List<TutorResponse> nonFavoriteTutors = [];
-
+    late LanguageProvider languageProvider;
     tutors.forEach((tutor) {
       if (favourites.contains(tutor.id)) {
         favoriteTutors.add(tutor);
@@ -127,6 +129,7 @@ class _TutorSearchScreenState extends State<TutorSearchScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
+    languageProvider = context.watch<LanguageProvider>();
     favourites = context.watch<FavoriteProvider>().itemIds;
     tutorApi.setToken(authProvider.getToken());
     if (_isLoading) {
@@ -134,9 +137,10 @@ class _TutorSearchScreenState extends State<TutorSearchScreen> {
     }
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: widget.hasBackButton,
           elevation: 0,
-          title: const Text(
-            'Tutors',
+          title:  Text(
+            languageProvider.language.tutor,
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
           backgroundColor: Colors.blueAccent,

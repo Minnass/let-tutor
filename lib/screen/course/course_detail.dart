@@ -6,6 +6,7 @@ import 'package:lettutor/data/network/apis/course/request/course_details.request
 import 'package:lettutor/data/network/apis/course/response/course_details.response.dart';
 import 'package:lettutor/data/network/dio_client.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/widgets/topic_card.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +22,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   CourseTutorResponse? course;
   bool _isLoading = true;
   CourseApi courseApi = CourseApi(DioClient(Dio()));
+  late LanguageProvider languageProvider;
   Future<void> _fetchCourse() async {
     try {
       final res = await courseApi
@@ -30,9 +32,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
         _isLoading = false;
       });
     } catch (error) {
-      print(error);
-      print(error);
-      print(error);
       setState(() {
         _isLoading = false;
       });
@@ -42,6 +41,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
+    languageProvider = context.watch<LanguageProvider>();
     courseApi.setToken(authProvider.getToken());
     _fetchCourse();
     return Scaffold(
@@ -52,7 +52,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             color: Colors.white,
           ),
           title: Text(
-            'Course Detail',
+            languageProvider.language.courseDetails,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),
@@ -98,17 +98,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(16),
-                      child: TextButton(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                          minimumSize: const Size.fromHeight(44),
-                          backgroundColor: Colors.blue,
-                        ),
-                        child: const Text(
-                          'Discover',
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                      ),
                     ),
                     const SizedBox(height: 16),
                     Padding(

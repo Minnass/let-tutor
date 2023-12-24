@@ -6,9 +6,12 @@ import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/data/network/apis/auth/auth.api.dart';
 import 'package:lettutor/data/network/apis/auth/request/login.request.dart';
 import 'package:lettutor/data/network/dio_client.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/domains/tuple.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/utils/enum/login_type.dart';
+import 'package:lettutor/utils/language/english.dart';
+import 'package:lettutor/utils/language/vietnam.dart';
 import 'package:lettutor/utils/validate_email.dart';
 import 'package:provider/provider.dart';
 
@@ -22,18 +25,21 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  late AuthProvider authProvider;
+  late LanguageProvider languageProvider;
   bool _isAuthenticating = false;
   String _emailErrorText = '';
-  String chosenLanguage = 'English';
+  late String chosenLanguage  ;
   AuthApi authApi = AuthApi(DioClient(Dio()));
   void _handleEmailvalidation() {
-    Tuple _EmailValidation = validateEmail(_emailController.text);
+    Tuple _EmailValidation =
+        validateEmail(_emailController.text, languageProvider);
     _emailErrorText = _EmailValidation.error;
     setState(() {});
   }
 
-  Future<void> _handleEmailLogin(
-      LoginRequest request, AuthProvider authProvider) async {
+  Future<void> _handleEmailLogin(LoginRequest request,
+      AuthProvider authProvider, LanguageProvider languageProvider) async {
     try {
       setState(() {
         _isAuthenticating = true;
@@ -57,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Icon(Icons.check_circle, color: Colors.green),
                 SizedBox(width: 8),
                 Expanded(
-                  child: Text('Login successfully.'),
+                  child: Text(languageProvider.language.loginSuccess),
                 ),
               ],
             ),
@@ -111,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Icon(Icons.check_circle, color: Colors.green),
                   SizedBox(width: 8),
                   Expanded(
-                    child: Text('Login successfully.'),
+                    child: Text(languageProvider.language.loginSuccess),
                   ),
                 ],
               ),
@@ -170,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Icon(Icons.check_circle, color: Colors.green),
                   SizedBox(width: 8),
                   Expanded(
-                    child: Text('Login successfully.'),
+                    child: Text(languageProvider.language.loginSuccess),
                   ),
                 ],
               ),
@@ -207,7 +213,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = context.watch<AuthProvider>();
+    authProvider = context.watch<AuthProvider>();
+    languageProvider = context.watch<LanguageProvider>();
+    chosenLanguage=languageProvider.language.id;
     return Scaffold(
       body: _isAuthenticating
           ? const Center(child: CircularProgressIndicator(color: Colors.blue))
@@ -220,17 +228,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     alignment: Alignment.centerRight,
                     child: DropdownButton<String>(
                       value: chosenLanguage,
-                      items: const [
+                      items: [
                         DropdownMenuItem<String>(
-                          value: 'English',
-                          child: Text('English'),
+                          value: 'EN',
+                          child: Text(languageProvider.en),
                         ),
                         DropdownMenuItem<String>(
-                          value: 'Tiếng Việt',
-                          child: Text('Tiếng Việt'),
+                          value: 'VI',
+                          child: Text(languageProvider.vi),
                         ),
                       ],
-                      onChanged: (String? language) {},
+                      onChanged: (String? language) {
+                        if (language == 'VI') {
+                          chosenLanguage = 'VI';
+                          languageProvider.setLanguage(Vietnamese());
+                        } else {
+                          chosenLanguage = 'EN';
+                          languageProvider.setLanguage(English());
+                        }
+                      },
                     ),
                   ),
                   Padding(
@@ -288,7 +304,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'Password',
+                    languageProvider.language.password,
                     style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -319,14 +335,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         final request = LoginRequest(
                             email: _emailController.text,
                             password: _passwordController.text);
-                        await _handleEmailLogin(request, authProvider);
+                        await _handleEmailLogin(
+                            request, authProvider, languageProvider);
                       }
                     },
                     style: TextButton.styleFrom(
                         minimumSize: const Size.fromHeight(56),
                         backgroundColor: Colors.blue),
                     child: Text(
-                      'Login',
+                      languageProvider.language.login,
                       style: const TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),
@@ -336,13 +353,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.pushNamed(context, Routes.forgotPassword);
                     },
                     child: Text(
-                      'Forgot Password?',
+                      languageProvider.language.forgotPassword,
                       style: const TextStyle(fontSize: 16),
                     ),
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Or continue with',
+                    languageProvider.language.loginWith,
                     textAlign: TextAlign.center,
                   ),
                   Padding(
@@ -414,7 +431,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Not a member yet?',
+                        languageProvider.language.registerQuestion,
                         style: const TextStyle(fontSize: 16),
                       ),
                       TextButton(
@@ -422,7 +439,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.pushNamed(context, Routes.register);
                         },
                         child: Text(
-                          'Sign up',
+                          languageProvider.language.register,
                           style: const TextStyle(fontSize: 16),
                         ),
                       ),

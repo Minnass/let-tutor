@@ -4,10 +4,10 @@ import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/data/network/apis/auth/auth.api.dart';
 import 'package:lettutor/data/network/apis/auth/request/register.request.dart';
 import 'package:lettutor/data/network/dio_client.dart';
-import 'package:lettutor/data/network/utils/custom_exception.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/domains/tuple.dart';
-import 'package:lettutor/domains/account/account.dart';
-import 'package:lettutor/data/providers/auth.provider.dart';
+import 'package:lettutor/utils/language/english.dart';
+import 'package:lettutor/utils/language/vietnam.dart';
 import 'package:lettutor/utils/validate_email.dart';
 import 'package:provider/provider.dart';
 
@@ -19,27 +19,28 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  String chosenLanguage = 'English';
+  late String chosenLanguage;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   AuthApi authApi = AuthApi(DioClient(Dio()));
-
+  late LanguageProvider languageProvider;
   String _emailErrorText = '';
   String _passwordErrorText = '';
   String _confirmErrorText = '';
 
   void _handleEmailvalidation() {
-    Tuple _EmailValidation = validateEmail(_emailController.text);
+    Tuple _EmailValidation =
+        validateEmail(_emailController.text, languageProvider);
     _emailErrorText = _EmailValidation.error;
     setState(() {});
   }
 
   void _handlePasswordValidation() {
     if (_passwordController.text.isEmpty) {
-      _passwordErrorText = "Password cannot be empty";
+      _passwordErrorText = languageProvider.language.emptyPassword;
     } else if (_passwordController.text.length < 6) {
-      _passwordErrorText = "Password must be at least 6 characters";
+      _passwordErrorText = languageProvider.language.passwordTooShort;
     } else {
       _passwordErrorText = '';
     }
@@ -48,11 +49,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _handleConfirmPasswordValidation() {
     if (_confirmPasswordController.text.isEmpty) {
-      _confirmErrorText = 'Confirm password cannot be empty';
+      _confirmErrorText = languageProvider.language.confirmPasswordEmpty;
     } else if (_confirmPasswordController.text.length < 6) {
-      _confirmErrorText = 'Confirm password must be at least 6 characters';
+      _confirmErrorText = languageProvider.language.passwordTooShort;
     } else if (_confirmPasswordController.text != _passwordController.text) {
-      _confirmErrorText = 'Confirm password does not match';
+      _confirmErrorText = languageProvider.language.confirmPasswordNotMatch;
     } else {
       _confirmErrorText = '';
     }
@@ -61,6 +62,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    languageProvider = context.watch<LanguageProvider>();
+    chosenLanguage = languageProvider.language.id;
     return Scaffold(
       body: SingleChildScrollView(
         padding:
@@ -68,49 +71,49 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.arrow_back,
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.arrow_back,
+                      color: Colors.blue,
+                    ),
+                    Text(
+                      languageProvider.language.backButton,
+                      style: TextStyle(
                         color: Colors.blue,
                       ),
-                      Text(
-                        'Back',
-                        style: TextStyle(
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                DropdownButton<String>(
-                  value: chosenLanguage,
-                  items: const [
-                    DropdownMenuItem<String>(
-                      value: 'English',
-                      child: Text('English'),
-                    ),
-                    DropdownMenuItem<String>(
-                      value: 'Tiếng Việt',
-                      child: Text('Tiếng Việt'),
                     ),
                   ],
-                  onChanged: (String? language) {
-                    // Handle language selection
-                    setState(() {
-                      chosenLanguage = language ?? 'English';
-                    });
-                  },
                 ),
-              ],
-            ),
+              ),
+              DropdownButton<String>(
+                value: chosenLanguage,
+                items: [
+                  DropdownMenuItem<String>(
+                    value: 'EN',
+                    child: Text(languageProvider.en),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'VI',
+                    child: Text(languageProvider.vi),
+                  ),
+                ],
+                onChanged: (String? language) {
+                  if (language == 'VI') {
+                    chosenLanguage = 'VI';
+                    languageProvider.setLanguage(Vietnamese());
+                  } else {
+                    chosenLanguage = 'EN';
+                    languageProvider.setLanguage(English());
+                  }
+                },
+              ),
+            ]),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Container(
@@ -148,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Password',
+              languageProvider.language.password,
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
             const SizedBox(height: 8),
@@ -177,7 +180,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Confirm Password',
+              languageProvider.language.confirmPassword,
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
             const SizedBox(height: 8),
@@ -227,7 +230,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     8), // Adjust spacing between icon and text
                             Expanded(
                               child: Text(
-                                'Register successfully.',
+                                languageProvider.language.registerSuccess,
                                 // Style the text as needed
                               ),
                             ),
@@ -263,7 +266,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   minimumSize: const Size.fromHeight(56),
                   backgroundColor: Colors.blue),
               child: Text(
-                'Register',
+                languageProvider.language.register,
                 style: const TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),
@@ -272,7 +275,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Already account',
+                  languageProvider.language.alreadyHaveAccount,
                   style: const TextStyle(fontSize: 16),
                 ),
                 TextButton(
@@ -280,7 +283,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Navigator.pop(context);
                   },
                   child: Text(
-                    'Login',
+                    languageProvider.language.login,
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),

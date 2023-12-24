@@ -1,7 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lettutor/const/routes.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/domains/course/course.dart';
 import 'package:lettutor/domains/tutor/tutor.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
@@ -14,7 +13,6 @@ import 'package:lettutor/screen/main/main_page.dart';
 import 'package:lettutor/screen/profile/account.profile.dart';
 import 'package:lettutor/screen/room/room.dart';
 import 'package:lettutor/screen/setting/setting.dart';
-import 'package:lettutor/screen/tutors/feedback_write.dart';
 import 'package:lettutor/screen/tutors/feedbacks.dart';
 import 'package:lettutor/screen/tutors/tutor_search.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +30,7 @@ class LettutorApp extends StatefulWidget {
 
 class _LettutorAppState extends State<LettutorApp> {
   final authProvider = AuthProvider();
+  final languageProvider = LanguageProvider();
   final schedulesProvider = ScheduleProvider();
   final favouriteProvier = FavoriteProvider();
   List<Tutor> listTutor = [];
@@ -50,6 +49,9 @@ class _LettutorAppState extends State<LettutorApp> {
           ChangeNotifierProvider(
             create: (_) => authProvider,
           ),
+          ChangeNotifierProvider(
+            create: (_) => languageProvider,
+          ),
           ChangeNotifierProvider(create: (_) => schedulesProvider),
           ChangeNotifierProvider(create: (_) => favouriteProvier),
           Provider(create: (context) => listTutor),
@@ -62,7 +64,7 @@ class _LettutorAppState extends State<LettutorApp> {
             Routes.login: (context) => const LoginScreen(),
             Routes.register: (context) => const RegisterScreen(),
             Routes.forgotPassword: (context) => const ForgotPasswordScreen(),
-            Routes.tutors: (context) => const TutorSearchScreen(),
+            // Routes.tutors: (context) => const TutorSearchScreen(),
             Routes.main: (context) => const MainScreen(),
             // Routes.courseDetail: (context) => const CourseDetailScreen(),
             // Routes.teacherDetail: (context) => const TutorDetailScreen(),

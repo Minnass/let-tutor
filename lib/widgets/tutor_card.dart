@@ -24,17 +24,10 @@ class _TutorSearchCardState extends State<TutorSearchCard> {
   TutorApi tutorApi = TutorApi(DioClient(Dio()));
   Future<void> addFavoriteTutor() async {
     try {
-      print(widget.tutor.id);
-      print(widget.tutor.id);
-      print(widget.tutor.id);
       await tutorApi
           .addFavoriteTutor(FavoriteTutorRequest(tutorId: widget.tutor.id!));
     } catch (error) {
-      print('dada');
-      print('dada');
-      print('dada');
-      print('dada');
-      print('dada');
+
     }
   }
 

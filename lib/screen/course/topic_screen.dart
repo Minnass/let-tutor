@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/data/network/apis/course/response/topic.response.dart';
-import 'package:lettutor/domains/course/topic.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class TopicScreen extends StatelessWidget {
@@ -8,6 +9,7 @@ class TopicScreen extends StatelessWidget {
   const TopicScreen({Key? key, required this.topic}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -23,7 +25,7 @@ class TopicScreen extends StatelessWidget {
       body: topic.nameFile == null
           ? Center(
               child: Text(
-                'No materials found',
+                languageProvider.language.noMaterial,
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.black54,

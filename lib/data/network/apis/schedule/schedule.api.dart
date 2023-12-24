@@ -42,17 +42,13 @@ class ScheduleApi {
     }
   }
 
-  Future<BookedScheduleResponse> requestForLesson(LessonRequest request) async {
+  Future<void> requestForLesson(LessonRequest request) async {
     try {
       Map<String, dynamic> jsonRequest = request.toJson();
       final res = await dioClient.post(
           '${Endpoints.lessonRequest}/${request.bookingId}',
           data: jsonRequest);
-      return BookedScheduleResponse.fromJson(res);
     } on DioException catch (e) {
-      print(e.response!.data);
-      print(e.response!.data);
-      print(e.response!.data);
       final customError = CustomErrorResponse.fromJson(
           e.response?.data as Map<String, dynamic>);
       throw CustomException(customError.message);

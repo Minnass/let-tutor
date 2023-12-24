@@ -81,9 +81,4 @@ class Course {
           .toList(),
     );
   }
-  @override
-  String toString() {
-    // TODO: implement toString
-    return this.name;
-  }
 }

@@ -40,10 +40,6 @@ class CourseApi {
     } on DioException catch (e) {
       final customError = CustomErrorResponse.fromJson(
           e.response?.data as Map<String, dynamic>);
-      print(e.response?.data);
-      print(e.response?.data);
-      print(e.response?.data);
-      print(e.response?.data);
       throw CustomException(customError.message);
     }
   }

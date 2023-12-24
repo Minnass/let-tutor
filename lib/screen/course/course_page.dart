@@ -6,6 +6,7 @@ import 'package:lettutor/data/network/apis/course/response/course_pagination.res
 import 'package:lettutor/data/network/constants/pagination.dart';
 import 'package:lettutor/data/network/dio_client.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/widgets/course_card.dart';
 import 'package:lettutor/widgets/search_bar.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +34,7 @@ class _CoursePageState extends State<CourseScreen> {
   List<String> selectedTopics = [];
   List<String> selectedLevels = [];
   bool _isLoading = true;
-
+  late LanguageProvider languageProvider;
   CourseApi courseApi = CourseApi(DioClient(Dio()));
 
   void handleSearchSubmit(String searchText) {}
@@ -88,6 +89,7 @@ class _CoursePageState extends State<CourseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    languageProvider = context.watch<LanguageProvider>();
     final authProvider = context.watch<AuthProvider>();
     courseApi.setToken(authProvider.getToken());
     if (_isLoading) {
@@ -102,14 +104,14 @@ class _CoursePageState extends State<CourseScreen> {
               Tab(
                 icon: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Icon(
                       Icons.school_outlined,
                       color: Colors.blue,
                     ),
                     SizedBox(width: 1),
                     Text(
-                      'All Courses',
+                      languageProvider.language.allCourse,
                       style: TextStyle(fontSize: 12, color: Colors.blue),
                     )
                   ],

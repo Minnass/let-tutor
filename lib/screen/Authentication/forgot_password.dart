@@ -4,8 +4,8 @@ import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/data/network/apis/auth/auth.api.dart';
 import 'package:lettutor/data/network/apis/auth/request/forgot_password.request.dart';
 import 'package:lettutor/data/network/dio_client.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/domains/tuple.dart';
-import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/utils/validate_email.dart';
 import 'package:provider/provider.dart';
 
@@ -18,10 +18,12 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _emailController = TextEditingController();
+  late LanguageProvider languageProvider;
   AuthApi authApi = AuthApi(DioClient(Dio()));
   String _emailErrorText = '';
   _handleValidation() {
-    Tuple _EmailValidation = validateEmail(_emailController.text);
+    Tuple _EmailValidation =
+        validateEmail(_emailController.text, languageProvider);
     _emailErrorText = _EmailValidation.error;
     setState(() {});
   }
@@ -37,7 +39,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               Icon(Icons.check_circle, color: Colors.green),
               SizedBox(width: 8),
               Expanded(
-                child: Text('Email send success!'),
+                child: Text(languageProvider.language.sendRecoveryEmailSuccess),
               ),
             ],
           ),
@@ -67,6 +69,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    languageProvider = context.watch<LanguageProvider>();
     return Scaffold(
         body: SingleChildScrollView(
             padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -95,7 +98,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Enter registered Email',
+                  languageProvider.language.enterEmailToResetPassword,
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -139,7 +142,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       minimumSize: const Size.fromHeight(56),
                       backgroundColor: Colors.blue),
                   child: Text(
-                    'Send Recovery Email',
+                    languageProvider.language.sendRecoveryEmail,
                     style: const TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
@@ -149,7 +152,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     Navigator.pop(context);
                   },
                   child: Text(
-                    'Back to login',
+                    languageProvider.language.backToLogin,
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),

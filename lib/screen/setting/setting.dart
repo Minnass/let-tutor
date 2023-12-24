@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/domains/tutor/tutor.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
+import 'package:lettutor/domains/entity/user/user.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
+import 'package:lettutor/screen/Authentication/login.dart';
 import 'package:lettutor/screen/profile/account.profile.dart';
+import 'package:lettutor/screen/setting/advanced_setting.dart';
+import 'package:lettutor/utils/enum/login_type.dart';
+import 'package:lettutor/utils/first_character.dart';
 import 'package:lettutor/widgets/setting_item.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -13,15 +19,35 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  late Tutor tutor;
+  late LanguageProvider languageProvider;
+  late AuthProvider authProvider;
+  void _signOut(AuthProvider authProvider) {
+    if (authProvider.loginType == LoginType.email) {
+      authProvider.logout();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+      );
+    } else if (authProvider.loginType == LoginType.google) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+      );
+    }
+  }
+
+  late User user;
   @override
   Widget build(BuildContext context) {
-    tutor = Provider.of<AuthProvider>(context).tutor;
+    languageProvider = Provider.of<LanguageProvider>(context);
+    authProvider = context.watch<AuthProvider>();
+    user = authProvider.getCurrentUser();
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         elevation: 0,
-        title: const Text(
-          'Settings',
+        title: Text(
+          languageProvider.language.setting,
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         backgroundColor: Colors.blueAccent,
@@ -42,19 +68,40 @@ class _SettingScreenState extends State<SettingScreen> {
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                         ),
-                        child: Image.network(
-                          tutor.avatar != null ? tutor.avatar : '',
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(
-                            Icons.error_outline_rounded,
-                            color: Colors.red,
-                            size: 32,
+                        child: Container(
+                          width: 70,
+                          height: 70,
+                          clipBehavior: Clip.hardEdge,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
                           ),
+                          child: user.avatar != null
+                              ? Image.network(
+                                  user.avatar!,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(
+                                    Icons.error_outline_rounded,
+                                    color: Colors.red,
+                                    size: 32,
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  backgroundColor: Colors.blue,
+                                  radius: 50,
+                                  child: Text(
+                                    getFirstCharacters(user.name),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24,
+                                    ),
+                                  ),
+                                ),
                         ),
                       ),
                       Text(
-                        tutor.name != null ? tutor.name : '',
+                        user.name ?? '',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
@@ -63,7 +110,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => AccountProfileScreen()));
                         },
-                        child: const Text('Edit Profile'),
+                        child: Text(languageProvider.language.editProfile),
                       ),
                     ]),
                     // child: Row(
@@ -106,45 +153,57 @@ class _SettingScreenState extends State<SettingScreen> {
                   const SizedBox(
                     height: 16,
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(top: 16),
                     child: SettingItem(
-                        text: 'View Feedbacks',
+                        text: languageProvider.language.viewFeedback,
                         iconData: Icons.person_outlined),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: GestureDetector(
                         onTap: () => {},
-                        child: const SettingItem(
-                            text: 'Booking History', iconData: Icons.list)),
+                        child: SettingItem(
+                            text: languageProvider.language.bookingHistory,
+                            iconData: Icons.list)),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: GestureDetector(
+                      onTap: () => {},
+                      child: SettingItem(
+                          text: languageProvider.language.courses,
+                          iconData: Icons.school),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: GestureDetector(
-                      onTap: () => {},
-                      child: const SettingItem(
-                          text: 'Courses', iconData: Icons.school),
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const AdvancedSettingPage())),
+                      child: SettingItem(
+                          text: languageProvider.language.advancedSetting,
+                          iconData: Icons.settings_outlined),
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 16),
-                    child: SettingItem(
-                        text: 'Advanced Settings',
-                        iconData: Icons.settings_outlined),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: GestureDetector(
                         onTap: () => {},
-                        child: const SettingItem(
-                            text: 'Become a tutor',
+                        child: SettingItem(
+                            text: languageProvider.language.becomeTutor,
                             iconData: Icons.emoji_people)),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 16),
-                    child: SettingItem(
-                        text: 'Our Website', iconData: Icons.language),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: GestureDetector(
+                      onTap: () {
+                        launch('https://sandbox.app.lettutor.com/');
+                      },
+                      child: SettingItem(
+                          text: languageProvider.language.website,
+                          iconData: Icons.language),
+                    ),
                   ),
                   const SizedBox(
                     height: 48,
@@ -160,7 +219,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       minimumSize: Size(double.infinity,
                           50), // Set the minimum width and height
                     ),
-                    child: Text('Logout'),
+                    child: Text(languageProvider.language.logout),
                   )
                 ],
               ))),

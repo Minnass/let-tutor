@@ -36,9 +36,6 @@ class _UpcomingTabState extends State<UpcomingTab> {
           orderBy: 'meeting',
           sortBy: 'asc'));
       bookingInfoList = res.data?.rows ?? [];
-      print(bookingInfoList[0].id);
-      print(bookingInfoList[0].id);
-      print(bookingInfoList[0].id);
       hasNext = res.data!.count! > bookingInfoList.length;
       setState(() {
         _isLoading = false;

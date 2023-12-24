@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lettutor/const/countries.dart';
 import 'package:lettutor/const/courseLevels.dart';
-import 'package:lettutor/domains/tutor/tutor.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
+import 'package:lettutor/domains/entity/user/user.dart';
 import 'package:lettutor/utils/country_convertor.dart';
-import 'package:lettutor/widgets/custom_circle_avatar.dart';
+import 'package:lettutor/utils/first_character.dart';
 import 'package:lettutor/widgets/date_selector.dart';
 import 'package:provider/provider.dart';
 
@@ -18,18 +19,22 @@ class AccountProfileScreen extends StatefulWidget {
 class _AccountProfileScreenState extends State<AccountProfileScreen> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _studyScheduleController = TextEditingController();
-  late Tutor account;
+  late LanguageProvider languageProvider;
+  late AuthProvider authProvider;
+  late User user;
   final ImagePicker picker = ImagePicker();
-  void Save() {
-    account.name = _nameController.text;
-    account.studySchedule = _studyScheduleController.text;
+  void Save() {}
+  void initValue(User user) {
+    _nameController.text = user.name ?? '';
+    _studyScheduleController.text = user.studySchedule ?? '';
   }
 
   @override
   Widget build(BuildContext context) {
-    account = Provider.of<AuthProvider>(context).tutor;
-    _nameController.text = account.name;
-    _studyScheduleController.text = account.studySchedule ?? '';
+    languageProvider = context.watch<LanguageProvider>();
+    authProvider = context.watch<AuthProvider>();
+    user = authProvider.getCurrentUser();
+    initValue(user);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -37,7 +42,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
         leading: BackButton(
           color: Colors.white,
         ),
-        title: Text('Profile',
+        title: Text(languageProvider.language.profile,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       ),
       body: SingleChildScrollView(
@@ -49,8 +54,37 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
               child: Column(children: [
                 Stack(
                   children: [
-                    CustomCircleAvatar(
-                        dimension: 120, avatarUrl: account.avatar ?? ''),
+                    Container(
+                      width: 70,
+                      height: 70,
+                      clipBehavior: Clip.hardEdge,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                      child: user.avatar != null
+                          ? Image.network(
+                              user.avatar!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(
+                                Icons.error_outline_rounded,
+                                color: Colors.red,
+                                size: 32,
+                              ),
+                            )
+                          : CircleAvatar(
+                              backgroundColor: Colors.blue,
+                              radius: 50,
+                              child: Text(
+                                getFirstCharacters(user.name),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                ),
+                              ),
+                            ),
+                    ),
                     Positioned(
                       child: GestureDetector(
                         onTap: () async {
@@ -79,7 +113,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Name',
+              languageProvider.language.name,
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey[900],
@@ -102,12 +136,12 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Email Address',
+              languageProvider.language.email,
               style: TextStyle(fontSize: 16, color: Colors.grey[900]),
             ),
             const SizedBox(height: 4),
             TextField(
-              controller: TextEditingController(text: account.email),
+              controller: TextEditingController(text: user.email),
               enabled: false,
               autocorrect: false,
               decoration: InputDecoration(
@@ -125,7 +159,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Country',
+              languageProvider.language.country,
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey[900],
@@ -134,7 +168,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
             const SizedBox(height: 4),
             DropdownButtonFormField(
               isExpanded: true,
-              value: account.country,
+              value: user.country,
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 4,
@@ -155,18 +189,18 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                       )))
                   .toList(),
               onChanged: (value) {
-                account.country = value;
+                user.country = value;
               },
             ),
             const SizedBox(height: 16),
-            Text('Phone Number',
+            Text(languageProvider.language.phoneNumber,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[900],
                 )),
             const SizedBox(height: 4),
             TextField(
-              controller: TextEditingController(text: account.phone),
+              controller: TextEditingController(text: user.phone),
               enabled: false,
               autocorrect: false,
               decoration: InputDecoration(
@@ -183,22 +217,22 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Text('Birthday',
+            Text(languageProvider.language.birthDay,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[900],
                 )),
             const SizedBox(height: 4),
-            SelectDate(initialDate: account.birthday),
+            SelectDate(initialDate: user.birthday),
             const SizedBox(height: 16),
-            Text('Level',
+            Text(languageProvider.language.level,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[900],
                 )),
             const SizedBox(height: 4),
             DropdownButtonFormField(
-              value: account.level,
+              value: user.level,
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 4,
@@ -217,11 +251,11 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                       ))
                   .toList(),
               onChanged: (value) {
-                account.level = value;
+                user.level = value;
               },
             ),
             const SizedBox(height: 16),
-            Text('Study Schedule',
+            Text(languageProvider.language.studySchedule,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[900],
@@ -244,30 +278,13 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
             const SizedBox(height: 24),
             TextButton(
               onPressed: () {
-                Provider.of<AuthProvider>(context)
-                    .updateAccount('ad', 'da', 'da', 'ad');
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //   SnackBar(
-                //     content: Row(
-                //       children: [
-                //         Icon(Icons.check_circle, color: Colors.green),
-                //         SizedBox(width: 8),
-                //         Expanded(
-                //           child: Text(
-                //             'Update profile successfully',
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //     duration: Duration(seconds: 1),
-                //   ),
-                // );
+                Save();
               },
               style: TextButton.styleFrom(
                 backgroundColor: Colors.blue,
               ),
-              child: const Text(
-                'SAVE',
+              child: Text(
+                languageProvider.language.save,
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.white,

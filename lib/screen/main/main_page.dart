@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/screen/course/course_page.dart';
 import 'package:lettutor/screen/homepage/home_page.dart';
 import 'package:lettutor/screen/schedule/schedule.dart';
 import 'package:lettutor/screen/setting/setting.dart';
 import 'package:lettutor/screen/tutors/tutor_search.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -13,17 +15,19 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  late LanguageProvider languageProvider;
   List<Widget> screens = [
-    const HomePageScreen(),
-    const TutorSearchScreen(),
-    const ScheduleScreen(),
-    const CourseScreen(),
-    const SettingScreen(),
+    HomePageScreen(),
+    TutorSearchScreen(hasBackButton: false),
+    ScheduleScreen(),
+    CourseScreen(),
+    SettingScreen(),
   ];
 
   int chosenScreenIndex = 0;
   @override
   Widget build(BuildContext context) {
+    languageProvider = context.watch<LanguageProvider>();
     return Scaffold(
       body: screens[chosenScreenIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -37,14 +41,21 @@ class _MainScreenState extends State<MainScreen> {
         },
         elevation: 20,
         currentIndex: chosenScreenIndex,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Tutors'),
+        items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.schedule_outlined), label: 'Schedule'),
-          BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Courses'),
+              icon: Icon(Icons.home_filled),
+              label: languageProvider.language.home),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: 'Settings'),
+              icon: Icon(Icons.people), label: languageProvider.language.tutor),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.schedule_outlined),
+              label: languageProvider.language.schedule),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.school),
+              label: languageProvider.language.course),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: languageProvider.language.setting),
         ],
       ),
     );
