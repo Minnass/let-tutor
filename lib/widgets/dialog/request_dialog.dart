@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
+import 'package:provider/provider.dart';
 
 class RequestDialog extends StatefulWidget {
   final Future<bool> Function(String request) requestForLesson;
@@ -10,17 +12,18 @@ class RequestDialog extends StatefulWidget {
 
 class _RequestDialogState extends State<RequestDialog> {
   final _textController = TextEditingController();
+  late LanguageProvider languageProvider;
   String _error = '';
-  void _validateText() {
+  void _validateText(LanguageProvider languageProvider) {
     if (_textController.text.isEmpty) {
-      _error = 'This field must not be empty';
+      _error = languageProvider.language.emptyRequest;
     } else {
       _error = '';
     }
   }
 
   Future<void> _sendRequest() async {
-    _validateText();
+    _validateText(languageProvider);
     if (_error.isEmpty) {
       final res = await widget.requestForLesson(_textController.text);
       if (res) {
@@ -31,7 +34,8 @@ class _RequestDialogState extends State<RequestDialog> {
                 Icon(Icons.check_circle, color: Colors.green),
                 SizedBox(width: 8),
                 Expanded(
-                  child: Text('Send request successfully.'),
+                  child:
+                      Text(languageProvider.language.sendRequestSuccessfully),
                 ),
               ],
             ),
@@ -46,13 +50,14 @@ class _RequestDialogState extends State<RequestDialog> {
 
   @override
   Widget build(BuildContext context) {
+    languageProvider = context.watch<LanguageProvider>();
     return Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
           child: Column(children: [
             Text(
-              'What do you want from this tutor?',
+              languageProvider.language.requestTitle,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             SizedBox(
@@ -63,7 +68,7 @@ class _RequestDialogState extends State<RequestDialog> {
               decoration: InputDecoration(
                 errorText: _error.isEmpty ? '' : _error,
                 border: OutlineInputBorder(),
-                hintText: 'Let us know details about your desire',
+                hintText: languageProvider.language.requestHint,
               ),
               maxLines: 10,
             ),
@@ -81,7 +86,7 @@ class _RequestDialogState extends State<RequestDialog> {
                     primary: Colors.white, // Background color for Cancel
                     onPrimary: Colors.blue, // Border color for Cancel
                   ),
-                  child: Text('Cancel'),
+                  child: Text(languageProvider.language.cancel),
                 ),
                 const SizedBox(width: 8), // Add some spacing between buttons
                 ElevatedButton(
@@ -91,7 +96,7 @@ class _RequestDialogState extends State<RequestDialog> {
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue, // Background color for Submit
                   ),
-                  child: Text('Submit'),
+                  child: Text(languageProvider.language.submit),
                 ),
               ],
             ),

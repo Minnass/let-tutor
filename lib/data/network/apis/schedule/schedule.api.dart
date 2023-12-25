@@ -42,6 +42,32 @@ class ScheduleApi {
     }
   }
 
+  Future<BookedScheduleResponse> getLatestUpcomingSchedule(
+      LatestUpcomingSchedule request) async {
+    try {
+      Map<String, dynamic> jsonRequest = request.toJson();
+      final res = await dioClient.get(Endpoints.bookedClass,
+          queryParameters: jsonRequest);
+      return BookedScheduleResponse.fromJson(res);
+    } on DioException catch (e) {
+      final customError = CustomErrorResponse.fromJson(
+          e.response?.data as Map<String, dynamic>);
+      throw CustomException(customError.message);
+    }
+  }
+
+  Future<int> getTotalTime() async {
+    try {
+      final res = await dioClient.get(Endpoints.totalTime);
+      return res['total'];
+    } on DioException catch (e) {
+      final customError = CustomErrorResponse.fromJson(
+          e.response?.data as Map<String, dynamic>);
+      throw CustomException(customError.message);
+    }
+  }
+
+
   Future<void> requestForLesson(LessonRequest request) async {
     try {
       Map<String, dynamic> jsonRequest = request.toJson();

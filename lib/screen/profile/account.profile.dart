@@ -1,13 +1,18 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lettutor/const/countries.dart';
 import 'package:lettutor/const/courseLevels.dart';
+import 'package:lettutor/const/testPreparation.dart';
+import 'package:lettutor/const/topic.dart';
+import 'package:lettutor/data/network/apis/user/request/update_info.request.dart';
+import 'package:lettutor/data/network/apis/user/user.api.dart';
+import 'package:lettutor/data/network/dio_client.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/domains/entity/user/user.dart';
 import 'package:lettutor/utils/country_convertor.dart';
 import 'package:lettutor/utils/first_character.dart';
-import 'package:lettutor/widgets/date_selector.dart';
 import 'package:provider/provider.dart';
 
 class AccountProfileScreen extends StatefulWidget {
@@ -18,15 +23,75 @@ class AccountProfileScreen extends StatefulWidget {
 
 class _AccountProfileScreenState extends State<AccountProfileScreen> {
   TextEditingController _nameController = TextEditingController();
+  String _nameError = '';
   TextEditingController _studyScheduleController = TextEditingController();
   late LanguageProvider languageProvider;
   late AuthProvider authProvider;
   late User user;
+  UserApi userApi = UserApi(DioClient(Dio()));
   final ImagePicker picker = ImagePicker();
-  void Save() {}
+  List<String> chosenTopics = [];
+  List<String> chosenTestPreparations = [];
+  late String country;
+  late String level;
+  bool firstLoad = true;
+  void validateName() {
+    if (_nameController.text.isEmpty) {
+      _nameError = languageProvider.language.emptyRequest;
+    } else {
+      _nameError = '';
+    }
+  }
+
+  Future<void> save() async {
+    validateName();
+    if (_nameError.isEmpty) {
+      try {
+        await userApi.updateInfor(UpdateRequest(
+            name: _nameController.text,
+            country: country,
+            birthday: '202-232',
+            level: level,
+            studySchedule: _studyScheduleController.text,
+            learnTopics: chosenTopics,
+            testPreparations: chosenTestPreparations));
+        authProvider.updateUser(
+            _nameController.text,
+            country,
+            null,
+            'da',
+            level,
+            _studyScheduleController.text,
+            chosenTopics,
+            chosenTestPreparations);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.green),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(languageProvider.language.updateSuccess),
+                ),
+              ],
+            ),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      } catch (error) {}
+    }
+    setState(() {});
+  }
+
   void initValue(User user) {
     _nameController.text = user.name ?? '';
     _studyScheduleController.text = user.studySchedule ?? '';
+    chosenTopics =
+        user.learnTopics?.map((e) => e.id.toString() ?? '').toList() ?? [];
+    chosenTestPreparations =
+        user.testPreparations?.map((e) => e.id.toString() ?? '').toList() ?? [];
+    level = user.level;
+    country = user.country!;
   }
 
   @override
@@ -34,7 +99,11 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
     languageProvider = context.watch<LanguageProvider>();
     authProvider = context.watch<AuthProvider>();
     user = authProvider.getCurrentUser();
-    initValue(user);
+    userApi.setToken(authProvider.getToken());
+    if (firstLoad) {
+      initValue(user);
+      firstLoad = false;
+    }
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -124,6 +193,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
               controller: _nameController,
               autocorrect: false,
               decoration: InputDecoration(
+                errorText: _nameError.isEmpty ? null : _nameError,
                 contentPadding: EdgeInsets.symmetric(
                   vertical: 4,
                   horizontal: 8,
@@ -168,7 +238,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
             const SizedBox(height: 4),
             DropdownButtonFormField(
               isExpanded: true,
-              value: user.country,
+              value: country,
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 4,
@@ -189,7 +259,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                       )))
                   .toList(),
               onChanged: (value) {
-                user.country = value;
+                country = value!;
               },
             ),
             const SizedBox(height: 16),
@@ -223,7 +293,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                   color: Colors.grey[900],
                 )),
             const SizedBox(height: 4),
-            SelectDate(initialDate: user.birthday),
+            // SelectDate(initialDate: user.birthday),
             const SizedBox(height: 16),
             Text(languageProvider.language.level,
                 style: TextStyle(
@@ -232,7 +302,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                 )),
             const SizedBox(height: 4),
             DropdownButtonFormField(
-              value: user.level,
+              value: level,
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 4,
@@ -251,10 +321,94 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                       ))
                   .toList(),
               onChanged: (value) {
-                user.level = value;
+                level = value!;
               },
             ),
             const SizedBox(height: 16),
+            Text(
+              languageProvider.language.topic,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[900],
+              ),
+            ),
+            const SizedBox(
+              height: 4,
+            ),
+            Wrap(
+              spacing: 8,
+              runSpacing: -4,
+              children: topics.entries.map((entry) {
+                final isSelected = chosenTopics.contains(entry.key);
+                return ChoiceChip(
+                  backgroundColor: Colors.grey[100],
+                  selectedColor: Colors.lightBlue[100],
+                  selected: isSelected,
+                  label: Text(
+                    entry.value,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: isSelected ? Colors.blue[700] : Colors.black54,
+                    ),
+                  ),
+                  onSelected: (bool selected) {
+                    setState(() {
+                      if (selected) {
+                        chosenTopics.add(entry.key);
+                      } else {
+                        chosenTopics.remove(entry.key);
+                      }
+                    });
+                  },
+                );
+              }).toList(),
+            ),
+
+            const SizedBox(
+              height: 4,
+            ),
+            Text(
+              languageProvider.language.testPreparation,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[900],
+              ),
+            ),
+
+            const SizedBox(
+              height: 4,
+            ),
+            Wrap(
+              spacing: 8,
+              runSpacing: -4,
+              children: testPreparation.entries.map((entry) {
+                final isSelected = chosenTestPreparations.contains(entry.key);
+                return ChoiceChip(
+                  backgroundColor: Colors.grey[100],
+                  selectedColor: Colors.lightBlue[100],
+                  selected: isSelected,
+                  label: Text(
+                    entry.value,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: isSelected ? Colors.blue[700] : Colors.black54,
+                    ),
+                  ),
+                  onSelected: (bool selected) {
+                    setState(() {
+                      if (selected) {
+                        chosenTestPreparations.add(entry.key);
+                      } else {
+                        chosenTestPreparations.remove(entry.key);
+                      }
+                    });
+                  },
+                );
+              }).toList(),
+            ),
+            const SizedBox(
+              height: 4,
+            ),
             Text(languageProvider.language.studySchedule,
                 style: TextStyle(
                   fontSize: 16,
@@ -278,7 +432,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
             const SizedBox(height: 24),
             TextButton(
               onPressed: () {
-                Save();
+                save();
               },
               style: TextButton.styleFrom(
                 backgroundColor: Colors.blue,

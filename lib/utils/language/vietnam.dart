@@ -114,7 +114,16 @@ class Vietnamese extends Language {
   String get seeAll => 'Xem tất cả';
   @override
   String get recommendTutor => "Đề xuất giáo viên";
-
+  @override
+  String get upcomingLesson => "Lịch học kế tiếp";
+  @override
+  String get inRoomButton => "Vào phòng học";
+  @override
+  String get totalTime => "Tổng thời gian";
+  @override
+  String get hours => "Giờ";
+  @override
+  String get minues => "Phút";
   //Course page;
   @override
   String get allCourse => 'Tất cả khóa học';
@@ -147,6 +156,10 @@ class Vietnamese extends Language {
   String get studySchedule => 'Study Schedule';
   @override
   String get save => 'Lưu';
+  @override
+  String get testPreparation => 'Loại bằng';
+  @override
+  String get updateSuccess => "Cập nhật thành công";
   //report dialog
   @override
   String get report => "Báo cáo";
@@ -171,4 +184,18 @@ class Vietnamese extends Language {
   //review dialog
   @override
   String get review => "Phản hồi";
+  //request dialog
+  @override
+  String get emptyRequest => 'Vui lòng điền lý do';
+  @override
+  String get requestTitle => 'Bạn muốn yêu cầu gì';
+  @override
+  String get requestHint => 'Nhập lý do';
+  @override
+  String get sendRequestSuccessfully => 'Gửi yêu cầu thành công.';
+  //date format
+  @override
+  String get dateTimeFormat => 'dd-MM-yyyy HH:mm';
+  @override
+  String get dateFormat => "dd-MM-yyyy";
 }

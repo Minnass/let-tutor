@@ -14,7 +14,6 @@ import 'package:lettutor/screen/profile/account.profile.dart';
 import 'package:lettutor/screen/room/room.dart';
 import 'package:lettutor/screen/setting/setting.dart';
 import 'package:lettutor/screen/tutors/feedbacks.dart';
-import 'package:lettutor/screen/tutors/tutor_search.dart';
 import 'package:provider/provider.dart';
 
 void main() {

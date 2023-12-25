@@ -113,6 +113,16 @@ class English extends Language {
   String get seeAll => 'See All';
   @override
   String get recommendTutor => "Tutor recommend";
+  @override
+  String get upcomingLesson => "Upcoming Leson";
+  @override
+  String get inRoomButton => "Enter Lesson Room";
+  @override
+  String get totalTime => "Total Lesson Time";
+  @override
+  String get hours => "hours";
+  @override
+  String get minues => "minues";
   //Course page;
   @override
   String get allCourse => "All courses";
@@ -145,6 +155,10 @@ class English extends Language {
   String get studySchedule => 'Study Schedule';
   @override
   String get save => 'Save';
+  @override
+  String get updateSuccess => "Update successully";
+  @override
+  String get testPreparation => 'Test Preparation';
   //report dialog
   @override
   String get report => "Report";
@@ -168,4 +182,18 @@ class English extends Language {
   String get submit => "Submit";
   @override
   String get review => "Review";
+  //request dialog
+  @override
+  String get emptyRequest => 'This reason can not be empty';
+  @override
+  String get requestTitle => 'Which reason do you want?';
+  @override
+  String get requestHint => 'Please fill your reason in';
+  @override
+  String get sendRequestSuccessfully => 'Send request successfully.';
+  //date formate
+  @override
+  String get dateTimeFormat => 'yyyy-MM-dd HH:mm';
+  @override
+  String get dateFormat => "yyyy-MM-dd";
 }

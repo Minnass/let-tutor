@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:lettutor/data/network/apis/auth/request/forgot_password.request.dart';
 import 'package:lettutor/data/network/apis/auth/request/login.request.dart';
 import 'package:lettutor/data/network/apis/auth/request/register.request.dart';
+import 'package:lettutor/data/network/apis/user/request/update_info.request.dart';
 import 'package:lettutor/data/network/apis/auth/response/login.response.dart';
 import 'package:lettutor/data/network/apis/auth/response/register.response.dart';
 import 'package:lettutor/data/network/constants/end_points.dart';
@@ -81,6 +82,24 @@ class AuthApi {
       );
       return;
     } on DioException catch (e) {
+      final customError = CustomErrorResponse.fromJson(
+          e.response?.data as Map<String, dynamic>);
+      throw CustomException(customError.message);
+    }
+  }
+
+  Future<void> updateInfor(UpdateRequest request) async {
+    try {
+      Map<String, dynamic> jsonRequest = request.toJson();
+      final res = await _dioClient.put(
+        Endpoints.updateInfo,
+        data: jsonRequest,
+      );
+      return;
+    } on DioException catch (e) {
+      print(e.response?.data);
+      print(e.response?.data);
+      print(e.response?.data);
       final customError = CustomErrorResponse.fromJson(
           e.response?.data as Map<String, dynamic>);
       throw CustomException(customError.message);

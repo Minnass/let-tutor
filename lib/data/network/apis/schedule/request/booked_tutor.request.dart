@@ -45,3 +45,14 @@ class UpcomingScheduleRequest {
     };
   }
 }
+
+class LatestUpcomingSchedule {
+  int dateTime;
+
+  LatestUpcomingSchedule({required this.dateTime});
+  Map<String, dynamic> toJson() {
+    return {
+      'dateTime': dateTime,
+    };
+  }
+}

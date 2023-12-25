@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:lettutor/data/network/apis/tutor/request/tutor_detail.request.dart';
 import 'package:lettutor/data/network/apis/tutor/request/tutor_favorite.request.dart';
 import 'package:lettutor/data/network/apis/tutor/request/tutor_feedback.request.dart';
 import 'package:lettutor/data/network/apis/tutor/request/tutor_pagination.request.dart';

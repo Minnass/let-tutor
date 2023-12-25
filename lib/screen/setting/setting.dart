@@ -24,7 +24,6 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   late LanguageProvider languageProvider;
   late AuthProvider authProvider;
-  late Completer<bool> _logoutConfirmationCompleter;
   Future<void> signout(AuthProvider authProvider) async {
     if (authProvider.loginType == LoginType.google) {
       final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -58,7 +57,6 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   void initState() {
     super.initState();
-    _logoutConfirmationCompleter = Completer<bool>();
   }
 
   @override

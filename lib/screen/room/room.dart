@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/widgets/avatar_name.dart';
 import 'dart:async';
-import 'package:intl/intl.dart';
-import 'package:lettutor/widgets/call_controll.dart';
+import 'package:lettutor/widgets/call_control.dart';
 
 class RoomScreen extends StatefulWidget {
   const RoomScreen({super.key});

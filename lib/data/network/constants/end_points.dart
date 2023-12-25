@@ -16,6 +16,8 @@ class Endpoints {
   static const String facebookLogin = baseUrl + "auth/facebook";
   static const String register = baseUrl + "auth/register";
   static const String forgotPassword = baseUrl + "user/forgotPassword";
+  static const String updateInfo = baseUrl + 'user/info';
+  static const String uploadAvatar = baseUrl + 'user/uploadAvatar';
   static const String getPaginatedTutors = baseUrl + "tutor/more";
   static const String getTutorDetails = baseUrl + "tutor/";
   static const String addFavoriteTutor = baseUrl + "user/manageFavoriteTutor";
@@ -24,4 +26,5 @@ class Endpoints {
   static const String getCourseDetails = baseUrl + 'course/';
   static const String bookedClass = baseUrl + 'booking/list/student';
   static const String lessonRequest = baseUrl + "booking/student-request";
+  static const String totalTime = baseUrl + "call/total";
 }

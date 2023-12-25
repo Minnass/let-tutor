@@ -50,6 +50,11 @@ abstract class Language {
   //home page;
   String get recommendTutor;
   String get seeAll;
+  String get upcomingLesson;
+  String get inRoomButton;
+  String get totalTime;
+  String get hours;
+  String get minues;
   //Course page;
   String get allCourse;
   String get topic;
@@ -68,6 +73,8 @@ abstract class Language {
   String get birthDay;
   String get studySchedule;
   String get save;
+  String get testPreparation;
+  String get updateSuccess;
   //report dialog
   String get report;
   String get reportTitle;
@@ -80,8 +87,13 @@ abstract class Language {
   String get reportSuccessfully;
   String get submit;
   //request dialog
-  String get title;
-  
+  String get requestTitle;
+  String get requestHint;
+  String get emptyRequest;
+  String get sendRequestSuccessfully;
   //review dialog
   String get review;
+  //date formate
+  String get dateFormat;
+  String get dateTimeFormat;
 }
