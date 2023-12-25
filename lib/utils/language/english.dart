@@ -89,6 +89,10 @@ class English extends Language {
   String get setting => 'Setting';
   //setting page
   @override
+  String get logoutTitle => 'Do you want to sign out ?';
+  @override
+  String get ok => 'Sign out';
+  @override
   String get editProfile => 'Edit profile';
   @override
   String get viewFeedback => 'View Feedback';
@@ -196,4 +200,13 @@ class English extends Language {
   String get dateTimeFormat => 'yyyy-MM-dd HH:mm';
   @override
   String get dateFormat => "yyyy-MM-dd";
+  //tutor detail;
+  @override
+  String get favorite => "Favorite";
+  @override
+  String get tutorDetails => "Tutor Detailss";
+  @override
+  String get more => 'more';
+  @override
+  String get less => 'less';
 }

@@ -33,31 +33,29 @@ class AuthProvider extends ChangeNotifier {
     return currentToken?.token ?? '';
   }
 
-  void updateUser(
-      String name,
-      String country,
-      String? phone,
-      String birthday,
-      String level,
-      String studySchedule,
-      List<String> topics,
-      List<String> tests) {
-    currentUser?.name = name;
-    currentUser?.country = country;
-    currentUser?.phone = phone ?? currentUser?.phone;
-    currentUser?.birthday = birthday;
-    currentUser?.level = level;
-    currentUser?.studySchedule = studySchedule;
-    List<LearnTopic> learnTopics = [];
-    List<TestPreparation> testPreparations = [];
-    topics.forEach((element) {
-      learnTopics.add(LearnTopic.getNew(element)!);
-    });
-    tests.forEach((element) {
-      testPreparations.add(TestPreparation.getNew(element)!);
-    });
-    currentUser?.testPreparations = testPreparations;
-    currentUser?.learnTopics = learnTopics;
+  void updateUser(User user) {
+    // currentUser?.name = name;
+    // currentUser?.country = country;
+    // currentUser?.phone = phone ?? currentUser?.phone;
+    // currentUser?.birthday = birthday;
+    // currentUser?.level = level;
+    // currentUser?.studySchedule = studySchedule;
+    // List<LearnTopic> learnTopics = [];
+    // List<TestPreparation> testPreparations = [];
+    // topics.forEach((element) {
+    //   learnTopics.add(LearnTopic.getNew(element)!);
+    // });
+    // tests.forEach((element) {
+    //   testPreparations.add(TestPreparation.getNew(element)!);
+    // });
+    // currentUser?.testPreparations = testPreparations;
+    // currentUser?.learnTopics = learnTopics;
+    currentUser = user;
+    notifyListeners();
+  }
+
+  void setUploadAvatar(String link) {
+    currentUser?.avatar = link;
     notifyListeners();
   }
 }

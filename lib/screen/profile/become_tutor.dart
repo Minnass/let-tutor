@@ -3,7 +3,6 @@ import 'package:lettutor/screen/profile/approval_step.dart';
 import 'package:lettutor/screen/profile/profile_step.dart';
 import 'package:lettutor/screen/profile/video_step.dart';
 import 'package:lettutor/widgets/process_step.dart';
-import 'package:provider/provider.dart';
 
 class TutorRegisteringPage extends StatefulWidget {
   const TutorRegisteringPage({Key? key}) : super(key: key);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:expandable_text/expandable_text.dart';
-import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/data/network/apis/tutor/response/tutor_pagination.response.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/data/providers/favorite.provider.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/screen/tutors/book_tutor.dart';
 import 'package:lettutor/screen/tutors/videoIntro.dart';
 import 'package:lettutor/utils/country_convertor.dart';
@@ -21,17 +21,19 @@ class TutorDetailScreen extends StatefulWidget {
 }
 
 class _TutorDetailScreenState extends State<TutorDetailScreen> {
+  late LanguageProvider languageProvider;
   @override
   Widget build(BuildContext context) {
     FavoriteProvider favouriteRepository = context.watch<FavoriteProvider>();
     var isInfavourite = favouriteRepository.itemIds.contains(widget.tutor.id);
+    languageProvider = context.watch<LanguageProvider>();
     final authProvider = context.watch<AuthProvider>();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.blueAccent,
-        title: const Text(
-          'Tutor Detail',
+        title: Text(
+          languageProvider.language.tutorDetails,
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         leading: BackButton(

@@ -7,6 +7,7 @@ import 'package:lettutor/domains/entity/user/user.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/screen/Authentication/login.dart';
 import 'package:lettutor/screen/profile/account.profile.dart';
+import 'package:lettutor/screen/profile/become_tutor.dart';
 import 'package:lettutor/screen/setting/advanced_setting.dart';
 import 'package:lettutor/utils/enum/login_type.dart';
 import 'package:lettutor/utils/first_character.dart';
@@ -135,42 +136,6 @@ class _SettingScreenState extends State<SettingScreen> {
                         child: Text(languageProvider.language.editProfile),
                       ),
                     ]),
-                    // child: Row(
-                    //   children: [
-                    //     Container(
-                    //       margin: EdgeInsets.only(top: 10.0, right: 10.0),
-                    //       width: 70,
-                    //       height: 70,
-                    //       clipBehavior: Clip.hardEdge,
-                    //       decoration: const BoxDecoration(
-                    //         shape: BoxShape.circle,
-                    //       ),
-                    //       child: Image.network(
-                    //         'https://img.washingtonpost.com/rw/2010-2019/WashingtonPost/2015/08/28/Editorial-Opinion/Images/DEM_2016_Biden_-08d5c-2005.jpg?uuid=MwRy3k27EeWE35I7PvGmSw',
-                    //         fit: BoxFit.cover,
-                    //         errorBuilder: (context, error, stackTrace) =>
-                    //             const Icon(
-                    //           Icons.error_outline_rounded,
-                    //           color: Colors.red,
-                    //           size: 32,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     Column(
-                    //       crossAxisAlignment: CrossAxisAlignment.start,
-                    //       children: const [
-                    //         Text(
-                    //           'Phan Nhat Trieu',
-                    //           style: TextStyle(fontSize: 16),
-                    //         ),
-                    //         Text(
-                    //           'phannhattrieu012@gmail.com',
-                    //           style: TextStyle(color: Colors.black54),
-                    //         )
-                    //       ],
-                    //     )
-                    //   ],
-                    // ),
                   ),
                   const SizedBox(
                     height: 16,
@@ -211,7 +176,11 @@ class _SettingScreenState extends State<SettingScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: GestureDetector(
-                        onTap: () => {},
+                        onTap: () => {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) =>
+                                      const TutorRegisteringPage())),
+                            },
                         child: SettingItem(
                             text: languageProvider.language.becomeTutor,
                             iconData: Icons.emoji_people)),
@@ -263,18 +232,21 @@ class _SettingScreenState extends State<SettingScreen> {
 
   AlertDialog _buildLogoutDialog(BuildContext context) {
     return AlertDialog(
-      title: Text('Do you want to log out?'),
+      title: Text(languageProvider.language.logoutTitle),
       actions: <Widget>[
         ElevatedButton(
-          child: Text('No'),
-          onPressed: () {
-            Navigator.of(context).pop(false);
-          },
-        ),
-        ElevatedButton(
-          child: Text('Yes'),
+          child: Text(languageProvider.language.ok),
           onPressed: () {
             Navigator.of(context).pop(true);
+          },
+        ),
+        OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(color: Colors.blue), // Border color
+          ),
+          child: Text(languageProvider.language.cancel),
+          onPressed: () {
+            Navigator.of(context).pop(false);
           },
         ),
       ],

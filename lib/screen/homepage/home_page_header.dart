@@ -21,6 +21,7 @@ class _HomePageHeaderState extends State<HomePageHeader> {
   late AuthProvider authProvider;
   late BookingInfoResponse? bookingInfo;
   late int totalTime;
+  bool isLoading = true;
   String scheduleTime = '';
   bool isFirstLoading = true;
   ScheduleApi scheduleApi = ScheduleApi(DioClient(Dio()));
@@ -41,6 +42,7 @@ class _HomePageHeaderState extends State<HomePageHeader> {
               bookingInfo?.scheduleDetailInfo?.startPeriodTimestamp ?? 0),
         );
       }
+      isLoading = false;
       setState(() {});
     } catch (error) {}
   }
@@ -53,54 +55,56 @@ class _HomePageHeaderState extends State<HomePageHeader> {
     if (isFirstLoading) {
       _fetchData();
     }
-    return Container(
-        color: Colors.blue[700],
-        width: double.maxFinite,
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: Text(
-                languageProvider.language.upcomingLesson,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            ),
-            Text(
-              scheduleTime,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 15, color: Colors.white),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: TextButton(
-                  style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 6, horizontal: 10),
-                      backgroundColor: Colors.white),
-                  onPressed: () => {},
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.ondemand_video_rounded),
-                      SizedBox(width: 12),
-                      Text(languageProvider.language.inRoomButton,
-                          style: TextStyle(fontSize: 14)),
-                    ],
-                  )),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 0, bottom: 5),
-              child: Text(
-                '${languageProvider.language.totalTime}: ${(totalTime / 60).round() - 1} ${languageProvider.language.hours} ${totalTime.round() % 60} ${languageProvider.language.minues}',
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 15, color: Colors.white),
-              ),
-            ),
-          ],
-        ));
+    return isLoading
+        ? const Center(child: CircularProgressIndicator(color: Colors.blue))
+        : Container(
+            color: Colors.blue[700],
+            width: double.maxFinite,
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 6),
+                  child: Text(
+                    languageProvider.language.upcomingLesson,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                ),
+                Text(
+                  scheduleTime,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 15, color: Colors.white),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 6, horizontal: 10),
+                          backgroundColor: Colors.white),
+                      onPressed: () => {},
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.ondemand_video_rounded),
+                          SizedBox(width: 12),
+                          Text(languageProvider.language.inRoomButton,
+                              style: TextStyle(fontSize: 14)),
+                        ],
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 0, bottom: 5),
+                  child: Text(
+                    '${languageProvider.language.totalTime}: ${(totalTime / 60).round() - 1} ${languageProvider.language.hours} ${totalTime.round() % 60} ${languageProvider.language.minues}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 15, color: Colors.white),
+                  ),
+                ),
+              ],
+            ));
   }
 }

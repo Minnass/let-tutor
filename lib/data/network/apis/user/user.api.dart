@@ -4,6 +4,7 @@ import 'package:lettutor/data/network/constants/end_points.dart';
 import 'package:lettutor/data/network/dio_client.dart';
 import 'package:lettutor/data/network/utils/custom_exception.dart';
 import 'package:lettutor/data/network/utils/error.response.dart';
+import 'package:lettutor/domains/entity/user/user.dart';
 
 class UserApi {
   final DioClient dioClient;
@@ -12,32 +13,33 @@ class UserApi {
     dioClient.setToken(token);
   }
 
-  Future<void> updateInfor(UpdateRequest request) async {
+  Future<User> updateInfor(UpdateRequest request) async {
     try {
       Map<String, dynamic> jsonRequest = request.toJson();
       final res = await dioClient.put(
         Endpoints.updateInfo,
         data: jsonRequest,
       );
-      return;
+      return User.fromJson(res);
     } on DioException catch (e) {
-      print(e.response?.data);
-      print(e.response?.data);
-      print(e.response?.data);
       final customError = CustomErrorResponse.fromJson(
           e.response?.data as Map<String, dynamic>);
       throw CustomException(customError.message);
     }
   }
 
-  Future<void> uploadAvatar(UpdateRequest request) async {
+  Future<User> uploadAvatar(String imagePath) async {
     try {
-      Map<String, dynamic> jsonRequest = request.toJson();
-      final res = await dioClient.put(
+      var formData = FormData.fromMap({
+        'avatar': await MultipartFile.fromFile(
+          imagePath,
+        ),
+      });
+      final res = await dioClient.post(
         Endpoints.uploadAvatar,
-        data: jsonRequest,
+        data: formData,
       );
-      return;
+      return User.fromJson(res);
     } on DioException catch (e) {
       final customError = CustomErrorResponse.fromJson(
           e.response?.data as Map<String, dynamic>);

@@ -47,6 +47,8 @@ abstract class Language {
   String get logout;
   String get switchSuccessfully;
   String get signoutSuccessfully;
+  String get logoutTitle;
+  String get ok;
   //home page;
   String get recommendTutor;
   String get seeAll;
@@ -96,4 +98,9 @@ abstract class Language {
   //date formate
   String get dateFormat;
   String get dateTimeFormat;
+  //tutor detail page
+  String get favorite;
+  String get tutorDetails;
+  String get less;
+  String get more;
 }

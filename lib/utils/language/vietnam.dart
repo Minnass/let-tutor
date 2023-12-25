@@ -90,6 +90,10 @@ class Vietnamese extends Language {
   String get setting => 'Cài đặt';
   //setting page
   @override
+  String get logoutTitle => 'Bạn chắc chắn muốn thoát không ?';
+  @override
+  String get ok => 'Thoát';
+  @override
   String get editProfile => 'Chỉnh Sửa';
   @override
   String get viewFeedback => 'Xem Đánh Giá';
@@ -198,4 +202,13 @@ class Vietnamese extends Language {
   String get dateTimeFormat => 'dd-MM-yyyy HH:mm';
   @override
   String get dateFormat => "dd-MM-yyyy";
+  //tutor details
+  @override
+  String get favorite => "Yêu thích";
+  @override
+  String get tutorDetails => "Chi tiết giáo viên";
+  @override
+  String get more => 'thêm';
+  @override
+  String get less => 'ẩn bớt';
 }

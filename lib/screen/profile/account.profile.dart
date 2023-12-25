@@ -47,7 +47,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
     validateName();
     if (_nameError.isEmpty) {
       try {
-        await userApi.updateInfor(UpdateRequest(
+        final res = await userApi.updateInfor(UpdateRequest(
             name: _nameController.text,
             country: country,
             birthday: '202-232',
@@ -160,6 +160,10 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                           final XFile? image = await picker.pickImage(
                             source: ImageSource.gallery,
                           );
+                          if (image != null) {
+                            final res = await userApi.uploadAvatar(image.path);
+                            authProvider.setUploadAvatar(res.avatar!);
+                          }
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
