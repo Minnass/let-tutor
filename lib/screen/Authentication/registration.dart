@@ -5,7 +5,7 @@ import 'package:lettutor/data/network/apis/auth/auth.api.dart';
 import 'package:lettutor/data/network/apis/auth/request/register.request.dart';
 import 'package:lettutor/data/network/dio_client.dart';
 import 'package:lettutor/data/providers/language.provider.dart';
-import 'package:lettutor/domains/tuple.dart';
+import 'package:lettutor/utils/tuple.dart';
 import 'package:lettutor/utils/language/english.dart';
 import 'package:lettutor/utils/language/vietnam.dart';
 import 'package:lettutor/utils/validate_email.dart';

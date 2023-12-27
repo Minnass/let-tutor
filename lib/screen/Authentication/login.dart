@@ -7,7 +7,7 @@ import 'package:lettutor/data/network/apis/auth/auth.api.dart';
 import 'package:lettutor/data/network/apis/auth/request/login.request.dart';
 import 'package:lettutor/data/network/dio_client.dart';
 import 'package:lettutor/data/providers/language.provider.dart';
-import 'package:lettutor/domains/tuple.dart';
+import 'package:lettutor/utils/tuple.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/utils/enum/login_type.dart';
 import 'package:lettutor/utils/language/english.dart';

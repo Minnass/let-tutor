@@ -146,6 +146,8 @@ class English extends Language {
   String get noMaterial => 'No material found';
   //account page;
   @override
+  String get uploadAvatarSuccessfully => "Upload avatar successfully";
+  @override
   String get profile => 'Profile';
   @override
   String get name => 'Name';
@@ -202,6 +204,8 @@ class English extends Language {
   String get dateFormat => "yyyy-MM-dd";
   //tutor detail;
   @override
+  String get noVideo => 'No video introduction';
+  @override
   String get favorite => "Favorite";
   @override
   String get tutorDetails => "Tutor Detailss";
@@ -209,4 +213,118 @@ class English extends Language {
   String get more => 'more';
   @override
   String get less => 'less';
+  @override
+  String get specialties => 'Specialties';
+  //upcomimg card
+  @override
+  String get requestForReason => "Request for reason";
+  @override
+  String get noRequest => "No request for this lesson";
+  @override
+  String get gotoMeeting => "Go to meeting";
+  @override
+  String get cancelScheduleSuccessfully => 'Cancle schedule successfully';
+  @override
+  String get deleteDialogTitle => 'Are you sure you want to delete ?';
+  //tutor register page
+  @override
+  String get tutorRegisterTitle => "Tutor Registration";
+  @override
+  String get videoIntroduction => "Video Introduction";
+  @override
+  String get approval => "Approval";
+  //profile step
+  @override
+  String get price => 'Price';
+  @override
+  String get example => 'Example: ';
+  @override
+  String get requiredField => 'This field must not be empty';
+  @override
+  String get setupContent =>
+      "Your tutor profile is your chance to market yourself to students on Tutoring. You can make edits later on your profile settings page."
+      "New students may browse tutor profiles to find a tutor that fits their learning goals and personality. Returning students may use the tutor profiles to find tutors they've had great experiences with already.";
+  @override
+  String get introduction => "Introduce yourself";
+  @override
+  String get basicInfo => "Basic information";
+  @override
+  String get uploadAvatar => 'Upload avatar here...';
+  @override
+  String get tapToUpload => 'Tap to upload';
+  @override
+  String get next => "Next";
+  @override
+  String get uploadPhotoGuidelines =>
+      'Please upload a professional photo. See guidelines';
+  @override
+  String get from => 'I am from';
+  @override
+  String get profileInfoForStudents =>
+      'Students will view this information on your profile to decide if you\'re a good fit for them';
+  @override
+  String get interests => "Interests";
+  @override
+  String get privacyWarning =>
+      "In order to protect your privacy, please do not share your personal information (email, phone number, social email, skype, etc) in your profile.";
+  @override
+  String get profileSharePrompt =>
+      "Interests, hobbies, memorable life experiences, or anything else you'd like to share!";
+  @override
+  String get education => "Education";
+  @override
+  String get educationHint =>
+      'Example: "Bachelor of Arts in English from Cambly University; Certified yoga instructor, Second Language Acquisition and Teaching  (SLAT) certificate from Cambly University"';
+  @override
+  String get experience => "Experience";
+  @override
+  String get professionInfo => "Current or previous Profession";
+  @override
+  String get spokenLanguage => 'Language I spoken';
+  @override
+  String get taughtAudience => 'Who I teach';
+  @override
+  String get firstImpressionForStudents =>
+      'This is the first thing students will see when looking for tutors.';
+  @override
+  String get mySpecialties => 'My specialities are';
+  @override
+  String get idealStudentProfile => 'I am best at teaching students who are';
+  @override
+  get teachingExample =>
+      'Example: "I was a doctor for 35 years and can help you practice business or medical English. I also enjoy teaching beginners as I am very patient and always speak slowly and clearly."';
+  @override
+  String get videoHint =>
+      'Let students know what they can expect from a lesson with you by recording a video highlighting your teaching style, expertise and personality. Students can be nervous to speak with a foreigner, so it really helps to have a friendly video that introduces yourself and invites students to call you.';
+  @override
+  String get tipTitle => 'Maybe follow those steps';
+  @override
+  String get firstStep => '1. Find a clean and quiet space';
+  @override
+  String get secondStep => '2. Smile and look at the camera';
+  @override
+  String get thirdStep => '3. Dress smart';
+  @override
+  String get fourthStep => '4. Speak for 1-3 minutes';
+  @override
+  String get fifthStep => '5. Brand yourself and have fun!';
+
+  @override
+  String get videoSetup => 'Set up your tutor profile';
+  @override
+  String get chooseVideo => 'Choose video';
+  @override
+  String get previous => 'Previous';
+  @override
+  String get done => 'Done';
+  @override
+  String get becomeTutorFailed => 'Send request failed';
+  //approval step
+  @override
+  String get stepsCompleted => 'You have done all the steps';
+  @override
+  String get operatorApprovalWait => "Please, wait for the operator's approval";
+  @override
+  String get tutorRegistrationSuccess =>
+      "Register successfully, wait for approval";
 }

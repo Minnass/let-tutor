@@ -55,15 +55,8 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
             studySchedule: _studyScheduleController.text,
             learnTopics: chosenTopics,
             testPreparations: chosenTestPreparations));
-        authProvider.updateUser(
-            _nameController.text,
-            country,
-            null,
-            'da',
-            level,
-            _studyScheduleController.text,
-            chosenTopics,
-            chosenTestPreparations);
+        
+        authProvider.updateUser(res);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -92,6 +85,27 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
         user.testPreparations?.map((e) => e.id.toString() ?? '').toList() ?? [];
     level = user.level;
     country = user.country!;
+  }
+
+  Future<void> uploadAvatar(String imagePath) async {
+    try {
+      final res = await userApi.uploadAvatar(imagePath);
+      authProvider.setUploadAvatar(res.avatar!);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.green),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(languageProvider.language.uploadAvatarSuccessfully),
+              ),
+            ],
+          ),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    } catch (error) {}
   }
 
   @override
@@ -161,8 +175,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                             source: ImageSource.gallery,
                           );
                           if (image != null) {
-                            final res = await userApi.uploadAvatar(image.path);
-                            authProvider.setUploadAvatar(res.avatar!);
+                            uploadAvatar(image.path);
                           }
                         },
                         child: ClipRRect(

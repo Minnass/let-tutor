@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:lettutor/data/network/apis/user/request/become_tutor.request.dart';
 import 'package:lettutor/data/network/apis/user/request/update_info.request.dart';
+import 'package:lettutor/data/network/apis/user/response/update_info.response.dart';
 import 'package:lettutor/data/network/constants/end_points.dart';
 import 'package:lettutor/data/network/dio_client.dart';
 import 'package:lettutor/data/network/utils/custom_exception.dart';
@@ -20,7 +22,7 @@ class UserApi {
         Endpoints.updateInfo,
         data: jsonRequest,
       );
-      return User.fromJson(res);
+      return UpdateInfoResponse.fromJson(res).user;
     } on DioException catch (e) {
       final customError = CustomErrorResponse.fromJson(
           e.response?.data as Map<String, dynamic>);
@@ -41,6 +43,26 @@ class UserApi {
       );
       return User.fromJson(res);
     } on DioException catch (e) {
+      final customError = CustomErrorResponse.fromJson(
+          e.response?.data as Map<String, dynamic>);
+      throw CustomException(customError.message);
+    }
+  }
+
+  Future<void> becomeTutor(BecomeTutorRequest request) async {
+    try {
+      var formData =
+          FormData.fromMap(await BecomeTutorRequest.toFormData(request));
+      await dioClient.post(
+        Endpoints.becomeTutor,
+        data: formData,
+      );
+    } on DioException catch (e) {
+      print(e.response?.data);
+      print(e.response?.data);
+      print(e.response?.data);
+      print(e.response?.data);
+      print(e.response?.data);
       final customError = CustomErrorResponse.fromJson(
           e.response?.data as Map<String, dynamic>);
       throw CustomException(customError.message);

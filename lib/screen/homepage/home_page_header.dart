@@ -37,7 +37,8 @@ class _HomePageHeaderState extends State<HomePageHeader> {
           sortBy: 'asc'));
       bookingInfo = res.data?.rows?.first;
       if (bookingInfo != null) {
-        scheduleTime = DateFormat(languageProvider.language.dateFormat).format(
+        scheduleTime =
+            DateFormat(languageProvider.language.dateTimeFormat).format(
           DateTime.fromMillisecondsSinceEpoch(
               bookingInfo?.scheduleDetailInfo?.startPeriodTimestamp ?? 0),
         );

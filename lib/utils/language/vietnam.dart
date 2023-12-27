@@ -147,6 +147,8 @@ class Vietnamese extends Language {
   String get noMaterial => 'Không có tài liệu';
   //account page;
   @override
+  String get uploadAvatarSuccessfully => 'Cập nhật ảnh thành công';
+  @override
   String get profile => 'Tài khoản';
   @override
   String get name => 'Họ tên';
@@ -192,9 +194,9 @@ class Vietnamese extends Language {
   @override
   String get emptyRequest => 'Vui lòng điền lý do';
   @override
-  String get requestTitle => 'Bạn muốn yêu cầu gì';
+  String get requestTitle => 'Yêu cầu của bạn là gì ?';
   @override
-  String get requestHint => 'Nhập lý do';
+  String get requestHint => 'Nhập yêu cầu';
   @override
   String get sendRequestSuccessfully => 'Gửi yêu cầu thành công.';
   //date format
@@ -204,6 +206,8 @@ class Vietnamese extends Language {
   String get dateFormat => "dd-MM-yyyy";
   //tutor details
   @override
+  String get noVideo => "Không có video giới thiệu";
+  @override
   String get favorite => "Yêu thích";
   @override
   String get tutorDetails => "Chi tiết giáo viên";
@@ -211,4 +215,120 @@ class Vietnamese extends Language {
   String get more => 'thêm';
   @override
   String get less => 'ẩn bớt';
+  @override
+  String get specialties => 'Chuyên môn';
+  //upcoming card
+  @override
+  String get requestForReason => "Yêu cầu lý do";
+  @override
+  String get noRequest => "Không có yêu cầu cho bài học";
+  @override
+  String get gotoMeeting => "Đi đến buổi học";
+  @override
+  String get cancelScheduleSuccessfully => "Hủy thành công";
+  @override
+  String get deleteDialogTitle => "Bạn chắc chắn muốn xóa không ?";
+  //tutor register page
+  @override
+  String get tutorRegisterTitle => "Đăng ký giáo viên";
+  @override
+  String get videoIntroduction => "Video giới thiệu";
+  @override
+  String get approval => "Chấp nhận";
+  //profile step;
+  @override
+  String get price => "Lệ phí";
+  @override
+  String get example => 'Ví dụ: ';
+  @override
+  String get requiredField => 'Vui lòng điền thông tin';
+  @override
+  String get setupContent =>
+      "Hồ sơ gia sư của bạn là cơ hội để bạn tiếp thị bản thân với học sinh trên Dạy kèm. Bạn có thể chỉnh sửa sau trên trang cài đặt hồ sơ của mình."
+      "Học viên mới có thể duyệt hồ sơ gia sư để tìm gia sư phù hợp với mục tiêu học tập và tính cách của mình. Học viên cũ có thể sử dụng hồ sơ gia sư để tìm gia sư mà họ đã có trải nghiệm tuyệt vời.";
+  @override
+  String get introduction => "Giới thiệu bản thân";
+  @override
+  String get basicInfo => "Thông tin cá nhân";
+  @override
+  String get uploadAvatar => 'Thêm ảnh ở đây...';
+  @override
+  String get tapToUpload => 'Vuốt đê thêm ảnh';
+  @override
+  String get next => "Tiếp tục";
+  @override
+  String get uploadPhotoGuidelines =>
+      'Vui lòng tải lên một bức ảnh chuyên nghiệp. Xem hướng dẫn';
+  @override
+  String get from => 'Tôi đến từ';
+  @override
+  String get profileInfoForStudents =>
+      'Học sinh sẽ xem thông tin này trên hồ sơ của bạn để quyết định xem bạn có phù hợp với họ không';
+  @override
+  String get interests => "Sở thích";
+  @override
+  String get privacyWarning =>
+      "Để bảo vệ quyền riêng tư của bạn, vui lòng không chia sẻ thông tin cá nhân của bạn (email, số điện thoại, email xã hội, Skype, v.v.) trong hồ sơ của bạn.";
+  @override
+  String get profileSharePrompt =>
+      "Sở thích, sở thích, trải nghiệm cuộc sống đáng nhớ hoặc bất kỳ điều gì khác mà bạn muốn chia sẻ!";
+  @override
+  String get education => "Giáo dục";
+  @override
+  String get educationHint =>
+      'Ví dụ: "Cử nhân Văn học bằng tiếng Anh của Đại học Cambly; Người hướng dẫn yoga được chứng nhận, chứng chỉ Giảng dạy và Tiếp thu Ngôn ngữ Thứ hai (SLAT) của Đại học Cambly"';
+  @override
+  String get experience => "Kinh nghiệm";
+  @override
+  String get professionInfo => "Công việc hiện tại hoặc trước đây";
+  @override
+  String get spokenLanguage => 'Ngôn ngữ dạy';
+  @override
+  String get taughtAudience => 'Chủ đề tôi dạy';
+  @override
+  String get firstImpressionForStudents =>
+      'Đây là điều đầu tiên học viên sẽ nhìn thấy khi tìm gia sư.';
+  @override
+  String get mySpecialties => 'Chuyên môn là';
+  @override
+  String get idealStudentProfile =>
+      'Tôi giỏi nhất trong việc dạy những học sinh';
+  @override
+  get teachingExample =>
+      'Ví dụ: "Tôi đã là bác sĩ trong 35 năm và có thể giúp bạn thực hành tiếng Anh thương mại hoặc y tế. Tôi cũng thích dạy những người mới bắt đầu vì tôi rất kiên nhẫn và luôn nói chậm và rõ ràng."';
+  @override
+  String get videoHint =>
+      'Cho học sinh biết những gì họ có thể mong đợi từ một bài học với bạn bằng cách quay video nêu bật phong cách giảng dạy, chuyên môn và cá tính của bạn. Học sinh có thể lo lắng khi nói chuyện với người nước ngoài, vì vậy sẽ thực sự hữu ích khi có một video thân thiện giới thiệu bản thân và mời học sinh gọi cho bạn';
+  @override
+  String get tipTitle => 'Có thể theo dõi các bước sau';
+  @override
+  String get firstStep => '1. Tìm một không gian sạch sẽ và yên tĩnh';
+  @override
+  String get secondStep => '2. Cười và nhìn vào camera';
+  @override
+  String get thirdStep => '3. Ăn mặc lịch sự';
+  @override
+  String get fourthStep => '4. Nói trong 1-3 phút';
+  @override
+  String get fifthStep =>
+      '5. Hãy xây dựng thương hiệu cho bản thân và tận hưởng niềm vui!';
+  @override
+  String get videoSetup => 'Thiết lập hồ sơ của bạn';
+  @override
+  String get chooseVideo => 'Chọn video';
+  @override
+  String get previous => 'Quay lui';
+  @override
+  String get done => 'Hoàn thành';
+  @override
+  String get becomeTutorFailed => 'Gửi yêu cầu thất bại';
+  //approval step
+  @override
+  String get stepsCompleted => 'Bạn đã thực hiện tất cả các bước';
+  @override
+  String get operatorApprovalWait =>
+      "Xin vui lòng chờ sự chấp thuận của nhà điều hành";
+  @override
+  String get tutorRegistrationSuccess =>
+      "Đăng ký thành công, chờ đợi phê duyệt";
 }

@@ -1,12 +1,16 @@
-import 'package:dotted_border/dotted_border.dart';
+import 'package:dio/dio.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lettutor/const/countries.dart';
+import 'package:lettutor/const/specialities.dart';
+import 'package:lettutor/data/network/apis/user/request/become_tutor.request.dart';
+import 'package:lettutor/data/network/apis/user/user.api.dart';
+import 'package:lettutor/data/network/dio_client.dart';
+import 'package:lettutor/data/providers/auth.provider.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/utils/country_convertor.dart';
-
-const setupContent =
-    "Your tutor profile is your chance to market yourself to students on Tutoring. You can make edits later on your profile settings page."
-    "New students may browse tutor profiles to find a tutor that fits their learning goals and personality. Returning students may use the tutor profiles to find tutors they've had great experiences with already.";
+import 'package:provider/provider.dart';
 
 enum Level { beginer, intermediate, advanced }
 
@@ -19,39 +23,81 @@ class ProfileStep extends StatefulWidget {
 }
 
 class _ProfileStepState extends State<ProfileStep> {
-  Level? level = Level.beginer;
-  var countryName = 'Vietnam';
+  Level? chosenLevel = Level.beginer;
+  String chosenCountry = 'VI';
+  late LanguageProvider languageProvider;
   DateTime selectedDate = DateTime.now();
-  Map<String, bool> specialities = {
-    'English for kids': false,
-    'English for business': false,
-    'Conversational': false,
-    'STARTERS': false,
-    'MOVERS': false,
-    'FLYERS': false,
-    'KET': false,
-    'PET': false,
-    'IELTS': false,
-    'TOEFL': false,
-    'TOEIC': false,
-  };
-
-  _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
+  UserApi userApi = UserApi(DioClient(Dio()));
+  late AuthProvider authProvider;
+  final _interestController = TextEditingController();
+  String _interestError = '';
+  final _educationController = TextEditingController();
+  String _educationError = '';
+  final _experienceController = TextEditingController();
+  String _experienceError = '';
+  final _professionController = TextEditingController();
+  String _professionError = '';
+  List<String> chosenCountries = [];
+  String _contriesError = '';
+  final _introductionController = TextEditingController();
+  String _introductionError = '';
+  List<String> chosenSpecialities = [];
+  String _specialitiesError = '';
+  final _priceController = TextEditingController();
+  String _priceError = '';
+  void validate() {
+    if (_interestController.text.isEmpty) {
+      _interestError = languageProvider.language.requiredField;
+    } else {
+      _interestError = '';
     }
+    if (_educationController.text.isEmpty) {
+      _educationError = languageProvider.language.requiredField;
+    } else {
+      _educationError = '';
+    }
+    if (_experienceController.text.isEmpty) {
+      _experienceError = languageProvider.language.requiredField;
+    } else {
+      _experienceError = '';
+    }
+    if (_professionController.text.isEmpty) {
+      _professionError = languageProvider.language.requiredField;
+    } else {
+      _professionError = '';
+    }
+    if (chosenCountries.isEmpty) {
+      _contriesError = languageProvider.language.requiredField;
+    } else {
+      _contriesError = '';
+    }
+    if (_introductionController.text.isEmpty) {
+      _introductionError = languageProvider.language.requiredField;
+    } else {
+      _introductionError = '';
+    }
+    if (chosenSpecialities.isEmpty) {
+      _specialitiesError = languageProvider.language.requiredField;
+    } else {
+      _specialitiesError = '';
+    }
+    if (_introductionController.text.isEmpty) {
+      _introductionError = languageProvider.language.requiredField;
+    } else {
+      _introductionError = '';
+    }
+    if (_priceController.text.isEmpty) {
+      _priceError = languageProvider.language.requiredField;
+    } else {
+      _priceError = '';
+    }
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    languageProvider = context.watch<LanguageProvider>();
+    authProvider = context.watch<AuthProvider>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -59,8 +105,8 @@ class _ProfileStepState extends State<ProfileStep> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.asset(
-              'assets/become_tutor/profile_step.png',
-              height: 80,
+              'assets/become_tutor/lettutor.png',
+              height: 60,
             ),
             const SizedBox(
               width: 16,
@@ -68,18 +114,18 @@ class _ProfileStepState extends State<ProfileStep> {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
-                    'Introduce yourself',
+                    languageProvider.language.introduction,
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                   ),
                   SizedBox(
                     height: 16,
                   ),
                   ExpandableText(
-                    setupContent,
-                    expandText: 'more',
-                    collapseText: 'less',
+                    languageProvider.language.setupContent,
+                    expandText: languageProvider.language.more,
+                    collapseText: languageProvider.language.less,
                     maxLines: 2,
                     linkColor: Colors.blue,
                     style: const TextStyle(fontSize: 14),
@@ -90,13 +136,13 @@ class _ProfileStepState extends State<ProfileStep> {
             )
           ],
         ),
-        const Row(children: [
+        Row(children: [
           const Expanded(child: Divider()),
           const SizedBox(
             width: 4,
           ),
           Text(
-            'Basic information',
+            languageProvider.language.basicInfo,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           const SizedBox(
@@ -107,33 +153,23 @@ class _ProfileStepState extends State<ProfileStep> {
         const SizedBox(
           height: 16,
         ),
-        Center(
-          child: DottedBorder(
-            dashPattern: const [5, 1],
-            color: Colors.black,
-            strokeWidth: 1,
-            child: Container(
-              height: 200,
-              width: 200,
-              color: Colors.grey.shade200,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text(
-                    'Upload avatar here...',
-                    style: TextStyle(fontSize: 12, color: Colors.black38),
-                  ),
-                  Text(
-                    'Tap to upload',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.black38,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
+        const Row(children: [
+          const Expanded(child: Divider()),
+          Text(
+            'CV',
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
+          const SizedBox(
+            width: 4,
+          ),
+          const Expanded(child: Divider()),
+        ]),
+        const SizedBox(
+          height: 16,
+        ),
+        Text(
+          languageProvider.language.profileInfoForStudents,
+          style: TextStyle(fontSize: 12),
         ),
         const SizedBox(
           height: 8,
@@ -144,25 +180,27 @@ class _ProfileStepState extends State<ProfileStep> {
               color: const Color(0xFFE6F7FF),
               border: Border.all(width: 1, color: Colors.blue),
               borderRadius: BorderRadius.circular(4)),
-          child: const Center(
+          child: Center(
               child: Text(
-            'Please upload a professional photo. See guidelines',
+            languageProvider.language.privacyWarning,
             style: TextStyle(fontSize: 12),
           )),
         ),
         const SizedBox(
           height: 8,
         ),
-        const Text(
-          'Phone number',
+        Text(
+          languageProvider.language.interests,
         ),
         const SizedBox(
           height: 8,
         ),
         TextFormField(
-          maxLines: 1,
+          controller: _interestController,
+          maxLines: 3,
           decoration: InputDecoration(
-            hintText: 'Phone number',
+            errorText: _interestError.isEmpty ? null : _interestError,
+            hintText: languageProvider.language.profileSharePrompt,
             isDense: true,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           ),
@@ -170,14 +208,96 @@ class _ProfileStepState extends State<ProfileStep> {
         const SizedBox(
           height: 8,
         ),
-        const Text(
-          "I'm from",
+        Text(
+          languageProvider.language.education,
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        TextFormField(
+          controller: _educationController,
+          maxLines: 3,
+          decoration: InputDecoration(
+            errorText: _educationError.isEmpty ? null : _educationError,
+            hintText: languageProvider.language.educationHint,
+            isDense: true,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Text(
+          languageProvider.language.experience,
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        TextFormField(
+          controller: _experienceController,
+          maxLines: 3,
+          decoration: InputDecoration(
+            errorText: _experienceError.isEmpty
+                ? null
+                : _experienceError, // Use null instead of empty string
+            isDense: true,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: Colors.blue), // Set the default border color to blue
+              borderRadius: BorderRadius.circular(8),
+            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+        ),
+        Text(
+          languageProvider.language.professionInfo,
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        TextFormField(
+          controller: _professionController,
+          maxLines: 3,
+          decoration: InputDecoration(
+            errorText: _professionError.isEmpty ? null : _professionError,
+            isDense: true,
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide:
+                  BorderSide(color: Colors.blue), // Set the color to red
+              borderRadius: BorderRadius.circular(8),
+            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        Row(children: [
+          const Expanded(child: Divider()),
+          const SizedBox(
+            width: 4,
+          ),
+          Text(
+            languageProvider.language.spokenLanguage,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(
+            width: 4,
+          ),
+          const Expanded(child: Divider()),
+        ]),
+        const SizedBox(
+          height: 8,
+        ),
+        Text(
+          '${languageProvider.language.example} ${languageProvider.en}',
         ),
         const SizedBox(
           height: 8,
         ),
         DropdownButtonFormField(
           isExpanded: true,
+          value: chosenCountry,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(
               vertical: 4,
@@ -198,185 +318,73 @@ class _ProfileStepState extends State<ProfileStep> {
                   )))
               .toList(),
           onChanged: (value) {
-      
+            chosenCountries.add(convertFromCodeToName(value!));
+            chosenCountry = value!;
+            setState(() {});
           },
         ),
         const SizedBox(
-          height: 8,
+          height: 16,
         ),
-        const Text('Date of Birth'),
-        const SizedBox(
-          height: 8,
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.grey),
-              borderRadius: BorderRadius.circular(8)),
-          height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(selectedDate.toString().split(' ')[0]),
-              IconButton(
-                  onPressed: () => _selectDate(context),
-                  icon: const Icon(
-                    Icons.calendar_today_outlined,
-                    color: Colors.grey,
-                  ))
-            ],
-          ),
+        _contriesError.isEmpty
+            ? Container()
+            : Text(
+                languageProvider.language.requiredField,
+                style: TextStyle(color: Colors.red),
+              ),
+        Wrap(
+          spacing: 8,
+          runSpacing: -4,
+          children: chosenCountries.map((country) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ChoiceChip(
+                  backgroundColor: Colors.grey[100],
+                  selectedColor: Colors.lightBlue[100],
+                  selected: true,
+                  label: Text(
+                    country,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.blue[700],
+                    ),
+                  ),
+                  onSelected: (_) {
+                    setState(() {
+                      chosenCountries.remove(country);
+                    });
+                  },
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      chosenCountries.remove(country);
+                    });
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 4),
+                    child: Icon(
+                      Icons.clear,
+                      size: 18,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }).toList(),
         ),
         const SizedBox(
           height: 16,
         ),
-        const Row(children: [
+        Row(children: [
           const Expanded(child: Divider()),
           const SizedBox(
             width: 4,
           ),
           Text(
-            'CV',
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(
-            width: 4,
-          ),
-          const Expanded(child: Divider()),
-        ]),
-        const SizedBox(
-          height: 16,
-        ),
-        const Text(
-          "Students will view this information on your profile to decide if you're a good fit for them.",
-          style: TextStyle(fontSize: 12),
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              color: const Color(0xFFE6F7FF),
-              border: Border.all(width: 1, color: Colors.blue),
-              borderRadius: BorderRadius.circular(4)),
-          child: const Center(
-              child: Text(
-            'In order to protect your privacy, please do not share your personal information (email, phone number, social email, skype, etc) in your profile.',
-            style: TextStyle(fontSize: 12),
-          )),
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        const Text(
-          'Interests',
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        TextFormField(
-          maxLines: 3,
-          decoration: InputDecoration(
-            hintText:
-                "Interests, hobbies, memorable life experiences, or anything else you'd like to share!",
-            isDense: true,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        const Text(
-          'Education',
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        TextFormField(
-          maxLines: 3,
-          decoration: InputDecoration(
-            hintText:
-                'Example: "Bachelor of Arts in English from Cambly University; Certified yoga instructor, Second Language Acquisition and Teaching  (SLAT) certificate from Cambly University"',
-            isDense: true,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        const Text(
-          'Experience',
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        TextFormField(
-          maxLines: 3,
-          decoration: InputDecoration(
-            isDense: true,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        const Text(
-          'Current or previous Profession',
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        TextFormField(
-          maxLines: 3,
-          decoration: InputDecoration(
-            isDense: true,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-        const Row(children: [
-          const Expanded(child: Divider()),
-          const SizedBox(
-            width: 4,
-          ),
-          Text(
-            'Language I speak',
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(
-            width: 4,
-          ),
-          const Expanded(child: Divider()),
-        ]),
-        const SizedBox(
-          height: 8,
-        ),
-        const Text(
-          'Language',
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        TextFormField(
-          maxLines: 2,
-          decoration: InputDecoration(
-            isDense: true,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-        const Row(children: [
-          const Expanded(child: Divider()),
-          const SizedBox(
-            width: 4,
-          ),
-          Text(
-            'Who I teach',
+            languageProvider.language.taughtAudience,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           const SizedBox(
@@ -393,26 +401,27 @@ class _ProfileStepState extends State<ProfileStep> {
               color: const Color(0xFFE6F7FF),
               border: Border.all(width: 1, color: Colors.blue),
               borderRadius: BorderRadius.circular(4)),
-          child: const Center(
+          child: Center(
               child: Text(
-            'This is the first thing students will see when looking for tutors.',
+            languageProvider.language.firstImpressionForStudents,
             style: TextStyle(fontSize: 12),
           )),
         ),
         const SizedBox(
           height: 8,
         ),
-        const Text(
-          'Introduction',
+        Text(
+          languageProvider.language.introduction,
         ),
         const SizedBox(
           height: 8,
         ),
         TextFormField(
+          controller: _introductionController,
           maxLines: 3,
           decoration: InputDecoration(
-            hintText:
-                'Example: "I was a doctor for 35 years and can help you practice business or medical English. I also enjoy teaching beginners as I am very patient and always speak slowly and clearly. "',
+            errorText: _introductionError.isEmpty ? null : _introductionError,
+            hintText: languageProvider.language.teachingExample,
             isDense: true,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           ),
@@ -420,8 +429,8 @@ class _ProfileStepState extends State<ProfileStep> {
         const SizedBox(
           height: 8,
         ),
-        const Text(
-          'I am best at teaching students who are',
+        Text(
+          languageProvider.language.idealStudentProfile,
         ),
         const SizedBox(
           height: 8,
@@ -430,9 +439,9 @@ class _ProfileStepState extends State<ProfileStep> {
           title: const Text('Beginer'),
           leading: Radio<Level>(
             value: Level.beginer,
-            groupValue: level,
+            groupValue: chosenLevel,
             onChanged: (value) => setState(() {
-              level = value;
+              chosenLevel = value;
             }),
           ),
         ),
@@ -440,9 +449,9 @@ class _ProfileStepState extends State<ProfileStep> {
           title: const Text('Intermediate'),
           leading: Radio<Level>(
             value: Level.intermediate,
-            groupValue: level,
+            groupValue: chosenLevel,
             onChanged: (value) => setState(() {
-              level = value;
+              chosenLevel = value;
             }),
           ),
         ),
@@ -450,55 +459,102 @@ class _ProfileStepState extends State<ProfileStep> {
           title: const Text('Advanced'),
           leading: Radio<Level>(
             value: Level.advanced,
-            groupValue: level,
+            groupValue: chosenLevel,
             onChanged: (value) => setState(() {
-              level = value;
+              chosenLevel = value;
             }),
           ),
         ),
         const SizedBox(
           height: 8,
         ),
-        const Text(
-          'My specialities are',
+        Text(
+          languageProvider.language.mySpecialties,
         ),
         const SizedBox(
           height: 8,
         ),
         Column(
-          children: specialities.keys
+          children: specialties.entries
               .map((e) => CheckboxListTile(
-                    title: Text(e),
+                    title: Text(e.value),
                     controlAffinity: ListTileControlAffinity.leading,
                     onChanged: (bool? value) {
+                      if (value != null && value) {
+                        chosenSpecialities.add(e.key);
+                      } else if (value != null && !value) {
+                        chosenSpecialities.remove(e.key);
+                      }
                       setState(() {
-                        specialities[e] = value ?? false;
+                        // specialities[e] = value ?? false;
                       });
                     },
-                    value: specialities[e],
+                    value: chosenSpecialities.contains(e.key),
                   ))
               .toList(),
         ),
-        Card(
-            color: Colors.blue,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            child: InkWell(
-                borderRadius: BorderRadius.circular(8),
-                onTap: () => {},
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Next',
-                        style: TextStyle(fontSize: 12, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ))),
+        _specialitiesError.isEmpty
+            ? Container()
+            : Text(
+                languageProvider.language.requiredField,
+                style: TextStyle(color: Colors.red),
+              ),
+        SizedBox(
+          height: 16,
+        ),
+        Text(
+          languageProvider.language.price,
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        TextFormField(
+          controller: _priceController,
+          maxLines: 1,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(
+                RegExp(r'[0-9]')), // Allow only numbers
+          ],
+          decoration: InputDecoration(
+            errorText: _priceError.isEmpty ? null : _priceError,
+            hintText: languageProvider.language.price,
+            isDense: true,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+        ),
+        const SizedBox(
+          height: 25,
+        ),
+        TextButton(
+          onPressed: () async {
+            validate();
+            if (_educationError.isEmpty &&
+                _contriesError.isEmpty &&
+                _interestError.isEmpty &&
+                _experienceError.isEmpty &&
+                _introductionError.isEmpty &&
+                _specialitiesError.isEmpty) {
+              widget.onPressNext(BecomeTutorRequest(
+                interests: _interestController.text,
+                education: _educationController.text,
+                experience: _experienceController.text,
+                profession: _professionController.text,
+                languages: chosenCountries.join(', '),
+                bio: _introductionController.text,
+                targetStudent: chosenLevel.toString(),
+                specialties: chosenSpecialities.join(', '),
+                price: _priceController.text,
+              ));
+            }
+          },
+          style: TextButton.styleFrom(
+              minimumSize: const Size.fromHeight(56),
+              backgroundColor: Colors.blue),
+          child: Text(
+            languageProvider.language.next,
+            style: const TextStyle(fontSize: 20, color: Colors.white),
+          ),
+        )
       ],
     );
   }

@@ -77,6 +77,7 @@ abstract class Language {
   String get save;
   String get testPreparation;
   String get updateSuccess;
+  String get uploadAvatarSuccessfully;
   //report dialog
   String get report;
   String get reportTitle;
@@ -103,4 +104,59 @@ abstract class Language {
   String get tutorDetails;
   String get less;
   String get more;
+  String get noVideo;
+  String get specialties;
+  //upcoming card
+  String get deleteDialogTitle;
+  String get requestForReason;
+  String get noRequest;
+  String get gotoMeeting;
+  String get cancelScheduleSuccessfully;
+  //tutor register page
+  String get tutorRegisterTitle;
+  String get videoIntroduction;
+  String get approval;
+  //profile step
+  String get price;
+  String get example;
+  String get setupContent;
+  String get introduction;
+  String get basicInfo;
+  String get uploadPhotoGuidelines;
+  String get uploadAvatar;
+  String get tapToUpload;
+  String get next;
+  String get from;
+  String get requiredField;
+  String get profileInfoForStudents;
+  String get interests;
+  String get privacyWarning;
+  String get profileSharePrompt;
+  String get education;
+  String get educationHint;
+  String get experience;
+  String get professionInfo;
+  String get spokenLanguage;
+  String get taughtAudience;
+  String get firstImpressionForStudents;
+  String get mySpecialties;
+  String get idealStudentProfile;
+  String get teachingExample;
+  //video step
+  String get becomeTutorFailed;
+  String get videoSetup;
+  String get videoHint;
+  String get tipTitle;
+  String get firstStep;
+  String get secondStep;
+  String get thirdStep;
+  String get fourthStep;
+  String get fifthStep;
+  String get chooseVideo;
+  String get previous;
+  String get done;
+  //approval step
+  String get stepsCompleted;
+  String get operatorApprovalWait;
+  String get tutorRegistrationSuccess;
 }

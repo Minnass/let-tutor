@@ -232,7 +232,8 @@ class _SettingScreenState extends State<SettingScreen> {
 
   AlertDialog _buildLogoutDialog(BuildContext context) {
     return AlertDialog(
-      title: Text(languageProvider.language.logoutTitle),
+      title: Text(languageProvider.language.logoutTitle,
+          style: TextStyle(fontWeight: FontWeight.normal)),
       actions: <Widget>[
         ElevatedButton(
           child: Text(languageProvider.language.ok),
@@ -253,3 +254,4 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 }
+  

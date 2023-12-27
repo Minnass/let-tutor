@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-const setupContent =
-    'Let students know what they can expect from a lesson with you by recording a video highlighting your teaching style, expertise and personality. Students can be nervous to speak with a foreigner, so it really helps to have a friendly video that introduces yourself and invites students to call you.';
+import 'package:image_picker/image_picker.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
+import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 
 class VideoIntroductionStep extends StatefulWidget {
   const VideoIntroductionStep(
@@ -18,8 +20,22 @@ class VideoIntroductionStep extends StatefulWidget {
 }
 
 class _VideoIntroductionStepState extends State<VideoIntroductionStep> {
+  late LanguageProvider languageProvider;
+  VideoPlayerController? videoController;
+  bool isSending = false;
+  String videoPath = '';
+  bool isPicked = false;
+  Future<void>? initializeVideoPlayerFuture;
+  final ImagePicker picker = ImagePicker();
+  @override
+  void dispose() {
+    videoController?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    languageProvider = context.watch<LanguageProvider>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -36,18 +52,18 @@ class _VideoIntroductionStepState extends State<VideoIntroductionStep> {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
-                    'Set up your tutor profile',
+                    languageProvider.language.videoSetup,
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                   ),
                   SizedBox(
                     height: 16,
                   ),
                   ExpandableText(
-                    setupContent,
-                    expandText: 'more',
-                    collapseText: 'less',
+                    languageProvider.language.videoHint,
+                    expandText: languageProvider.language.more,
+                    collapseText: languageProvider.language.less,
                     maxLines: 2,
                     linkColor: Colors.blue,
                     style: const TextStyle(fontSize: 14),
@@ -61,13 +77,13 @@ class _VideoIntroductionStepState extends State<VideoIntroductionStep> {
         const SizedBox(
           height: 16,
         ),
-        const Row(children: [
+        Row(children: [
           const Expanded(child: Divider()),
           const SizedBox(
             width: 4,
           ),
           Text(
-            'Introduction Video',
+            languageProvider.language.videoIntroduction,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           const SizedBox(
@@ -88,33 +104,33 @@ class _VideoIntroductionStepState extends State<VideoIntroductionStep> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'A few helpful tips',
+                Text(
+                  languageProvider.language.tipTitle,
                   style: TextStyle(fontSize: 12),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
-                        '1. Find a clean and quiet space',
+                        languageProvider.language.firstStep,
                         style: TextStyle(fontSize: 12),
                       ),
                       Text(
-                        '2. Smile and look at the camera',
+                        languageProvider.language.secondStep,
                         style: TextStyle(fontSize: 12),
                       ),
                       Text(
-                        '3. Dress smart',
+                        languageProvider.language.thirdStep,
                         style: TextStyle(fontSize: 12),
                       ),
                       Text(
-                        '4. Speak for 1-3 minutes',
+                        languageProvider.language.fourthStep,
                         style: TextStyle(fontSize: 12),
                       ),
                       Text(
-                        '5. Brand yourself and have fun!',
+                        languageProvider.language.fifthStep,
                         style: TextStyle(fontSize: 12),
                       ),
                     ],
@@ -127,11 +143,45 @@ class _VideoIntroductionStepState extends State<VideoIntroductionStep> {
         ),
         Center(
             child: Card(
+                child: (initializeVideoPlayerFuture != null)
+                    ? FutureBuilder(
+                        future: initializeVideoPlayerFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return AspectRatio(
+                              aspectRatio: videoController!.value.aspectRatio,
+                              child: VideoPlayer(videoController!),
+                            );
+                          } else {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        })
+                    : Container())),
+        const SizedBox(
+          height: 32,
+        ),
+        Card(
           color: Colors.blue,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: InkWell(
               borderRadius: BorderRadius.circular(8),
-              onTap: () => {},
+              onTap: () async {
+                final XFile? video =
+                    await picker.pickVideo(source: ImageSource.gallery);
+                if (video != null) {
+                  videoPath = video.path;
+                  setState(() {
+                    // TutorRegisteringProvider.of(context).videoPath = video.path;
+                    videoController =
+                        VideoPlayerController.file(File(video.path));
+                    initializeVideoPlayerFuture = videoController?.initialize();
+                    videoController?.setLooping(true);
+                    videoController?.play();
+                  });
+                }
+              },
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child: Row(
@@ -139,64 +189,44 @@ class _VideoIntroductionStepState extends State<VideoIntroductionStep> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Choose video",
+                      languageProvider.language.chooseVideo,
                       style: TextStyle(fontSize: 12, color: Colors.white),
                     ),
                   ],
                 ),
               )),
-        )),
-        const SizedBox(
-          height: 32,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Card(
-              color: Colors.blue,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              child: InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  onTap: () => {},
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Previous",
-                          style: TextStyle(fontSize: 12, color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  )),
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: Colors.blue), // Border color
+              ),
+              child: Text(languageProvider.language.previous),
+              onPressed: () {
+                widget.onPressPrevious();
+              },
             ),
-            Card(
-                color: Colors.blue,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                child: InkWell(
-                    borderRadius: BorderRadius.circular(8),
-                    onTap: () => {},
-                    child: Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Done",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.blue,
-                              ),
-                            )
-                          ],
-                        )))),
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: Colors.blue), // Border color
+              ),
+              child: Text(languageProvider.language.done),
+              onPressed: () {
+                if (videoPath.isNotEmpty) {
+                  setState(() {
+                    isSending = true;
+                  });
+                  widget.onPressDone(videoPath);
+                }
+              },
+            ),
           ],
-        )
+        ),
+        isSending
+            ? const Center(child: CircularProgressIndicator(color: Colors.blue))
+            : Container()
       ],
     );
   }

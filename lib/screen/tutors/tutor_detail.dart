@@ -121,8 +121,8 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: ExpandableText(
                 widget.tutor.bio ?? '',
-                expandText: 'more',
-                collapseText: 'less',
+                expandText: languageProvider.language.more,
+                collapseText: languageProvider.language.less,
                 maxLines: 2,
                 linkColor: Colors.blue,
                 style: const TextStyle(fontSize: 14),
@@ -146,7 +146,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                     ),
                   ),
                   Text(
-                    'Favorite',
+                    languageProvider.language.favorite,
                     style: TextStyle(color: true ? Colors.red : Colors.blue),
                   )
                 ]),
@@ -160,9 +160,10 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                             feedbacks: widget.tutor.feedbacks ?? []));
                   },
                   child: Column(
-                    children: const [
+                    children: [
                       Icon(Icons.reviews_outlined, color: Colors.blue),
-                      Text('Reviews', style: TextStyle(color: Colors.blue))
+                      Text(languageProvider.language.review,
+                          style: TextStyle(color: Colors.blue))
                     ],
                   ),
                 ),
@@ -172,15 +173,16 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                     onPressed: () => {
                           showDialog(
                             context: context,
-                            builder: (context) => const ReportDialog(
-                              name: 'Keegan',
+                            builder: (context) => ReportDialog(
+                              name: widget.tutor.name ?? '',
                             ),
                           )
                         },
                     child: Column(
                       children: [
                         Icon(Icons.report_outlined, color: Colors.blue),
-                        Text('Report', style: TextStyle(color: Colors.blue))
+                        Text(languageProvider.language.report,
+                            style: TextStyle(color: Colors.blue))
                       ],
                     )),
               )
@@ -194,7 +196,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                 border: Border.all(color: Colors.blue, width: 2),
                 borderRadius: const BorderRadius.all(Radius.circular(10))),
             child: widget.tutor.video == null
-                ? Text('No Introduction Video',
+                ? Text(languageProvider.language.noVideo,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -206,7 +208,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Education',
+            languageProvider.language.education,
             style: TextStyle(
                 fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
           ),
@@ -221,7 +223,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
             ),
           ),
           Text(
-            'Languages',
+            languageProvider.language.language,
             style: TextStyle(
                 fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
           ),
@@ -243,7 +245,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Specialties',
+            languageProvider.language.specialties,
             style: TextStyle(
                 fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
           ),
@@ -265,7 +267,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Teaching Experiences',
+            languageProvider.language.experience,
             style: TextStyle(
                 fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
           ),

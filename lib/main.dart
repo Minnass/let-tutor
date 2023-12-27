@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lettutor/const/routes.dart';
 import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/domains/course/course.dart';
-import 'package:lettutor/domains/tutor/tutor.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/data/providers/favorite.provider.dart';
 import 'package:lettutor/data/providers/schedule.provider.dart';
@@ -32,7 +31,6 @@ class _LettutorAppState extends State<LettutorApp> {
   final languageProvider = LanguageProvider();
   final schedulesProvider = ScheduleProvider();
   final favouriteProvier = FavoriteProvider();
-  List<Tutor> listTutor = [];
   List<Course> listCourse = [];
   @override
   void initState() {
@@ -53,8 +51,6 @@ class _LettutorAppState extends State<LettutorApp> {
           ),
           ChangeNotifierProvider(create: (_) => schedulesProvider),
           ChangeNotifierProvider(create: (_) => favouriteProvier),
-          Provider(create: (context) => listTutor),
-          Provider(create: (context) => listCourse),
         ],
         child: MaterialApp(
           theme: ThemeData(fontFamily: 'Inter'),
