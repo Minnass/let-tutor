@@ -278,7 +278,7 @@ class _TutorDetailScreenState extends State<TutorDetailScreen> {
                   fontSize: 14,
                 )),
           ),
-          Booking()
+          Booking(tutorId: widget.tutor.id!),
         ]),
       ),
     );

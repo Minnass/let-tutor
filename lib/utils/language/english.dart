@@ -72,7 +72,7 @@ class English extends Language {
   String get backToLogin => 'Go back to Login';
   //Text
   @override
-  String get language => 'English';
+  String get language => 'Language';
   //Button
   @override
   String get backButton => 'Back';
@@ -91,7 +91,7 @@ class English extends Language {
   @override
   String get logoutTitle => 'Do you want to sign out ?';
   @override
-  String get ok => 'Sign out';
+  String get signout => 'Sign out';
   @override
   String get editProfile => 'Edit profile';
   @override
@@ -202,6 +202,8 @@ class English extends Language {
   String get dateTimeFormat => 'yyyy-MM-dd HH:mm';
   @override
   String get dateFormat => "yyyy-MM-dd";
+  @override
+  get regionDatetime => 'en';
   //tutor detail;
   @override
   String get noVideo => 'No video introduction';
@@ -327,4 +329,26 @@ class English extends Language {
   @override
   String get tutorRegistrationSuccess =>
       "Register successfully, wait for approval";
+  //upcoming card
+  @override
+  String get noUpcomingSchedule => "No Upcoming Schedule";
+
+  @override
+  String get book => "Book";
+    @override
+  String get booked => "Booked";
+  @override
+  String get bookingDetails => "Booking Details";
+  @override
+  String get bookingTime => "Booking time";
+  @override
+  String get balance => "Balance";
+  @override
+  String get notes => "Notes";
+  @override
+  String get lesson => "Lesson";
+  @override
+  String get remainingLesson => "You have 10 lesson left";
+  @override
+  String get bookSuccess => "Book tutor successfully";
 }

@@ -1,20 +1,66 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:lettutor/data/network/apis/schedule/schedule.api.dart';
+import 'package:lettutor/data/network/dio_client.dart';
+import 'package:lettutor/data/providers/auth.provider.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
+import 'package:lettutor/domains/entity/user/user.dart';
+import 'package:provider/provider.dart';
 
 class BookTutorDialog extends StatefulWidget {
   const BookTutorDialog(
-      {Key? key, required this.start, required this.end, required this.date})
+      {Key? key,
+      required this.start,
+      required this.end,
+      required this.scheduleId,
+      required this.bookClass})
       : super(key: key);
-  final String start;
-  final String end;
-  final String date;
-
+  final DateTime start;
+  final DateTime end;
+  final String scheduleId;
+  final Function(String, String) bookClass;
   @override
   State<BookTutorDialog> createState() => _BookTutorDialogState();
 }
 
 class _BookTutorDialogState extends State<BookTutorDialog> {
+  ScheduleApi scheduleApi = ScheduleApi(DioClient(Dio()));
+  late AuthProvider authProvider;
+
+  void validate() {
+    if (_noteController.text.isEmpty) {
+      _noteError = languageProvider.language.requiredField;
+    } else {
+      _noteError = '';
+    }
+    setState(() {});
+  }
+
+  Future<bool> onBookClass() async {
+    validate();
+    if (_noteError.isEmpty) {
+      return await widget.bookClass(widget.scheduleId, _noteController.text);
+    }
+    return false;
+  }
+
+  late LanguageProvider languageProvider;
+  late User? user;
+  String _noteError = '';
+  final _noteController = TextEditingController();
+  String getHoursMinues(DateTime time) {
+    return "${time.hour.toString().length == 1 ? "0" + time.hour.toString() : time.hour.toString()}:${time.minute.toString().length == 1 ? "0" + time.minute.toString() : time.minute.toString()}";
+  }
+
+  String getDate(DateTime date, String country) {
+    return DateFormat('EEEE, d MMMM y', country).format(date);
+  }
+
   @override
   Widget build(BuildContext context) {
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
+    user = context.watch<AuthProvider>().currentUser;
     return Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: SingleChildScrollView(
@@ -25,8 +71,8 @@ class _BookTutorDialogState extends State<BookTutorDialog> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Booking details',
+                      Text(
+                        languageProvider.language.bookingDetails,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
@@ -59,8 +105,8 @@ class _BookTutorDialogState extends State<BookTutorDialog> {
                                   children: [
                                     Container(
                                       padding: const EdgeInsets.all(8),
-                                      child: const Text(
-                                        'Booking Time',
+                                      child: Text(
+                                        languageProvider.language.bookingTime,
                                         style: TextStyle(
                                           fontWeight: FontWeight.w700,
                                         ),
@@ -80,7 +126,7 @@ class _BookTutorDialogState extends State<BookTutorDialog> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Text(
-                                  '${widget.start}-${widget.end}, ${widget.date}',
+                                  '${getHoursMinues(widget.start)}-${getHoursMinues(widget.end)}, ${getDate(widget.start, languageProvider.language.regionDatetime)}',
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -115,8 +161,8 @@ class _BookTutorDialogState extends State<BookTutorDialog> {
                                   children: [
                                     Container(
                                       padding: const EdgeInsets.all(8),
-                                      child: const Text(
-                                        'Balance',
+                                      child: Text(
+                                        languageProvider.language.balance,
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -130,7 +176,7 @@ class _BookTutorDialogState extends State<BookTutorDialog> {
                                     Container(
                                       padding: const EdgeInsets.all(8),
                                       child: Text(
-                                        'You have 10 lesson left',
+                                        '${(int.tryParse(user!.walletInfo?.amount ?? "0") ?? 0) ~/ 100000} ${languageProvider.language.lesson}',
                                         style: const TextStyle(
                                           color: Color(0xff7766c7),
                                         ),
@@ -149,8 +195,8 @@ class _BookTutorDialogState extends State<BookTutorDialog> {
                                   children: [
                                     Container(
                                         padding: const EdgeInsets.all(8),
-                                        child: const Text(
-                                          'Price',
+                                        child: Text(
+                                          languageProvider.language.price,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -163,7 +209,7 @@ class _BookTutorDialogState extends State<BookTutorDialog> {
                                     Container(
                                         padding: const EdgeInsets.all(8),
                                         child: Text(
-                                          '10 lesson',
+                                          '10 ${languageProvider.language.lesson}',
                                           style: const TextStyle(
                                             color: Color(0xff7766c7),
                                           ),
@@ -194,8 +240,8 @@ class _BookTutorDialogState extends State<BookTutorDialog> {
                                     children: [
                                       Container(
                                         padding: const EdgeInsets.all(8),
-                                        child: const Text(
-                                          'Notes',
+                                        child: Text(
+                                          languageProvider.language.notes,
                                           style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                           ),
@@ -211,6 +257,7 @@ class _BookTutorDialogState extends State<BookTutorDialog> {
                                     onTap: () {},
                                     minLines: 5,
                                     maxLines: 5,
+                                    controller: _noteController,
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                     )))
@@ -229,16 +276,21 @@ class _BookTutorDialogState extends State<BookTutorDialog> {
                                 Colors.white, // Background color for Cancel
                             onPrimary: Colors.blue, // Border color for Cancel
                           ),
-                          child: Text('Cancel'),
+                          child: Text(languageProvider.language.cancel),
                         ),
                         const SizedBox(
                             width: 8), // Add some spacing between buttons
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final res = await onBookClass();
+                            if (_noteError.isEmpty) {
+                              Navigator.pop(context, res);
+                            }
+                          },
                           style: ElevatedButton.styleFrom(
                             primary: Colors.blue, // Background color for Submit
                           ),
-                          child: Text('Book'),
+                          child: Text(languageProvider.language.book),
                         ),
                       ],
                     ),

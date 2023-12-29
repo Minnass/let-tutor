@@ -48,7 +48,7 @@ abstract class Language {
   String get switchSuccessfully;
   String get signoutSuccessfully;
   String get logoutTitle;
-  String get ok;
+  String get signout;
   //home page;
   String get recommendTutor;
   String get seeAll;
@@ -98,6 +98,7 @@ abstract class Language {
   String get review;
   //date formate
   String get dateFormat;
+  String get regionDatetime;
   String get dateTimeFormat;
   //tutor detail page
   String get favorite;
@@ -159,4 +160,16 @@ abstract class Language {
   String get stepsCompleted;
   String get operatorApprovalWait;
   String get tutorRegistrationSuccess;
+  //upcoming Schedule
+  String get noUpcomingSchedule;
+  //book_tutor dialog;
+  String get book;
+  String get booked;
+  String get bookingDetails;
+  String get bookingTime;
+  String get balance;
+  String get notes;
+  String get lesson;
+  String get remainingLesson;
+  String get bookSuccess;
 }

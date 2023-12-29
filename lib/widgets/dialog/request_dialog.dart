@@ -66,7 +66,7 @@ class _RequestDialogState extends State<RequestDialog> {
             TextFormField(
               controller: _textController,
               decoration: InputDecoration(
-                errorText: _error.isEmpty ? '' : _error,
+                errorText: _error.isEmpty ? null : _error,
                 border: OutlineInputBorder(),
                 hintText: languageProvider.language.requestHint,
               ),

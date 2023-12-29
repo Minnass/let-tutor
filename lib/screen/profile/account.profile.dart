@@ -55,7 +55,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
             studySchedule: _studyScheduleController.text,
             learnTopics: chosenTopics,
             testPreparations: chosenTestPreparations));
-        
+
         authProvider.updateUser(res);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

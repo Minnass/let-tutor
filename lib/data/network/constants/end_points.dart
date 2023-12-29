@@ -29,4 +29,6 @@ class Endpoints {
   static const String lessonRequest = baseUrl + "booking/student-request";
   static const String totalTime = baseUrl + "call/total";
   static const String cancleSchedule = baseUrl + 'booking';
+  static const String tutorSchedule = baseUrl + 'schedule';
+  static const String bookClass = baseUrl + 'booking';
 }

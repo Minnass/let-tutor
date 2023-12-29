@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/domains/entity/feedback/feedback.dart';
+import 'package:lettutor/utils/first_character.dart';
+import 'package:provider/provider.dart';
 
 class FeedbackCard extends StatefulWidget {
   final MyFeedback feedback;
@@ -10,8 +14,19 @@ class FeedbackCard extends StatefulWidget {
 }
 
 class _FeedbackCardState extends State<FeedbackCard> {
+  late LanguageProvider languageProvider;
+  String formatDatetime(String date, String format) {
+    if (date.isEmpty) {
+      return '';
+    }
+    DateTime apiDate = DateTime.parse(date);
+    String formattedDate = DateFormat(format).format(apiDate);
+    return formattedDate;
+  }
+
   @override
   Widget build(BuildContext context) {
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     return Card(
         margin: const EdgeInsets.symmetric(vertical: 4),
         surfaceTintColor: Colors.white,
@@ -30,17 +45,37 @@ class _FeedbackCardState extends State<FeedbackCard> {
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                   ),
-                  child: Image.network(
-                    // widget.feedback.firstInfo.avatar != null
-                    //     ? widget.feedback.firstInfo.avatar
-                    //     : "https://api.app.lettutor.com/avatar/e9e3eeaa-a588-47c4-b4d1-ecfa190f63faavatar1632109929661.jpg",
-                    'https://api.app.lettutor.com/avatar/e9e3eeaa-a588-47c4-b4d1-ecfa190f63faavatar1632109929661.jpg',
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => const Icon(
-                      Icons.error_outline_rounded,
-                      size: 32,
-                      color: Colors.redAccent,
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    clipBehavior: Clip.hardEdge,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
                     ),
+                    child: widget.feedback.firstInfo!.avatar != null
+                        ? Image.network(
+                            widget.feedback.firstInfo!.avatar!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(
+                              Icons.error_outline_rounded,
+                              color: Colors.red,
+                              size: 32,
+                            ),
+                          )
+                        : CircleAvatar(
+                            backgroundColor: Colors.blue,
+                            radius: 50,
+                            child: Text(
+                              getFirstCharacters(
+                                  widget.feedback.firstInfo!.name),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24,
+                              ),
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(width: 4),
@@ -51,9 +86,6 @@ class _FeedbackCardState extends State<FeedbackCard> {
                     Row(
                       children: [
                         Text(
-                          // widget.feedback.content != null
-                          //     ? widget.feedback.content
-                          //     : '',
                           '',
                           style: const TextStyle(
                             fontSize: 15,
@@ -62,8 +94,8 @@ class _FeedbackCardState extends State<FeedbackCard> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          // widget.feedback.updatedAt,
-                          '',
+                          formatDatetime(widget.feedback.updatedAt ?? '',
+                              languageProvider.language.dateFormat),
                           style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
@@ -72,16 +104,18 @@ class _FeedbackCardState extends State<FeedbackCard> {
                       ],
                     ),
                     Row(
-                      children: [
-                        const Icon(Icons.star, color: Colors.amber, size: 15),
-                        const Icon(Icons.star, color: Colors.amber, size: 15),
-                        const Icon(Icons.star, color: Colors.amber, size: 15),
-                        const Icon(Icons.star, color: Colors.amber, size: 15),
-                        const Icon(Icons.star, color: Colors.amber, size: 15)
-                      ],
+                      children: List.generate(
+                        (widget.feedback.rating ?? 0)
+                            .toInt(), // Casting widget.tutor.rating to int
+                        (index) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                          size: 15,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 4),
-                    Text('Vui ve khong quao')
+                    Text(widget.feedback.content!)
                   ],
                 ))
               ],

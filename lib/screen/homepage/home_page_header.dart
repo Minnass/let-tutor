@@ -35,7 +35,7 @@ class _HomePageHeaderState extends State<HomePageHeader> {
           dateTimeGte: DateTime.now().millisecondsSinceEpoch,
           orderBy: 'meeting',
           sortBy: 'asc'));
-      bookingInfo = res.data?.rows?.first;
+      bookingInfo = res.data!.rows!.isEmpty ? null : res.data?.rows?.first;
       if (bookingInfo != null) {
         scheduleTime =
             DateFormat(languageProvider.language.dateTimeFormat).format(
@@ -45,7 +45,10 @@ class _HomePageHeaderState extends State<HomePageHeader> {
       }
       isLoading = false;
       setState(() {});
-    } catch (error) {}
+    } catch (error) {
+      isLoading = false;
+      setState(() {});
+    }
   }
 
   @override
@@ -53,7 +56,7 @@ class _HomePageHeaderState extends State<HomePageHeader> {
     languageProvider = context.watch<LanguageProvider>();
     authProvider = context.watch<AuthProvider>();
     scheduleApi.setToken(authProvider.getToken());
-    if (isFirstLoading) {
+    if (isLoading) {
       _fetchData();
     }
     return isLoading
@@ -63,40 +66,55 @@ class _HomePageHeaderState extends State<HomePageHeader> {
             width: double.maxFinite,
             child: Column(
               children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 6),
-                  child: Text(
-                    languageProvider.language.upcomingLesson,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ),
-                Text(
-                  scheduleTime,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 15, color: Colors.white),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  child: TextButton(
-                      style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 6, horizontal: 10),
-                          backgroundColor: Colors.white),
-                      onPressed: () => {},
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
+                bookingInfo != null
+                    ? Column(
                         children: [
-                          Icon(Icons.ondemand_video_rounded),
-                          SizedBox(width: 12),
-                          Text(languageProvider.language.inRoomButton,
-                              style: TextStyle(fontSize: 14)),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 6),
+                            child: Text(
+                              languageProvider.language.upcomingLesson,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
+                          ),
+                          Text(
+                            scheduleTime,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                fontSize: 15, color: Colors.white),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: TextButton(
+                                style: TextButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 6, horizontal: 10),
+                                    backgroundColor: Colors.white),
+                                onPressed: () => {},
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.ondemand_video_rounded),
+                                    SizedBox(width: 12),
+                                    Text(languageProvider.language.inRoomButton,
+                                        style: TextStyle(fontSize: 14)),
+                                  ],
+                                )),
+                          ),
                         ],
-                      )),
-                ),
+                      )
+                    : Center(
+                        child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              languageProvider.language.noUpcomingSchedule,
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.white),
+                            )),
+                      ),
                 Padding(
                   padding: const EdgeInsets.only(top: 0, bottom: 5),
                   child: Text(

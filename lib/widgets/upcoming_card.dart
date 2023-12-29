@@ -191,7 +191,7 @@ class _UpcomingCardState extends State<UpcomingCard> {
                               TextButton.styleFrom(foregroundColor: Colors.red),
                           onPressed: () => {_showDeleteConfirmation()},
                           child: Text(
-                            'Cancel',
+                            languageProvider.language.cancel,
                             style: TextStyle(fontSize: 14, color: Colors.red),
                           ),
                         )),
@@ -233,7 +233,7 @@ class _UpcomingCardState extends State<UpcomingCard> {
       ),
       actions: <Widget>[
         ElevatedButton(
-          child: Text(languageProvider.language.ok),
+          child: Text(languageProvider.language.book),
           onPressed: () {
             Navigator.of(context).pop(true);
           },

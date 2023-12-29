@@ -7,6 +7,7 @@ import 'package:lettutor/data/network/apis/schedule/schedule.api.dart';
 import 'package:lettutor/data/network/constants/pagination.dart';
 import 'package:lettutor/data/network/dio_client.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/widgets/history_booking_card.dart';
 import 'package:lettutor/widgets/upcoming_card.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,7 @@ class _UpcomingTabState extends State<UpcomingTab> {
   bool _isLoading = true;
   late List<BookingInfoResponse> bookingInfoList;
   ScheduleApi scheduleApi = ScheduleApi(DioClient(Dio()));
-
+  late LanguageProvider languageProvider;
   Future<void> _fetchUpcomingSchedule() async {
     final now = DateTime.now().millisecondsSinceEpoch;
     try {
@@ -68,13 +69,16 @@ class _UpcomingTabState extends State<UpcomingTab> {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
     scheduleApi.setToken(authProvider.getToken());
+    languageProvider=context.watch<LanguageProvider>();
     if (_isLoading) {
       _fetchUpcomingSchedule();
     }
     return Expanded(
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
-            : ListView.separated(
+            : bookingInfoList.isEmpty?
+            Center(child: Text(languageProvider.language.noUpcomingSchedule),):
+            ListView.separated(
                 controller: controller,
                 itemBuilder: (context, index) {
                   if (index < bookingInfoList.length) {
@@ -90,6 +94,8 @@ class _UpcomingTabState extends State<UpcomingTab> {
                 separatorBuilder: (BuildContext context, int index) =>
                     const SizedBox(height: 8),
                 itemCount: bookingInfoList.length + 1,
-              ));
+              ) 
+            
+            );
   }
 }

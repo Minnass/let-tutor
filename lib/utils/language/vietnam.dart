@@ -73,7 +73,7 @@ class Vietnamese extends Language {
   String get backToLogin => 'Quay về đăng nhập';
   //Text
   @override
-  String get language => 'Việt Nam';
+  String get language => 'Ngôn ngữ';
   //Button
   @override
   String get backButton => 'Quay về';
@@ -92,7 +92,7 @@ class Vietnamese extends Language {
   @override
   String get logoutTitle => 'Bạn chắc chắn muốn thoát không ?';
   @override
-  String get ok => 'Thoát';
+  String get signout => 'Thoát';
   @override
   String get editProfile => 'Chỉnh Sửa';
   @override
@@ -204,6 +204,8 @@ class Vietnamese extends Language {
   String get dateTimeFormat => 'dd-MM-yyyy HH:mm';
   @override
   String get dateFormat => "dd-MM-yyyy";
+  @override
+  get regionDatetime => 'vi';
   //tutor details
   @override
   String get noVideo => "Không có video giới thiệu";
@@ -331,4 +333,25 @@ class Vietnamese extends Language {
   @override
   String get tutorRegistrationSuccess =>
       "Đăng ký thành công, chờ đợi phê duyệt";
+  //upcoming card
+  @override
+  String get noUpcomingSchedule => "Không có lịch học sắp tới";
+  @override
+  String get book => "Đăng ký";
+  @override
+  String get booked => "Đã đăng ký";
+  @override
+  String get bookingDetails => "Thông tin đăng ký";
+  @override
+  String get bookingTime => "Thời gian đăng ký";
+  @override
+  String get balance => "Số dư";
+  @override
+  String get notes => "Ghi Chú";
+  @override
+  String get lesson => "bài học";
+  @override
+  String get remainingLesson => "Bạn còn 934 bài học";
+  @override
+  String get bookSuccess => "Đặt lịch thành công";
 }

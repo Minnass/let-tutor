@@ -97,9 +97,6 @@ class AuthApi {
       );
       return;
     } on DioException catch (e) {
-      print(e.response?.data);
-      print(e.response?.data);
-      print(e.response?.data);
       final customError = CustomErrorResponse.fromJson(
           e.response?.data as Map<String, dynamic>);
       throw CustomException(customError.message);

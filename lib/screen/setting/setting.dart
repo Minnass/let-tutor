@@ -236,7 +236,7 @@ class _SettingScreenState extends State<SettingScreen> {
           style: TextStyle(fontWeight: FontWeight.normal)),
       actions: <Widget>[
         ElevatedButton(
-          child: Text(languageProvider.language.ok),
+          child: Text(languageProvider.language.signout),
           onPressed: () {
             Navigator.of(context).pop(true);
           },
@@ -254,4 +254,3 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 }
-  
