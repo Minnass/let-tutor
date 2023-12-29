@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:lettutor/data/providers/language.provider.dart';
+import 'package:provider/provider.dart';
 
 class SelectDate extends StatefulWidget {
   final String initialDate;
-
-  const SelectDate({Key? key, required this.initialDate}) : super(key: key);
+  final Function onDatePickerComplete;
+  const SelectDate(
+      {Key? key, required this.initialDate, required this.onDatePickerComplete})
+      : super(key: key);
 
   @override
   State<SelectDate> createState() => _SelectDateState();
@@ -11,23 +16,19 @@ class SelectDate extends StatefulWidget {
 
 class _SelectDateState extends State<SelectDate> {
   late DateTime selectedDate;
-  DateTime _parseDate(String date) {
-    List<String> dateParts = date.split('-');
-    return DateTime(int.parse(dateParts[0]), int.parse(dateParts[1]),
-        int.parse(dateParts[2]));
-  }
+  late LanguageProvider languageProvider;
 
   @override
   void initState() {
     super.initState();
-    selectedDate = _parseDate(widget.initialDate);
+    selectedDate = DateTime.parse(widget.initialDate);
   }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime.now(),
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
       lastDate: DateTime(2050),
     );
 
@@ -35,11 +36,13 @@ class _SelectDateState extends State<SelectDate> {
       setState(() {
         selectedDate = picked;
       });
+      widget.onDatePickerComplete(selectedDate);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    languageProvider = context.watch<LanguageProvider>();
     return InkWell(
       onTap: () {
         _selectDate(context);
@@ -58,7 +61,8 @@ class _SelectDateState extends State<SelectDate> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "${selectedDate.year}/${selectedDate.month}/${selectedDate.day}",
+              DateFormat(languageProvider.language.dateFormat)
+                  .format(selectedDate),
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,

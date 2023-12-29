@@ -42,7 +42,8 @@ class Vietnamese extends Language {
   String get emptyPassword => 'Vui lòng nhập mật khẩu';
 
   @override
-  String get registerSuccess => 'Tạo tài khoản thành công';
+  String get registerSuccess =>
+      'Vui lòng xác nhận Email để kích hoạt tài khoản';
 
   // Register Text
   @override

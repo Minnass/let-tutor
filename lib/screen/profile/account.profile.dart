@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:lettutor/const/countries.dart';
 import 'package:lettutor/const/courseLevels.dart';
 import 'package:lettutor/const/testPreparation.dart';
@@ -13,6 +14,7 @@ import 'package:lettutor/data/providers/language.provider.dart';
 import 'package:lettutor/domains/entity/user/user.dart';
 import 'package:lettutor/utils/country_convertor.dart';
 import 'package:lettutor/utils/first_character.dart';
+import 'package:lettutor/widgets/date_selector.dart';
 import 'package:provider/provider.dart';
 
 class AccountProfileScreen extends StatefulWidget {
@@ -34,6 +36,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
   List<String> chosenTestPreparations = [];
   late String country;
   late String level;
+  late String dateOfbirth;
   bool firstLoad = true;
   void validateName() {
     if (_nameController.text.isEmpty) {
@@ -50,7 +53,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
         final res = await userApi.updateInfor(UpdateRequest(
             name: _nameController.text,
             country: country,
-            birthday: '202-232',
+            birthday: dateOfbirth,
             level: level,
             studySchedule: _studyScheduleController.text,
             learnTopics: chosenTopics,
@@ -85,6 +88,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
         user.testPreparations?.map((e) => e.id.toString() ?? '').toList() ?? [];
     level = user.level;
     country = user.country!;
+    dateOfbirth = user.birthday;
   }
 
   Future<void> uploadAvatar(String imagePath) async {
@@ -106,6 +110,11 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
         ),
       );
     } catch (error) {}
+  }
+
+  void onDatePickerComplete(DateTime returnedValue) {
+    dateOfbirth =
+        DateFormat(languageProvider.language.dateFormat).format(returnedValue);
   }
 
   @override
@@ -310,7 +319,10 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                   color: Colors.grey[900],
                 )),
             const SizedBox(height: 4),
-            // SelectDate(initialDate: user.birthday),
+            SelectDate(
+              initialDate: dateOfbirth,
+              onDatePickerComplete: onDatePickerComplete,
+            ),
             const SizedBox(height: 16),
             Text(languageProvider.language.level,
                 style: TextStyle(
@@ -380,7 +392,6 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                 );
               }).toList(),
             ),
-
             const SizedBox(
               height: 4,
             ),
@@ -391,7 +402,6 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                 color: Colors.grey[900],
               ),
             ),
-
             const SizedBox(
               height: 4,
             ),

@@ -55,7 +55,8 @@ class English extends Language {
   String get confirmPasswordNotMatch => 'Re-typed password does not match';
 
   @override
-  String get registerSuccess => 'Account Created Successfully';
+  String get registerSuccess =>
+      'Register account successfully. Please check email to verify';
 
   // Forgot Password Text
   @override
@@ -107,7 +108,7 @@ class English extends Language {
   @override
   String get website => 'Website';
   @override
-  String get logout => 'Logout';
+  String get logout => 'Log out';
   @override
   String get switchSuccessfully => 'Switch language successfully';
   @override
@@ -335,7 +336,7 @@ class English extends Language {
 
   @override
   String get book => "Book";
-    @override
+  @override
   String get booked => "Booked";
   @override
   String get bookingDetails => "Booking Details";

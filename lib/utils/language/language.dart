@@ -117,6 +117,7 @@ abstract class Language {
   String get tutorRegisterTitle;
   String get videoIntroduction;
   String get approval;
+  
   //profile step
   String get price;
   String get example;
