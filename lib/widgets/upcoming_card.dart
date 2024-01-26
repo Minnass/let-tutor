@@ -215,6 +215,31 @@ class _UpcomingCardState extends State<UpcomingCard> {
   }
 
   Future<void> _showDeleteConfirmation() async {
+    int twoHoursInMilliseconds = 2 * 60 * 60 * 1000;
+    int currentTime = DateTime.now().millisecondsSinceEpoch;
+    int difference =
+        widget.bookingInfo.scheduleDetailInfo!.startPeriodTimestamp! -
+            currentTime;
+    if (difference < twoHoursInMilliseconds) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error, color: Colors.red),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  languageProvider.language.cancleFailed,
+                ),
+              ),
+            ],
+          ),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -233,7 +258,7 @@ class _UpcomingCardState extends State<UpcomingCard> {
       ),
       actions: <Widget>[
         ElevatedButton(
-          child: Text(languageProvider.language.book),
+          child: Text(languageProvider.language.confirm),
           onPressed: () {
             Navigator.of(context).pop(true);
           },

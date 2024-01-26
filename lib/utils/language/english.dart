@@ -229,6 +229,10 @@ class English extends Language {
   String get cancelScheduleSuccessfully => 'Cancle schedule successfully';
   @override
   String get deleteDialogTitle => 'Are you sure you want to delete ?';
+  @override
+  String get cancleFailed => 'You can not cancle this lesson';
+  @override
+  String get confirm => "Confirm";
   //tutor register page
   @override
   String get tutorRegisterTitle => "Tutor Registration";

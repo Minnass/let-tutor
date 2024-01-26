@@ -113,11 +113,13 @@ abstract class Language {
   String get noRequest;
   String get gotoMeeting;
   String get cancelScheduleSuccessfully;
+  String get cancleFailed;
+  String get confirm;
   //tutor register page
   String get tutorRegisterTitle;
   String get videoIntroduction;
   String get approval;
-  
+
   //profile step
   String get price;
   String get example;

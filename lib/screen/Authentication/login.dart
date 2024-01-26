@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   late LanguageProvider languageProvider;
   bool _isAuthenticating = false;
   String _emailErrorText = '';
-  late String chosenLanguage  ;
+  late String chosenLanguage;
   AuthApi authApi = AuthApi(DioClient(Dio()));
   void _handleEmailvalidation() {
     Tuple _EmailValidation =
@@ -96,28 +96,53 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleFacebookLogin(AuthProvider authProvider) async {
-    final result = await FacebookAuth.instance.login();
-    if (result.status == LoginStatus.success) {
-      try {
-        setState(() {
-          _isAuthenticating = true;
-        });
-        final res = await authApi.loginByFacebook(
-            FacebookLoginRequest(access_token: result.accessToken!.token));
-        if (res.user != null) {
-          authProvider.login(res.user, res.tokens?.access, res.tokens?.refresh,
-              LoginType.facebook);
-          Future.delayed(const Duration(seconds: 0), () {
-            Navigator.pushNamed(context, Routes.main);
+    try {
+      final result = await FacebookAuth.instance.login();
+      if (result.status == LoginStatus.success) {
+        try {
+          setState(() {
+            _isAuthenticating = true;
+          });
+          final res = await authApi.loginByFacebook(
+              FacebookLoginRequest(access_token: result.accessToken!.token));
+          if (res.user != null) {
+            authProvider.login(res.user, res.tokens?.access,
+                res.tokens?.refresh, LoginType.facebook);
+            Future.delayed(const Duration(seconds: 0), () {
+              Navigator.pushNamed(context, Routes.main);
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    Icon(Icons.check_circle, color: Colors.green),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(languageProvider.language.loginSuccess),
+                    ),
+                  ],
+                ),
+                duration: Duration(seconds: 1),
+              ),
+            );
+          }
+          setState(() {
+            _isAuthenticating = false;
+          });
+        } catch (error) {
+          setState(() {
+            _isAuthenticating = false;
           });
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Row(
                 children: [
-                  Icon(Icons.check_circle, color: Colors.green),
+                  Icon(Icons.error, color: Colors.red),
                   SizedBox(width: 8),
                   Expanded(
-                    child: Text(languageProvider.language.loginSuccess),
+                    child: Text(
+                      error.toString(),
+                    ),
                   ),
                 ],
               ),
@@ -125,30 +150,11 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           );
         }
-        setState(() {
-          _isAuthenticating = false;
-        });
-      } catch (error) {
-        setState(() {
-          _isAuthenticating = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.error, color: Colors.red),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    error.toString(),
-                  ),
-                ),
-              ],
-            ),
-            duration: Duration(seconds: 1),
-          ),
-        );
       }
+    } catch (error) {
+      print(error);
+      print(error);
+      print(error);
     }
   }
 
@@ -215,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     authProvider = context.watch<AuthProvider>();
     languageProvider = context.watch<LanguageProvider>();
-    chosenLanguage=languageProvider.language.id;
+    chosenLanguage = languageProvider.language.id;
     return Scaffold(
       body: _isAuthenticating
           ? const Center(child: CircularProgressIndicator(color: Colors.blue))

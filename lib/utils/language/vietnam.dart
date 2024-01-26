@@ -231,6 +231,10 @@ class Vietnamese extends Language {
   String get cancelScheduleSuccessfully => "Hủy thành công";
   @override
   String get deleteDialogTitle => "Bạn chắc chắn muốn xóa không ?";
+  @override
+  String get cancleFailed => 'Bạn không thể hủy bài học này';
+  @override
+  String get confirm => 'Xác nhận';
   //tutor register page
   @override
   String get tutorRegisterTitle => "Đăng ký giáo viên";

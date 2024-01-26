@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:lettutor/const/categories.dart';
 import 'package:lettutor/data/network/apis/course/course.api.dart';
 import 'package:lettutor/data/network/apis/course/request/course_pagination.request.dart';
 import 'package:lettutor/data/network/apis/course/response/course_pagination.response.dart';
@@ -7,6 +8,7 @@ import 'package:lettutor/data/network/constants/pagination.dart';
 import 'package:lettutor/data/network/dio_client.dart';
 import 'package:lettutor/data/providers/auth.provider.dart';
 import 'package:lettutor/data/providers/language.provider.dart';
+import 'package:lettutor/utils/level_converter.dart';
 import 'package:lettutor/widgets/course_card.dart';
 import 'package:lettutor/widgets/search_bar.dart';
 import 'package:provider/provider.dart';
@@ -22,34 +24,38 @@ class _CoursePageState extends State<CourseScreen> {
   final controller = ScrollController();
   bool hasNext = true;
   List<CourseResponse> courses = [];
-  int page = 1;
+  PagedCourseRequest request =
+      PagedCourseRequest(page: 1, size: Pagination.pageSize);
   final _searchController = TextEditingController();
-  final List<String> topics = [
-    "For Studying Abroad",
-    "English for Traveling",
-    "Business English",
-    // Add more topics here
+  final List<String> levels = [
+    "Any Level",
+    "Beginner",
+    "Intermediate",
+    "Advanced"
   ];
-  final List<String> levels = ["Beginner", "Intermediate", "Proficiency"];
-  List<String> selectedTopics = [];
-  List<String> selectedLevels = [];
-  bool _isLoading = true;
+  late String? selectedTopics = '';
+  late String? selectedLevel = '';
+  bool _isFirstLoading = true;
+  int page = 1;
   late LanguageProvider languageProvider;
   CourseApi courseApi = CourseApi(DioClient(Dio()));
 
-  void handleSearchSubmit(String searchText) {}
+  void handleSearchSubmit(String searchText) {
+    request.keyword = searchText;
+    _fetchCourse();
+  }
+
   Future<void> _fetchCourse() async {
     try {
-      final res = await courseApi.getPagedCourse(
-          PagedCourseRequest(page: 1, size: page * Pagination.pageSize));
+      final res = await courseApi.getPagedCourse(request);
       courses = res.data?.rows ?? [];
       hasNext = res.data!.count! > courses.length;
       setState(() {
-        _isLoading = false;
+        _isFirstLoading = false;
       });
     } catch (error) {
       setState(() {
-        _isLoading = false;
+        _isFirstLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -74,8 +80,11 @@ class _CoursePageState extends State<CourseScreen> {
   void initState() {
     super.initState();
     controller.addListener(() {
-      if (controller.position.maxScrollExtent == controller.position.pixels) {
+      if (controller.position.maxScrollExtent == controller.position.pixels &&
+          hasNext) {
+        request.page = 1;
         page++;
+        request.size = (page  ) * 10;
         _fetchCourse();
       }
     });
@@ -92,7 +101,7 @@ class _CoursePageState extends State<CourseScreen> {
     languageProvider = context.watch<LanguageProvider>();
     final authProvider = context.watch<AuthProvider>();
     courseApi.setToken(authProvider.getToken());
-    if (_isLoading) {
+    if (_isFirstLoading) {
       _fetchCourse();
     }
     return DefaultTabController(
@@ -155,22 +164,27 @@ class _CoursePageState extends State<CourseScreen> {
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
-                            children: topics.map((topic) {
-                              final bool isSelected =
-                                  selectedTopics.contains(topic);
+                            children: categories.entries.map((category) {
+                              final bool isSelected = selectedTopics ==
+                                  category.key; // Check if level is selected
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ChoiceChip(
-                                  label: Text(topic),
+                                  label: Text(category.value),
                                   selected: isSelected,
-                                  onSelected: (selected) {
+                                  onSelected: (selected) async {
                                     setState(() {
+                                      page = 1;
                                       if (selected) {
-                                        selectedTopics.add(topic);
+                                        selectedTopics =
+                                            category.key; // Set selected level
                                       } else {
-                                        selectedTopics.remove(topic);
+                                        selectedTopics =
+                                            null; // Deselect level if already selected
                                       }
                                     });
+                                    request.categoryId = selectedTopics;
+                                    await _fetchCourse();
                                   },
                                 ),
                               );
@@ -192,23 +206,31 @@ class _CoursePageState extends State<CourseScreen> {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: levels.map((level) {
-                              final bool isSelected =
-                                  selectedLevels.contains(level);
+                              final bool isSelected = selectedLevel ==
+                                  level; // Check if level is selected
                               return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ChoiceChip(
-                                    label: Text(level),
-                                    selected: isSelected,
-                                    onSelected: (selected) {
-                                      setState(() {
-                                        if (selected) {
-                                          selectedLevels.add(level);
-                                        } else {
-                                          selectedLevels.remove(level);
-                                        }
-                                      });
-                                    },
-                                  ));
+                                padding: const EdgeInsets.all(8.0),
+                                child: ChoiceChip(
+                                  label: Text(level),
+                                  selected: isSelected,
+                                  onSelected: (selected) async {
+                                    setState(() {
+                                      page = 1;
+                                      if (selected) {
+                                        selectedLevel =
+                                            level; // Set selected level
+                                      } else {
+                                        selectedLevel =
+                                            null; // Deselect level if already selected
+                                      }
+                                    });
+                                    request.level =
+                                        convertStringToLevel(selectedLevel!);
+
+                                    await _fetchCourse();
+                                  },
+                                ),
+                              );
                             }).toList(),
                           ),
                         ),
@@ -220,7 +242,7 @@ class _CoursePageState extends State<CourseScreen> {
             ),
           ),
           Expanded(
-              child: _isLoading
+              child: _isFirstLoading
                   ? const Center(child: CircularProgressIndicator())
                   : TabBarView(
                       children: [
